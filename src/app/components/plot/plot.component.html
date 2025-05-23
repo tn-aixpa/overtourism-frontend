@@ -1,0 +1,99 @@
+<div class="d-flex flex-row gap-4">
+  <!-- Colonna sinistra: Box informativi -->
+  <div class="flex-shrink-0" style="min-width: 300px;">
+    <div class="mb-3 p-3 border rounded bg-light">
+      <h6 class="mb-1">Area Totale</h6>
+      <p class="small text-muted">{{ formatNumber(kpisData?.area || 0) }} m²</p>
+    </div>
+    <div class="mb-3 p-3 border rounded bg-light">
+      <h6 class="mb-1">Livello di Overturismo</h6>
+      <p class="small text-muted">{{ formatNumber(kpisData?.overtourism_level || 0) }}%</p>
+    </div>
+    <div class="mb-3 p-3 border rounded bg-light">
+      <h6 class="mb-1">Vincolo Critico</h6>
+      <p class="small text-muted">{{ kpisData?.critical_constraint?.name || '-' }}: {{
+        formatNumber(kpisData?.critical_constraint?.level || 0) }}%</p>
+    </div>
+    <div class="mb-3 p-3 border rounded bg-light">
+      <h6 class="mb-2">Livelli di Vincolo</h6>
+      <div class="small text-muted">
+        <div>Parcheggi: {{ formatNumber(kpisData?.constraint_level_parcheggi || 0) }}%</div>
+        <div>Spiaggia: {{ formatNumber(kpisData?.constraint_level_spiaggia || 0) }}%</div>
+        <div>Alberghi: {{ formatNumber(kpisData?.constraint_level_alberghi || 0) }}%</div>
+        <div>Ristoranti: {{ formatNumber(kpisData?.constraint_level_ristoranti || 0) }}%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Colonna destra: Grafico + controlli -->
+  <div class="flex-shrink-0" style="min-width: 0; max-width: 1000px; width: 100%;" class="col-8">
+    <!-- Controlli -->
+    <div class="p-3 mb-3 border rounded bg-light">
+      <div class="row g-3 align-items-center">
+        <div class="col-auto">
+
+          <it-checkbox [(ngModel)]="showAllSubsystems" label="Mostra tutti i sottosistemi" toggle="true"
+            (change)="onFunzioneChange()">
+          </it-checkbox>
+        </div>
+        <div class="col-auto">
+
+          <it-checkbox [(ngModel)]="mostraPunti" label="Mostra punti" toggle="true" (change)="onFunzioneChange()">
+          </it-checkbox>
+        </div>
+        <div class="col-auto">
+
+          <it-checkbox [(ngModel)]="monoDimensionale" label="Modalità monodimensionale" toggle="true"
+            (change)="onFunzioneChange()">
+          </it-checkbox>
+        </div>
+        <div class="col-auto">
+
+          <it-checkbox [(ngModel)]="heatmapAttiva" label="Mostra heatmap" toggle="true" (change)="onHeatmapToggle()">
+          </it-checkbox>
+        </div>
+      </div>
+          <!-- Radio sottosistema -->
+          <div *ngIf="!showAllSubsystems" class="mb-3">
+            <fieldset>
+              <legend class="me-2 fw-bold mb-0">Sottosistema:</legend>
+              <it-radio-button
+                *ngFor="let ss of sottosistemi"
+                name="sottosistema"
+                [value]="ss.value"
+                [label]="ss.label"
+                [(ngModel)]="sottosistemaSelezionato"
+                (ngModelChange)="onFunzioneChange()">
+              </it-radio-button>
+            </fieldset>
+          </div>
+    </div>
+
+
+    <!-- Chart -->
+    <div #chartLib style="min-height: 400px; position: relative;">
+      <div *ngIf="loading" class="loading-spinner">Loading...</div>
+    </div>
+    <!-- Box informativo di sola lettura -->
+<div class="row mt-4">
+  <div class="col-6">
+    <div class="p-3 border rounded bg-light h-100">
+      <h6 class="mb-2">Informazioni</h6>
+      <p class="small text-muted mb-0">
+        <!-- Inserisci qui le informazioni che vuoi mostrare -->
+        Questo box mostra informazioni di sola lettura relative al grafico o ai dati selezionati.
+      </p>
+    </div>
+  </div>
+
+  <!-- Box Note editabile -->
+  <div class="col-6">
+    <div class="p-3 border rounded bg-light h-100">
+      <h6 class="mb-2">Note</h6>
+        <it-textarea label="Aggiungi le tue note qui..." [(ngModel)]="noteUtente"></it-textarea>
+
+    </div>
+  </div>
+</div>
+  </div>
+</div>

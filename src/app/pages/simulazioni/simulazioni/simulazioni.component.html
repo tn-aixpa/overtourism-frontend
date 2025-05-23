@@ -1,0 +1,21 @@
+<div *ngIf="loading">Caricamento simulazioni...</div>
+
+<div *ngIf="!loading" class="bd-example">
+
+    <h3>Simulazioni</h3>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+  <it-list>
+    <it-list-item *ngFor="let simulazione of simulazioni" iconLeft="true" [routerLink]="['/simulazioni', simulazione.id, 'scenari']" externalLink="false">
+      <div>
+        <h4 class="text m-0">{{ simulazione.name }}</h4>
+        <p class="small m-0">{{ simulazione.description }}</p>
+      </div>
+      <ng-container multiple>
+        <!-- Puoi aggiungere qui eventuali azioni secondarie, per esempio pulsanti o icone -->
+        <a [routerLink]="['/simulazioni', simulazione.id, 'scenari']" [attr.aria-label]="'Apri simulazione ' + simulazione.name">
+          <it-icon name="arrow-right" color="primary"></it-icon>
+        </a>
+      </ng-container>
+    </it-list-item>
+  </it-list>
+</div>

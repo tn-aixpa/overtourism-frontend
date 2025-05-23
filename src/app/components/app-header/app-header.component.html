@@ -1,0 +1,14 @@
+<it-header
+      slimTitle="{{ 'navigation.go-back' | translate }}"
+      slimTitleLink="#"
+      loginStyle="none"
+      [light]="false"
+      [showSearch]="false"
+      [sticky]="true"
+      [megamenu]="false"
+    >
+    <ng-container slimRightZone>
+        <it-language-switcher mode="nav"></it-language-switcher>
+        <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button>
+      </ng-container>
+    </it-header>

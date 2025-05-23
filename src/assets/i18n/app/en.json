@@ -1,0 +1,10 @@
+{
+  "appName": "IAxPA",
+  "sidebar": {
+    "home": "Home",
+    "simulazioni": "Simulations",
+    "faqs": "FAQs",
+    "terms": "Terms of Service",
+    "settings": "Settings"
+  }
+}

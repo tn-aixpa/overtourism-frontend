@@ -1,0 +1,41 @@
+<div>
+  <it-sidebar header="Menu">
+    <it-list linkList="true">
+      <it-list-item size="medium" href="/home" iconLeft="true" [active]="router.url === '/home'" >
+        <span class="list-item-title-icon-wrapper">
+          <it-icon name="pa" />
+          <span>{{ 'sidebar.home' | translate }}</span>
+        </span>
+      </it-list-item>
+      <it-list-item size="medium" href="/simulazioni" iconLeft="true" [active]="router.url === '/simulazioni'">
+        <span class="list-item-title-icon-wrapper">
+          <it-icon name="list" />
+          <span>{{ 'sidebar.simulazioni' | translate }}</span>
+        </span>
+      </it-list-item>
+
+      <!-- Altri collegamenti -->
+      <it-list-item size="medium" href="/faqs" iconLeft="true" [active]="router.url === '/faqs'">
+        <span class="list-item-title-icon-wrapper">
+          <it-icon name="help-circle" />
+          <span>{{ 'sidebar.faqs' | translate }}</span>
+        </span>
+      </it-list-item>
+
+      <it-list-item size="medium" href="/terms" iconLeft="true" [active]="router.url === '/terms'">
+        <span class="list-item-title-icon-wrapper">
+          <it-icon name="file" />
+          <span>{{ 'sidebar.terms' | translate }}</span>
+        </span>
+      </it-list-item>
+
+      <it-list-item size="medium" href="/settings" iconLeft="true" [active]="router.url === '/settings'">
+        <span class="list-item-title-icon-wrapper">
+          <it-icon name="settings" />
+          <span>{{ 'sidebar.settings' | translate }}</span>
+        </span>
+      </it-list-item>
+
+    </it-list>
+  </it-sidebar>
+</div>

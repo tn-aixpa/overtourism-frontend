@@ -1,0 +1,28 @@
+<div *ngIf="loading">Caricamento scenari...</div>
+
+<div *ngIf="!loading" class="bd-example">
+    <div class="row my-2">
+        <div class="col">
+            <it-back-button buttonStyle="link"></it-back-button>
+        </div>
+      </div>
+  <h3>Scenari</h3>
+  <p>Descrizione breve degli scenari disponibili.</p>
+
+  <it-list>
+    <it-list-item *ngFor="let scenario of scenari" iconLeft="true" [routerLink]="['/simulazioni', simulationId, 'scenari', scenario.id]" externalLink="false">
+      <div>
+        <h4 class="text m-0">{{ scenario.name }}</h4>
+        <p class="small m-0">{{ scenario.description }}</p>
+      </div>
+      
+      <ng-container multiple>
+        <a [routerLink]="['/simulazioni', simulationId, 'scenari', scenario.id]" [attr.aria-label]="'Apri scenario {{ scenario.name }}'">
+          <it-icon name="arrow-right" color="primary"></it-icon>
+        </a>
+      </ng-container>
+    </it-list-item>
+  </it-list>
+
+
+</div>
