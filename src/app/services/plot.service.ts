@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import dataExample from '../../assets/dataExample.json'; 
 import { PlotInput, Curve } from '../models/plot.model';
+import Plotly from 'plotly.js-dist-min';
 
 @Injectable({ providedIn: 'root' })
 export class PlotService {
@@ -84,5 +85,86 @@ export class PlotService {
       capacity_by_constraint: module.capacity_by_constraint ?? {},
       capacity_mean_by_constraint: module.capacity_mean_by_constraint ?? {}
     };
+  }
+    renderFunctionPlot(container: HTMLElement, input: PlotInput) {
+    const data: Partial<Plotly.PlotData>[] = [];
+  
+    if (input.heatmap) {
+      data.push({
+        z: input.heatmap.z,
+        x: input.heatmap.x,
+        y: input.heatmap.y,
+        type: 'heatmap',
+        colorscale: [
+          [0, 'rgb(0,0,255)'],       // blu per 0
+          [0.5, 'rgb(255,255,255)'], // bianco
+          [1, 'rgb(150,0,24)']       // rosso scuro per 1
+        ],
+        zmin: 0,
+        zmax: 1,
+        showscale: true,
+        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
+      });
+    }
+  
+    for (const curve of input.curves) {
+      data.push({
+        x: curve.x,
+        y: curve.y,
+        mode: 'lines',
+        name: curve.name,
+        line: {
+          color: curve.color ?? 'black',
+          dash: curve.dash ?? 'solid',
+          width: 3,
+        },
+        hoverinfo: 'name',
+        type: 'scatter',
+      });
+    }
+  
+    if (input.points?.length) {
+      for (const pt of input.points) {
+        data.push({
+          x: pt.x,
+          y: pt.y,
+          type: 'scatter',
+          mode: 'markers',
+          name: pt.name,
+          marker: {
+            color: pt.color ?? 'black',
+            size: 8,
+            line: {
+              width: 1,
+              color: 'black',
+            },
+          },
+          hoverinfo: 'x+y+name',
+        });
+      }
+    }
+  
+    const layout: Partial<Plotly.Layout> = {
+      title: { text: 'Scenario con Heatmap' },
+      xaxis: {
+        title: { text: 'Turisti' },
+        range: [0, input.xMax ?? undefined],
+      },
+      yaxis: {
+        title: { text:'Escursionisti'},
+        range: [0, input.yMax ?? undefined],
+      },
+      margin: { l: 60, r: 30, t: 40, b: 50 },
+      showlegend: true,
+      legend: {
+        orientation: 'h',
+        x: 0,
+        y: -0.2,
+        xanchor: 'left',
+        yanchor: 'top',
+      }
+    };
+  
+    Plotly.newPlot(container, data, layout, { responsive: true });
   }
 }

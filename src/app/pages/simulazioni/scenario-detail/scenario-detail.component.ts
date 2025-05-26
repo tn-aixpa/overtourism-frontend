@@ -1,7 +1,6 @@
 import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlotService } from '../../../services/plot.service';
-import { renderFunctionPlot, PlotInput } from '../../../models/plot.model';
 
 @Component({
   selector: 'app-scenario-detail',

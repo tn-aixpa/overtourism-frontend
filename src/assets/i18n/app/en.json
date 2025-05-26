@@ -16,5 +16,13 @@
       "constraint_level_alberghi": "Alberghi Constraint Level",
       "constraint_level_ristoranti": "Ristoranti Constraint Level",
       "critical_constraint": "Critical Constraint"
-    }
-}
+    },
+    "scenari": {
+      "loading": "Loading scenarios...",
+      "title": "Scenarios",
+      "description": "Brief description of the available scenarios.",
+      "enable_compare": "Enable comparison",
+      "disable_compare": "Disable comparison",
+      "compare_selected": "Compare selected scenarios",
+      "open": "Open scenario {{name}}"
+    }}

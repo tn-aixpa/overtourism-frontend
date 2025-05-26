@@ -16,6 +16,15 @@
       "constraint_level_alberghi": "Livello vincolo Alberghi",
       "constraint_level_ristoranti": "Livello vincolo Ristoranti",
       "critical_constraint": "Vincolo Critico"
-    }
+    },
+    "scenari": {
+    "loading": "Caricamento scenari...",
+    "title": "Scenari",
+    "description": "Descrizione breve degli scenari disponibili.",
+    "enable_compare": "Abilita comparazione",
+    "disable_compare": "Disabilita comparazione",
+    "compare_selected": "Confronta scenari selezionati",
+    "open": "Apri scenario {{name}}"
+  }
   
 }
