@@ -66,18 +66,20 @@ export class PlotService {
       sample_e: sampleY,
       capacity: module.capacity ?? [],
       capacity_mean: module.capacity_mean,
-      kpis: module.kpis ? {
-        area: module.kpis.area ?? 0,
-        overtourism_level: module.kpis.overtourism_level ?? 0,
-        critical_constraint: {
-          name: module.kpis['critical constraint']?.name ?? '',
-          level: module.kpis['critical constraint']?.level ?? 0
-        },
-        constraint_level_parcheggi: module.kpis['constraint level parcheggi'] ?? 0,
-        constraint_level_spiaggia: module.kpis['constraint level spiaggia'] ?? 0,
-        constraint_level_alberghi: module.kpis['constraint level alberghi'] ?? 0,
-        constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0
-      } : undefined,
+      kpis: module.kpis ?? undefined,
+
+      // kpis: module.kpis ? {
+      //   area: module.kpis.area ?? 0,
+      //   overtourism_level: module.kpis.overtourism_level ?? 0,
+      //   critical_constraint: {
+      //     name: module.kpis['critical constraint']?.name ?? '',
+      //     level: module.kpis['critical constraint']?.level ?? 0
+      //   },
+      //   constraint_level_parcheggi: module.kpis['constraint level parcheggi'] ?? 0,
+      //   constraint_level_spiaggia: module.kpis['constraint level spiaggia'] ?? 0,
+      //   constraint_level_alberghi: module.kpis['constraint level alberghi'] ?? 0,
+      //   constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0
+      // } : undefined,
       usage_by_constraint: module.usage_by_constraint ?? {},
       capacity_by_constraint: module.capacity_by_constraint ?? {},
       capacity_mean_by_constraint: module.capacity_mean_by_constraint ?? {}

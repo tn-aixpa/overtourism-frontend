@@ -6,5 +6,15 @@
     "faqs": "FAQs",
     "terms": "Terms of Service",
     "settings": "Settings"
-  }
+  },
+  
+    "kpi": {
+      "area": "Total Area",
+      "overtourism_level": "Overtourism Level",
+      "constraint_level_parcheggi": "Parcheggi Constraint Level",
+      "constraint_level_spiaggia": "Spiaggia Constraint Level",
+      "constraint_level_alberghi": "Alberghi Constraint Level",
+      "constraint_level_ristoranti": "Ristoranti Constraint Level",
+      "critical_constraint": "Critical Constraint"
+    }
 }

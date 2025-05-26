@@ -1,0 +1,22 @@
+<div *ngIf="kpisData">
+    <!-- Critical constraint -->
+    <div class="mb-3 p-3 border rounded " 
+         *ngIf="criticalConstraint" 
+         [ngClass]="getKpiClass(criticalConstraint)">
+      <h6 class="mb-1">{{ 'kpi.critical_constraint' | translate }}</h6>
+      <p class="small text-muted">
+        {{ criticalConstraint.name }}: {{ formatNumber(criticalConstraint.level) }}
+      </p>
+    </div>
+  
+    <!-- Altri KPI -->
+    <ng-container *ngFor="let key of kpiKeys">
+      <div class="mb-3 p-3 border rounded"
+           [ngClass]="getKpiClass(getKpiRawValue(key))">
+        <h6 class="mb-1">{{ kpiLabels[key] | translate }}</h6>
+        <p class="small text-muted">
+          {{ formatNumber(getKpiValue(key)) }}
+        </p>
+      </div>
+    </ng-container>
+  </div>

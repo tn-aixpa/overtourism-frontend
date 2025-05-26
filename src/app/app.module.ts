@@ -23,9 +23,8 @@ import { ScenarioDetailComponent } from './pages/simulazioni/scenario-detail/sce
 import { PlotComponent } from './components/plot/plot.component';
 import { FormsModule } from '@angular/forms';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
+import { KpiBoxComponent } from './components/plot/kpi-box/kpi-box.component';
 
-// import { AppHeaderComponent } from './components/app-header/app-header.component';
-// import { AppSideBarComponent } from './components/app-side-bar/app-side-bar.component';
 
 // Funzione per caricare i file delle traduzioni
 export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
@@ -36,7 +35,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
 }
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent],
+  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

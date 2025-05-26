@@ -28,14 +28,17 @@ export interface CriticalConstraint {
   level: number;
 }
 
+// export interface KPIs {
+//   area: number;
+//   overtourism_level: number;
+//   critical_constraint: CriticalConstraint;
+//   constraint_level_parcheggi: number;
+//   constraint_level_spiaggia: number;
+//   constraint_level_alberghi: number;
+//   constraint_level_ristoranti: number;
+// }
 export interface KPIs {
-  area: number;
-  overtourism_level: number;
-  critical_constraint: CriticalConstraint;
-  constraint_level_parcheggi: number;
-  constraint_level_spiaggia: number;
-  constraint_level_alberghi: number;
-  constraint_level_ristoranti: number;
+  [key: string]: number | undefined | { name: string; level: number };
 }
 
 export type PlotInput = {

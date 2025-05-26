@@ -6,5 +6,16 @@
     "faqs": "FAQs",
     "terms": "Termini di servizio",
     "settings": "Impostazioni"
-  }
+  },
+  
+    "kpi": {
+      "area": "Area Totale",
+      "overtourism_level": "Livello di Overturismo",
+      "constraint_level_parcheggi": "Livello vincolo Parcheggi",
+      "constraint_level_spiaggia": "Livello vincolo Spiaggia",
+      "constraint_level_alberghi": "Livello vincolo Alberghi",
+      "constraint_level_ristoranti": "Livello vincolo Ristoranti",
+      "critical_constraint": "Vincolo Critico"
+    }
+  
 }

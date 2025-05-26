@@ -1,28 +1,7 @@
 <div class="d-flex flex-row gap-4">
   <!-- Colonna sinistra: Box informativi -->
   <div class="flex-shrink-0" style="min-width: 300px;">
-    <div class="mb-3 p-3 border rounded bg-light">
-      <h6 class="mb-1">Area Totale</h6>
-      <p class="small text-muted">{{ formatNumber(kpisData?.area || 0) }} m²</p>
-    </div>
-    <div class="mb-3 p-3 border rounded bg-light">
-      <h6 class="mb-1">Livello di Overturismo</h6>
-      <p class="small text-muted">{{ formatNumber(kpisData?.overtourism_level || 0) }}%</p>
-    </div>
-    <div class="mb-3 p-3 border rounded bg-light">
-      <h6 class="mb-1">Vincolo Critico</h6>
-      <p class="small text-muted">{{ kpisData?.critical_constraint?.name || '-' }}: {{
-        formatNumber(kpisData?.critical_constraint?.level || 0) }}%</p>
-    </div>
-    <div class="mb-3 p-3 border rounded bg-light">
-      <h6 class="mb-2">Livelli di Vincolo</h6>
-      <div class="small text-muted">
-        <div>Parcheggi: {{ formatNumber(kpisData?.constraint_level_parcheggi || 0) }}%</div>
-        <div>Spiaggia: {{ formatNumber(kpisData?.constraint_level_spiaggia || 0) }}%</div>
-        <div>Alberghi: {{ formatNumber(kpisData?.constraint_level_alberghi || 0) }}%</div>
-        <div>Ristoranti: {{ formatNumber(kpisData?.constraint_level_ristoranti || 0) }}%</div>
-      </div>
-    </div>
+    <app-kpi-box [kpisData]="kpisData" [formatNumber]="formatNumber"></app-kpi-box>
   </div>
 
   <!-- Colonna destra: Grafico + controlli -->
