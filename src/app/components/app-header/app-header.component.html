@@ -1,14 +1,21 @@
 <it-header
-      slimTitle="{{ 'navigation.go-back' | translate }}"
-      slimTitleLink="#"
-      loginStyle="none"
-      [light]="false"
-      [showSearch]="false"
-      [sticky]="true"
-      [megamenu]="false"
-    >
-    <ng-container slimRightZone>
-        <it-language-switcher mode="nav"></it-language-switcher>
-        <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button>
-      </ng-container>
-    </it-header>
+slimTitle="{{ 'navigation.go-back' | translate }}"
+slimTitleLink="#"
+[showSearch]="false"
+[sticky]="true"
+[expand]="true"
+>
+<ng-container brand>
+  <a href="#">
+    <it-icon name="designers-italia"></it-icon>
+    <div class="it-brand-text">
+      <div class="it-brand-title">IAxPA</div>
+      <div class="it-brand-tagline d-none d-md-block">Intelligenza Artificiale Per la Pubblica Amministrazione</div>
+    </div>
+  </a>
+</ng-container>
+<ng-container slimRightZone>
+  <it-language-switcher mode="nav"></it-language-switcher>
+  <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button>
+</ng-container>
+</it-header>

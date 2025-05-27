@@ -1,0 +1,45 @@
+<!-- plot-controls.component.html -->
+<div class="p-3 mb-3 border rounded bg-light">
+    <fieldset>
+      <legend class="fw-bold mb-2">Opzioni visualizzazione</legend>
+      <div class="d-flex flex-wrap gap-3 align-items-center">
+        <it-checkbox
+          [(ngModel)]="showAllSubsystems"
+          label="Mostra tutti i sottosistemi"
+          toggle="true"
+          (ngModelChange)="showAllSubsystemsChange.emit($event); funzioneChange.emit()">
+        </it-checkbox>
+        <it-checkbox
+          [(ngModel)]="mostraPunti"
+          label="Mostra punti"
+          toggle="true"
+          (ngModelChange)="mostraPuntiChange.emit($event); funzioneChange.emit()">
+        </it-checkbox>
+        <it-checkbox
+          [(ngModel)]="monoDimensionale"
+          label="Modalità monodimensionale"
+          toggle="true"
+          (ngModelChange)="monoDimensionaleChange.emit($event); funzioneChange.emit()">
+        </it-checkbox>
+        <it-checkbox
+          [(ngModel)]="heatmapAttiva"
+          label="Mostra heatmap"
+          toggle="true"
+          (ngModelChange)="heatmapAttivaChange.emit($event); heatmapToggle.emit()">
+        </it-checkbox>
+      </div>
+      <div *ngIf="!showAllSubsystems" class="mt-3">
+        <fieldset>
+          <legend class="me-2 fw-bold mb-0">Sottosistema:</legend>
+          <it-radio-button
+            *ngFor="let ss of sottosistemi"
+            name="sottosistema"
+            [value]="ss.value"
+            [label]="ss.label"
+            [(ngModel)]="sottosistemaSelezionato"
+            (ngModelChange)="sottosistemaSelezionatoChange.emit($event); funzioneChange.emit()">
+          </it-radio-button>
+        </fieldset>
+      </div>
+    </fieldset>
+  </div>

@@ -24,6 +24,7 @@ import { PlotComponent } from './components/plot/plot.component';
 import { FormsModule } from '@angular/forms';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { KpiBoxComponent } from './components/plot/kpi-box/kpi-box.component';
+import { PlotControlsComponent } from './components/plot/plot-controls/plot-controls.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -35,7 +36,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
 }
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent],
+  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

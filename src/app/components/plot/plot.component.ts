@@ -3,6 +3,12 @@ import { Component, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import Plotly from 'plotly.js-dist-min';
 import { PlotService } from '../../services/plot.service';
 import { Curve, KPIs, PlotInput } from '../../models/plot.model';
+import {
+  SUBSYSTEM_OPTIONS,
+  PLOT_COLORS,
+  HEATMAP_COLOR_SCALE,
+  DEFAULT_LAYOUT
+} from './plot.config';
 
 @Component({
   selector: 'app-plot',
@@ -23,13 +29,9 @@ export class PlotComponent implements AfterViewInit {
   monoDimensionale = false;
   kpisData: KPIs | undefined;
   noteUtente: string = '';
-  // sottosistemaSelezionato = 'Parcheggi';
-  sottosistemi = [
-    { value: 'parcheggi', label: 'Parcheggi' },
-    { value: 'spiaggia', label: 'Spiaggia' },
-    { value: 'alberghi', label: 'Alberghi' },
-    { value: 'ristoranti', label: 'Ristoranti' }
-  ];
+
+  sottosistemi = SUBSYSTEM_OPTIONS;
+
   constructor(private plotService: PlotService) { }
 
   ngAfterViewInit() {
@@ -92,19 +94,19 @@ export class PlotComponent implements AfterViewInit {
 
     const traceSampleT: Partial<Plotly.PlotData> = {
       x,
-      y: sortedIndices.map(i => sampleT[i]),
+      y: sortedIndices.map(i => sampleT[i]*1.2),
       name: 'Turisti',
-      marker: { color: 'rgba(211, 211, 211, 0.7)' }, // Light gray color
+      marker: { color: PLOT_COLORS.sampleT },
       type: 'bar',
       yaxis: 'y2',
     };
 
     const traceSampleE: Partial<Plotly.PlotData> = {
       x,
-      y: sortedIndices.map(i => sampleE[i]),
+      y: sortedIndices.map(i => sampleE[i]*1.2),
       name: 'Escursionisti',
       type: 'bar',
-      marker: { color: 'rgba(64, 64, 64, 0.7)' },// Dark gray color
+      marker: { color: PLOT_COLORS.sampleE },
 
       yaxis: 'y2',
     };
@@ -115,16 +117,17 @@ export class PlotComponent implements AfterViewInit {
       type: 'scatter',
       mode: 'lines',
       name: 'Capacity Mean',
-      line: { color: 'red', dash: 'dash', width: 2 },
+      line: { color: PLOT_COLORS.capacityMean, dash: 'dash', width: 2 },
       yaxis: 'y1',
     };
     const threshold = this.sottosistemaSelezionato === 'default'
     ? input.capacity_mean
     : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
   
-  const updatedColor = sortedIndices.map(i =>
-    usage[i] > (threshold ?? 0) ? '#BA0C2F' : '#32CD32'
-  );
+
+    const updatedColor = sortedIndices.map(i =>
+      usage[i] > (threshold ?? 0) ? PLOT_COLORS.overThreshold : PLOT_COLORS.underThreshold
+    );
   
   const traceUsagePoints: Partial<Plotly.PlotData> = {
     x,
@@ -148,11 +151,8 @@ export class PlotComponent implements AfterViewInit {
         type: 'heatmap',
         zmin: 0,
         zmax: 1,
-        colorscale: [
-          [0, 'rgb(0,0,255)'],
-          [0.5, 'rgb(255,255,255)'],
-          [1, 'rgb(150, 0, 24)']
-        ],
+        colorscale: HEATMAP_COLOR_SCALE,
+
         // showscale: true,
         hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
         colorbar: {
@@ -162,8 +162,10 @@ export class PlotComponent implements AfterViewInit {
         }
       }]
       : [];
-
+      const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
+      const yAxisMax = usageMax * 1.2;
     const layout: Partial<Plotly.Layout> = {
+      ...DEFAULT_LAYOUT,
       title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
       barmode: 'stack',
       xaxis: { title: { text: 'Indice ordinato per usage' } },
@@ -172,25 +174,15 @@ export class PlotComponent implements AfterViewInit {
         title: { text: 'Overturismo (capacity)' },
         side: 'left',
         overlaying: undefined,
+        range: [0, yAxisMax]  
+
       },
 
       yaxis2: {
         title: { text: 'Presenze (turisti + escursionisti)' },
         side: 'right',
         overlaying: 'y',
-      },
-
-      height: 500,
-      width: 800,
-      showlegend: true,
-      legend: {
-        orientation: 'h',
-        x: 0,
-        y: -0.2,
-        xanchor: 'left',
-        yanchor: 'top',
-      },
-      margin: { l: 60, r: 60, t: 40, b: 50 },
+      }
     };
 
     const traces: Partial<Plotly.PlotData>[] = [
@@ -289,9 +281,10 @@ export class PlotComponent implements AfterViewInit {
       });
     }
 
-    const curvesToRender = this.showAllSubsystems
-      ? input.curves
-      : input.curves.filter(c => c.name === this.sottosistemaSelezionato);
+    const curvesToRender = this.sottosistemaSelezionato === 'default'
+    ? input.curves
+    : input.curves.filter(c => c.name === this.sottosistemaSelezionato);
+  
 
     for (const curve of curvesToRender) {
       data.push({
