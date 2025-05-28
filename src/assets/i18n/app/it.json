@@ -1,5 +1,8 @@
 {
   "appName": "IAxPA",
+  "header": {
+    "title": "Intelligenza Artificiale Per la Pubblica Amministrazione"
+  },
   "sidebar": {
     "home": "Home",
     "simulazioni": "Simulazioni",

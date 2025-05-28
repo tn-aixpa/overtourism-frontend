@@ -29,7 +29,10 @@
           <p class="small m-0">{{ scenario.description }}</p>
         </div>
       </div>
+
       <ng-container multiple *ngIf="!comparazioneAttiva">
+        <it-icon name="pencil" color="primary" class="me-2" (click)="openEdit(scenario); $event.stopPropagation()"></it-icon>
+
         <a [routerLink]="['/simulazioni', simulationId, 'scenari', scenario.id]"
            [attr.aria-label]="'scenari.open_scenario' | translate:{name: scenario.name}">
           <it-icon name="arrow-right" color="primary"></it-icon>

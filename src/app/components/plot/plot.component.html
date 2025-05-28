@@ -4,7 +4,6 @@
     <app-kpi-box [kpisData]="kpisData" [formatNumber]="formatNumber"></app-kpi-box>
   </div>
 
-  <!-- Colonna destra: Grafico + controlli -->
   <!-- Colonna destra: Controlli + grafico -->
   <div class="col-8 flex-shrink-0">
     <app-plot-controls
@@ -49,4 +48,11 @@
   </div>
 </div>
   </div>
+   <!-- Colonna sinistra: Box informativi -->
+   <div class="flex-shrink-0" style="min-width: 300px;">
+    <app-kpi-box [kpisData]="kpisData" [formatNumber]="formatNumber"></app-kpi-box>
+  </div>
+  <div class="flex-shrink-0" style="min-width: 300px;">
+    <it-icon name="pencil" color="primary" class="me-2" (click)="openEdit(); $event.stopPropagation()"></it-icon>
+
 </div>

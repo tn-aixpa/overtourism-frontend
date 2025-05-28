@@ -31,7 +31,17 @@ export class PlotComponent implements AfterViewInit {
   noteUtente: string = '';
 
   sottosistemi = SUBSYSTEM_OPTIONS;
-
+  editSidebarVisible = false;
+  selectedScenario: any = null;
+  
+  openEdit() {
+    this.editSidebarVisible = true;
+  }
+  
+  onScenarioSave(edited: any) {
+    // Aggiorna la lista/scenario con i nuovi dati
+    this.editSidebarVisible = false;
+  }
   constructor(private plotService: PlotService) { }
 
   ngAfterViewInit() {

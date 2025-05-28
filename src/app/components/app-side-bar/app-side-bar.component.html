@@ -1,5 +1,6 @@
-<div>
-  <it-sidebar header="Menu">
+<div  [ngClass]="{'sidebar-wrapper': true, 'sidebar-collapsed': collapsed}">
+  
+  <it-sidebar>
     <it-list linkList="true">
       <it-list-item size="medium" href="/home" iconLeft="true" [active]="router.url === '/home'" >
         <span class="list-item-title-icon-wrapper">

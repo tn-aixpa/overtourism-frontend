@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
@@ -10,6 +10,8 @@ import { Router, NavigationEnd } from '@angular/router';
 })
 export class AppSideBarComponent {
   @Input() collapsed = false;
+  @Output() toggleSidebar = new EventEmitter<void>();
+
   sidebarOpen = true;
   isSimulazioniOpen = false;
 

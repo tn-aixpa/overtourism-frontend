@@ -1,5 +1,5 @@
 <it-header
-slimTitle="{{ 'navigation.go-back' | translate }}"
+slimTitle="{{ 'header.title' | translate }}"
 slimTitleLink="#"
 [showSearch]="false"
 [sticky]="true"
@@ -10,11 +10,13 @@ slimTitleLink="#"
     <it-icon name="designers-italia"></it-icon>
     <div class="it-brand-text">
       <div class="it-brand-title">IAxPA</div>
-      <div class="it-brand-tagline d-none d-md-block">Intelligenza Artificiale Per la Pubblica Amministrazione</div>
+      <div class="it-brand-tagline d-none d-md-block"></div>
     </div>
   </a>
 </ng-container>
 <ng-container slimRightZone>
+  <button itButton="outline-primary" class="me-2" (click)="toggleSidebar.emit()">☰</button>
+
   <it-language-switcher mode="nav"></it-language-switcher>
   <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button>
 </ng-container>

@@ -22,7 +22,11 @@ export class ScenariComponent {
       this.selectedScenari = [];
     }
   }
-  
+  openEdit(scenario: any) {
+    //
+    alert('Vado allEdit di: ' + scenario.name);
+
+  }
   isScenarioSelected(scenario: any): boolean {
     return this.selectedScenari.some(s => s.id === scenario.id);
   }
