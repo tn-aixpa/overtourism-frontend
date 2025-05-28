@@ -1,6 +1,7 @@
 <app-header (toggleSidebar)="toggleSidebar()"></app-header>
     <div class="d-flex">
-      <app-side-bar [collapsed]="sidebarCollapsed"></app-side-bar>
+      <app-side-bar     [collapsed]="sidebarCollapsed" 
+      (toggle)="toggleSidebar()"></app-side-bar>
       <main class="p-4" style="flex: 1">
         <router-outlet></router-outlet>
       </main>

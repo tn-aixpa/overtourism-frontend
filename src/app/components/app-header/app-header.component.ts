@@ -7,7 +7,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrl: './app-header.component.scss'
 })
 export class AppHeaderComponent {
-  @Output() toggleSidebar = new EventEmitter<void>();
   darkMode = false;
 
   toggleTheme() {

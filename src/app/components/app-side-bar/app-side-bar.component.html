@@ -1,6 +1,14 @@
 <div  [ngClass]="{'sidebar-wrapper': true, 'sidebar-collapsed': collapsed}">
-  
-  <it-sidebar>
+    <it-list linkList="true">
+      <it-list-item size="medium" iconLeft="true"  >
+        <button aria-label="Toggle menu" (click)="toggleSidebar()" class="btn btn-outline btn-sm">
+          <i class="bi bi-list fs-4"></i> 
+        </button>
+      </it-list-item>
+      </it-list>
+
+  <it-sidebar [style.width]="collapsed ? '60px' : '250px'" >
+ 
     <it-list linkList="true">
       <it-list-item size="medium" href="/home" iconLeft="true" [active]="router.url === '/home'" >
         <span class="list-item-title-icon-wrapper">

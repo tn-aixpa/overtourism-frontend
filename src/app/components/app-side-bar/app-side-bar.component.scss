@@ -1,8 +1,8 @@
-:host {
-  display: block;
-  transition: all 0.3s ease-in-out;
-  overflow: hidden;
-}
+// :host {
+//   display: block;
+//   transition: all 0.3s ease-in-out;
+//   overflow: hidden;
+// }
 // it-sidebar {
 //     background-color: #f7f7f7; /* o uno dei colori AGID */
 //     min-height: 100vh;
@@ -35,4 +35,16 @@
 .sidebar-collapsed .sidebar-content {
   opacity: 0;
   pointer-events: none;
+}
+:host {
+  display: block;
+  transition: width 0.3s ease;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end; // oppure flex-start se vuoi a sinistra
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
 }

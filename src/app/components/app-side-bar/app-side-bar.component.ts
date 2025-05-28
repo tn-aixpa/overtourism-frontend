@@ -9,15 +9,27 @@ import { Router, NavigationEnd } from '@angular/router';
   
 })
 export class AppSideBarComponent {
-  @Input() collapsed = false;
-  @Output() toggleSidebar = new EventEmitter<void>();
+  // @Input() collapsed = false;
+  // @Output() toggleSidebar = new EventEmitter<void>();
 
-  sidebarOpen = true;
-  isSimulazioniOpen = false;
+  // sidebarOpen = true;
+  // isSimulazioniOpen = false;
 
-  constructor(public router: Router) {
+  // constructor(public router: Router) {
     
+  // }
+  // isSimulazioniActive(): boolean {
+  //   return this.router.url.startsWith('/simulazioni');
+  // }
+  @Input() collapsed = false;
+  @Output() toggle = new EventEmitter<void>(); 
+
+  constructor(public router: Router) {}
+
+  toggleSidebar() {
+    this.toggle.emit();
   }
+
   isSimulazioniActive(): boolean {
     return this.router.url.startsWith('/simulazioni');
   }
