@@ -1,58 +1,63 @@
 <div class="d-flex flex-row gap-4">
-  <!-- Colonna sinistra: Box informativi -->
+  <!-- KPI a sinistra -->
   <div class="flex-shrink-0" style="min-width: 300px;">
     <app-kpi-box [kpisData]="kpisData" [formatNumber]="formatNumber"></app-kpi-box>
   </div>
 
-  <!-- Colonna destra: Controlli + grafico -->
-  <div class="col-8 flex-shrink-0">
-    <app-plot-controls
-      [showAllSubsystems]="showAllSubsystems"
-      [mostraPunti]="mostraPunti"
-      [monoDimensionale]="monoDimensionale"
-      [heatmapAttiva]="heatmapAttiva"
-      [sottosistemi]="sottosistemi"
-      [sottosistemaSelezionato]="sottosistemaSelezionato"
-      (showAllSubsystemsChange)="showAllSubsystems = $event"
-      (mostraPuntiChange)="mostraPunti = $event"
-      (monoDimensionaleChange)="monoDimensionale = $event"
-      (heatmapAttivaChange)="heatmapAttiva = $event"
-      (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event"
-      (funzioneChange)="onFunzioneChange()"
-      (heatmapToggle)="onHeatmapToggle()"
-    ></app-plot-controls>
+  <!-- Grafico al centro + widget opzionale -->
+  <div class="flex-grow-1 d-flex flex-row gap-4">
+    <!-- Parte centrale: controlli + grafico -->
+    <div class="flex-grow-1">
+      <app-plot-controls
+        [showAllSubsystems]="showAllSubsystems"
+        [mostraPunti]="mostraPunti"
+        [monoDimensionale]="monoDimensionale"
+        [heatmapAttiva]="heatmapAttiva"
+        [sottosistemi]="sottosistemi"
+        [sottosistemaSelezionato]="sottosistemaSelezionato"
+        (showAllSubsystemsChange)="showAllSubsystems = $event"
+        (mostraPuntiChange)="mostraPunti = $event"
+        (monoDimensionaleChange)="monoDimensionale = $event"
+        (heatmapAttivaChange)="heatmapAttiva = $event"
+        (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event"
+        (funzioneChange)="onFunzioneChange()"
+        (heatmapToggle)="onHeatmapToggle()"
+      ></app-plot-controls>
 
-    <!-- Chart -->
-    <div #chartLib style="min-height: 400px; position: relative;">
-      <div *ngIf="loading" class="loading-spinner">Loading...</div>
+      <div #chartLib style="min-height: 400px; position: relative;">
+        <div *ngIf="loading" class="loading-spinner">Loading...</div>
+        <!-- Qui va il grafico vero e proprio -->
+      </div>
+
+      <!-- Info e note SEMPRE visibili -->
+      <div class="row mt-4">
+        <div class="col">
+          <div class="p-3 border rounded bg-light h-100">
+            <h6 class="mb-2">{{ 'plot.infoTitle' | translate }}</h6>
+            <p class="small text-muted mb-0">
+              {{ 'plot.infoText' | translate }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-4">
+        <div class="col">
+          <div class="p-3 border rounded bg-light h-100">
+            <h6 class="mb-2">{{ 'plot.notesTitle' | translate }}</h6>
+            <it-textarea
+              label="{{ 'plot.notesLabel' | translate }}"
+              [(ngModel)]="noteUtente"
+            ></it-textarea>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- Box informativo di sola lettura -->
-<div class="row mt-4">
-  <div class="col-6">
-    <div class="p-3 border rounded bg-light h-100">
-      <h6 class="mb-2">Informazioni</h6>
-      <p class="small text-muted mb-0">
-        <!-- Inserisci qui le informazioni che vuoi mostrare -->
-        Questo box mostra informazioni di sola lettura relative al grafico o ai dati selezionati.
-      </p>
+
+    <!-- Colonna destra: widget solo se editing -->
+    <div class="flex-shrink-0" *ngIf="editing" style="width: 300px;">
+      <app-plot-editor-widget
+    ></app-plot-editor-widget>
     </div>
   </div>
-
-  <!-- Box Note editabile -->
-  <div class="col-6">
-    <div class="p-3 border rounded bg-light h-100">
-      <h6 class="mb-2">Note</h6>
-        <it-textarea label="Aggiungi le tue note qui..." [(ngModel)]="noteUtente"></it-textarea>
-
-    </div>
-  </div>
-</div>
-  </div>
-   <!-- Colonna sinistra: Box informativi -->
-   <div class="flex-shrink-0" style="min-width: 300px;">
-    <app-kpi-box [kpisData]="kpisData" [formatNumber]="formatNumber"></app-kpi-box>
-  </div>
-  <div class="flex-shrink-0" style="min-width: 300px;">
-    <it-icon name="pencil" color="primary" class="me-2" (click)="openEdit(); $event.stopPropagation()"></it-icon>
-
 </div>

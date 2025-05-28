@@ -1,22 +1,30 @@
 <div class="row my-2">
-    <div class="col">
-      <it-back-button buttonStyle="link"></it-back-button>
-    </div>
+  <div class="col">
+    <it-back-button buttonStyle="link"></it-back-button>
   </div>
-  <div class="row my-2">
-    <div class="col">
-      <h4>Dettagli Scenario</h4>
-    </div>
-  </div>
-  <div class="row my-2">
-    <div class="col">
-      <h5>simulationId: {{ simulationId }}</h5>
-    </div>
-    <div class="col">
-      <h5>Scenario ID: {{ scenarioId }}</h5>
-  </div>
-  
-  <div class="my-4">
-    <app-plot></app-plot>  
+</div>
 
+<div class="row my-2">
+  <div class="col">
+    <h4>{{ 'plot.detailsTitle' | translate }}</h4>
   </div>
+</div>
+
+<div class="row my-2">
+  <div class="col">
+    <h5>{{ 'plot.simulationId' | translate }}: {{ simulationId }}</h5>
+  </div>
+  <div class="col">
+    <h5>{{ 'plot.scenarioId' | translate }}: {{ scenarioId }}</h5>
+  </div>
+  <it-icon name="pencil" color="primary" class="me-2"  (click)="toggleEditing()">
+    {{ isEditing ? ('plot.save' | translate) : ('plot.edit' | translate) }}
+  </it-icon>
+</div>
+
+
+<div class="my-4 d-flex justify-content-between align-items-center">
+
+  <app-plot [editing]="isEditing"></app-plot>
+
+</div>

@@ -8,11 +8,12 @@ import { PlotService } from '../../../services/plot.service';
   templateUrl: './scenario-detail.component.html',
   styleUrl: './scenario-detail.component.scss'
 })
-export class ScenarioDetailComponent implements AfterViewInit {
+export class ScenarioDetailComponent  {
   @ViewChild('plotContainer') plotContainer!: ElementRef<HTMLDivElement>;
 
   scenarioId!: string;
   simulationId!: string;
+  isEditing = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,13 +24,7 @@ export class ScenarioDetailComponent implements AfterViewInit {
     this.simulationId = this.route.snapshot.paramMap.get('simulationId')!;
     this.scenarioId = this.route.snapshot.paramMap.get('scenarioId')!;
   }
-
-  async ngAfterViewInit(): Promise<void> {
-    // try {
-    //   const plotData: PlotInput = await this.plotService.fetchPlotData();
-    //   renderFunctionPlot(this.plotContainer.nativeElement, plotData);
-    // } catch (error) {
-    //   console.error('Errore nel caricamento dei dati del plot:', error);
-    // }
+  toggleEditing(): void {
+    this.isEditing = !this.isEditing;
   }
 }

@@ -28,6 +28,24 @@
     "disable_compare": "Disabilita comparazione",
     "compare_selected": "Confronta scenari selezionati",
     "open": "Apri scenario {{name}}"
+  },
+  "plot": {
+    "detailsTitle": "Dettagli Scenario",
+    "simulationId": "ID Simulazione",
+    "scenarioId": "ID Scenario",
+    "edit": "Modifica",
+    "save": "Salva",
+    "viewMode": "Visualizzazione grafico",
+    "editMode": "Modifica grafico",
+    "infoTitle": "Informazioni",
+    "infoText": "Questa casella mostra informazioni in sola lettura relative al grafico o ai dati selezionati.",
+    "notesTitle": "Note",
+    "notesLabel": "Aggiungi le tue note qui...",
+    "widget": {
+      "title": "Modifica Parametri",
+      "sliderLabel": "Soglia di evidenza",
+      "toggleLabel": "Attiva opzione avanzata"
+    }
+
   }
-  
 }

@@ -1,5 +1,5 @@
 // plot.component.ts
-import { Component, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, ViewChild, Input } from '@angular/core';
 import Plotly from 'plotly.js-dist-min';
 import { PlotService } from '../../services/plot.service';
 import { Curve, KPIs, PlotInput } from '../../models/plot.model';
@@ -18,6 +18,7 @@ import {
 })
 export class PlotComponent implements AfterViewInit {
   @ViewChild('chartLib', { static: false }) chartLib!: ElementRef<HTMLElement>;
+  @Input() editing: boolean = false;
 
   inputData: PlotInput | null = null;
   sottosistemaSelezionato = 'default';
@@ -31,17 +32,17 @@ export class PlotComponent implements AfterViewInit {
   noteUtente: string = '';
 
   sottosistemi = SUBSYSTEM_OPTIONS;
-  editSidebarVisible = false;
+  // editSidebarVisible = false;
   selectedScenario: any = null;
   
-  openEdit() {
-    this.editSidebarVisible = true;
-  }
+  // openEdit() {
+  //   this.editSidebarVisible = true;
+  // }
   
-  onScenarioSave(edited: any) {
-    // Aggiorna la lista/scenario con i nuovi dati
-    this.editSidebarVisible = false;
-  }
+  // onScenarioSave(edited: any) {
+  //   // Aggiorna la lista/scenario con i nuovi dati
+  //   this.editSidebarVisible = false;
+  // }
   constructor(private plotService: PlotService) { }
 
   ngAfterViewInit() {

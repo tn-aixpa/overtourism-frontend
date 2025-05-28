@@ -2,7 +2,7 @@
     <it-list linkList="true">
       <it-list-item size="medium" iconLeft="true"  >
         <button aria-label="Toggle menu" (click)="toggleSidebar()" class="btn btn-outline btn-sm">
-          <i class="bi bi-list fs-4"></i> 
+          <i class="bi bi-list fs-4"   [ngClass]="{'rotate-icon': !collapsed}"></i> 
         </button>
       </it-list-item>
       </it-list>

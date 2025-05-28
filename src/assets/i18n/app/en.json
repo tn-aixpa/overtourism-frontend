@@ -28,4 +28,23 @@
       "disable_compare": "Disable comparison",
       "compare_selected": "Compare selected scenarios",
       "open": "Open scenario {{name}}"
-    }}
+    },
+  "plot": {
+    "detailsTitle": "Scenario Details",
+    "simulationId": "Simulation ID",
+    "scenarioId": "Scenario ID",
+    "edit": "Edit",
+    "save": "Save",
+    "viewMode": "Viewing graph",
+    "editMode": "Editing graph",
+    "infoTitle": "Information",
+    "infoText": "This box shows read-only information related to the graph or selected data.",
+    "notesTitle": "Notes",
+    "notesLabel": "Add your notes here...",
+    "widget": {
+      "title": "Edit Parameters",
+      "sliderLabel": "Evidence Threshold",
+      "toggleLabel": "Enable advanced option"
+    }
+  
+  }}

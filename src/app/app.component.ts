@@ -11,5 +11,13 @@ export class AppComponent {
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
+  isMobile = false;
+
+ngOnInit() {
+  this.isMobile = window.innerWidth < 768;
+  window.addEventListener('resize', () => {
+    this.isMobile = window.innerWidth < 768;
+  });
+}
 }
 
