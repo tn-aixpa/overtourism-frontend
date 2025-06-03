@@ -15,8 +15,17 @@ slimTitleLink="#"
   </a>
 </ng-container>
 <ng-container slimRightZone>
-
   <it-language-switcher mode="nav"></it-language-switcher>
-  <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button>
+  <!-- <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button> -->
+</ng-container>
+<ng-container navItems>
+  <it-navbar-item *ngFor="let link of links">
+    <a
+      class="nav-link"
+      [ngClass]="{ active: isActive(link)}"
+      [href]="link.route"
+      >{{ link.label }}</a
+    >
+  </it-navbar-item>
 </ng-container>
 </it-header>

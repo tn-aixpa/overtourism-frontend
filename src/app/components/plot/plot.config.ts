@@ -22,8 +22,6 @@ export const SUBSYSTEM_OPTIONS = [
   ];
   
   export const DEFAULT_LAYOUT: Partial<Plotly.Layout> = {
-    height: 500,
-    width: 800,
     showlegend: true,
     legend: {
       orientation: 'h',

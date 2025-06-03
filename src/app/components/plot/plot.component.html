@@ -55,7 +55,7 @@
     </div>
 
     <!-- Colonna destra: widget solo se editing -->
-    <div class="flex-shrink-0" *ngIf="editing" style="width: 300px;">
+    <div [class.visible]="editing"  class="plot-editor-sidebar flex-shrink-0">
       <app-plot-editor-widget
     ></app-plot-editor-widget>
     </div>

@@ -19,14 +19,15 @@ import { TermsComponent } from './pages/terms/terms.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { AppSideBarModule } from './components/app-side-bar/app-side-bar.module';
 import { AppHeaderModule } from './components/app-header/app-header.module';
+import { AppFooterModule } from './components/app-footer/app-footer.module';
 import { ScenarioDetailComponent } from './pages/simulazioni/scenario-detail/scenario-detail.component';
 import { PlotComponent } from './components/plot/plot.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
 import { KpiBoxComponent } from './components/plot/kpi-box/kpi-box.component';
 import { PlotControlsComponent } from './components/plot/plot-controls/plot-controls.component';
-import { ScenarioEditSidebarComponent } from './components/plot/scenario-edit-sidebar/scenario-edit-sidebar.component';
 import { AppPlotEditorWidgetComponent } from './components/plot/app-plot-editor-widget/app-plot-editor-widget.component';
+import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -38,13 +39,15 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
 }
 
 @NgModule({
-  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, ScenarioEditSidebarComponent, AppPlotEditorWidgetComponent],
+  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
     AppHeaderModule,
+    AppFooterModule,
     AppSideBarModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {

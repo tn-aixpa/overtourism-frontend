@@ -1,19 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Scenario } from '../models/scenario.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import dataExample from '../../assets/dataExample.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ScenarioService {
   constructor(private http: HttpClient) {}
+
   private dataUrl = 'assets/dataExample.json';
 
-  // TODO che manca l'api
-  // getScenarios(): Observable<Scenario[]> {
-  //   return this.http.get<Scenario[]>('/api/scenarios');
-  // }
+  private currentScenarioSubject = new BehaviorSubject<any>(null);
+  public currentScenario$ = this.currentScenarioSubject.asObservable();
+
+  get currentScenario(): any {
+    return this.currentScenarioSubject.value;
+  }
+
+  async fetchScenarioData(): Promise<any> {
+    const scenarioData = dataExample; 
+    this.currentScenarioSubject.next(scenarioData);
+    return scenarioData;
+  }
 
   // Mock temporaneo
   getScenarios(): Observable<Scenario[]> {
@@ -23,5 +33,4 @@ export class ScenarioService {
     ];
     return of(mockData);
   }
-
 }

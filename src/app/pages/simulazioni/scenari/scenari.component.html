@@ -1,11 +1,11 @@
 <div *ngIf="loading">{{ 'scenari.loading' | translate }}</div>
 
 <div *ngIf="!loading" class="bd-example">
-  <div class="row my-2">
+  <!-- <div class="row my-2">
     <div class="col">
       <it-back-button buttonStyle="link"></it-back-button>
     </div>
-  </div>
+  </div> -->
   <h3>{{ 'scenari.title' | translate }}</h3>
   <p>{{ 'scenari.description' | translate }}</p>
 
@@ -31,7 +31,6 @@
       </div>
 
       <ng-container multiple *ngIf="!comparazioneAttiva">
-        <it-icon name="pencil" color="primary" class="me-2" (click)="openEdit(scenario); $event.stopPropagation()"></it-icon>
 
         <a [routerLink]="['/simulazioni', simulationId, 'scenari', scenario.id]"
            [attr.aria-label]="'scenari.open_scenario' | translate:{name: scenario.name}">

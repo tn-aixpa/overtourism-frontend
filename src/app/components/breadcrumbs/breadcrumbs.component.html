@@ -1,0 +1,15 @@
+<div class="container-fluid mb-3">
+    <it-breadcrumb [separator]="'/'" [ariaLabel]="'Breadcrumb'">
+      <it-breadcrumb-item
+        *ngFor="let breadcrumb of breadcrumbs$ | async; let last = last"
+        [active]="last"
+      >
+        <a *ngIf="!last" [routerLink]="breadcrumb.url">
+          {{ breadcrumb.label }}
+        </a>
+        <ng-template [ngIf]="last">
+          {{ breadcrumb.label }}
+        </ng-template>
+      </it-breadcrumb-item>
+    </it-breadcrumb>
+  </div>

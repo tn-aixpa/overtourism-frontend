@@ -1,0 +1,19 @@
+.plot-editor-sidebar {
+    position: relative;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background: #fff;
+    // box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    z-index: 1;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s cubic-bezier(.4,0,.2,1), visibility 0.3s;
+    /* opzionale: */
+    // border-left: 1px solid #eee;
+  }
+  .plot-editor-sidebar.visible {
+    opacity: 1;
+    visibility: visible;  }

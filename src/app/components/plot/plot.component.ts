@@ -9,6 +9,7 @@ import {
   HEATMAP_COLOR_SCALE,
   DEFAULT_LAYOUT
 } from './plot.config';
+import { ScenarioService } from '../../services/scenario.service';
 
 @Component({
   selector: 'app-plot',
@@ -43,7 +44,7 @@ export class PlotComponent implements AfterViewInit {
   //   // Aggiorna la lista/scenario con i nuovi dati
   //   this.editSidebarVisible = false;
   // }
-  constructor(private plotService: PlotService) { }
+  constructor(private plotService: PlotService, private scenarioService: ScenarioService) { }
 
   ngAfterViewInit() {
     this.loadData();
@@ -53,7 +54,8 @@ export class PlotComponent implements AfterViewInit {
   }
   async loadData() {
     this.loading = true;
-    this.inputData = await this.plotService.fetchPlotData();
+    const rawData = await this.scenarioService.fetchScenarioData();
+    this.inputData = this.plotService.preparePlotInput(rawData);
     this.kpisData = this.inputData.kpis;
     this.loading = false;
 
@@ -345,9 +347,7 @@ export class PlotComponent implements AfterViewInit {
         y: -0.2,
         xanchor: 'left',
         yanchor: 'top',
-      },
-      height: 500,
-      width: 800,
+      }
     };
 
     Plotly.newPlot(container, data, layout, { responsive: true });

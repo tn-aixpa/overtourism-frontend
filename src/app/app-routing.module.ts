@@ -11,14 +11,40 @@ import { ScenarioDetailComponent } from './pages/simulazioni/scenario-detail/sce
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
-  { path: 'simulazioni', component: SimulazioniComponent },
-  { path: 'simulazioni/:simulationId/scenari', component: ScenariComponent },
-  { path: 'simulazioni/:simulationId/scenari/:scenarioId', component: ScenarioDetailComponent },
-  { path: 'simulazioni/preferiti', component: PreferitiComponent },
-  { path: 'faqs', component: FaqsComponent },
-  { path: 'terms', component: TermsComponent },
-  { path: 'settings', component: SettingsComponent }
+  { path: 'home', component: HomeComponent, data: { breadcrumb: 'Home' } },
+  { 
+    path: 'simulazioni', 
+    data: { breadcrumb: 'Simulazioni' },
+    children: [
+      { 
+        path: '', 
+        component: SimulazioniComponent 
+      },
+      {
+        path: ':simulationId/scenari',
+        data: { breadcrumb: 'Scenari' },
+        children: [
+          {
+            path: '',
+            component: ScenariComponent
+          },
+          {
+            path: ':scenarioId',
+            component: ScenarioDetailComponent,
+            data: { breadcrumb: 'Dettaglio scenario' }
+          }
+        ]
+      },
+      {
+        path: 'preferiti',
+        component: PreferitiComponent,
+        data: { breadcrumb: 'Preferiti' }
+      }
+    ]
+  },
+  { path: 'faqs', component: FaqsComponent, data: { breadcrumb: 'FAQ' } },
+  { path: 'terms', component: TermsComponent, data: { breadcrumb: 'Termini di utilizzo' } },
+  { path: 'settings', component: SettingsComponent, data: { breadcrumb: 'Impostazioni' } }
 ];
 
 @NgModule({

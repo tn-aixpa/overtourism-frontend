@@ -1,50 +1,50 @@
-// :host {
-//   display: block;
+// // :host {
+// //   display: block;
+// //   transition: all 0.3s ease-in-out;
+// //   overflow: hidden;
+// // }
+// // it-sidebar {
+// //     background-color: #f7f7f7; /* o uno dei colori AGID */
+// //     min-height: 100vh;
+// //     border-right: 1px solid #ddd;
+// //   }
+
+// .sidebar-wrapper {
+//   width: 250px;
+//   min-width: 250px;
+//   max-width: 250px;
 //   transition: all 0.3s ease-in-out;
 //   overflow: hidden;
+//   background-color: white;
+//   background-color: #f7f7f7; /* o uno dei colori AGID */
+//   min-height: 100vh;
+//   border-right: 1px solid #ddd;
 // }
-// it-sidebar {
-//     background-color: #f7f7f7; /* o uno dei colori AGID */
-//     min-height: 100vh;
-//     border-right: 1px solid #ddd;
-//   }
 
-.sidebar-wrapper {
-  width: 250px;
-  min-width: 250px;
-  max-width: 250px;
-  transition: all 0.3s ease-in-out;
-  overflow: hidden;
-  background-color: white;
-  background-color: #f7f7f7; /* o uno dei colori AGID */
-  min-height: 100vh;
-  border-right: 1px solid #ddd;
-}
+// .sidebar-collapsed {
+//   width: 60px;
+//   min-width: 60px;
+//   max-width: 60px;
+// }
 
-.sidebar-collapsed {
-  width: 60px;
-  min-width: 60px;
-  max-width: 60px;
-}
+// .sidebar-content {
+//   transition: opacity 0.2s ease-in-out;
+//   opacity: 1;
+// }
 
-.sidebar-content {
-  transition: opacity 0.2s ease-in-out;
-  opacity: 1;
-}
+// .sidebar-collapsed .sidebar-content {
+//   opacity: 0;
+//   pointer-events: none;
+// }
+// :host {
+//   display: block;
+//   transition: width 0.3s ease;
+// }
 
-.sidebar-collapsed .sidebar-content {
-  opacity: 0;
-  pointer-events: none;
-}
-:host {
-  display: block;
-  transition: width 0.3s ease;
-}
-
-.sidebar-header {
-  display: flex;
-  justify-content: flex-end; // oppure flex-start se vuoi a sinistra
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-}
+// .sidebar-header {
+//   display: flex;
+//   justify-content: flex-end; // oppure flex-start se vuoi a sinistra
+//   align-items: center;
+//   padding: 0.75rem 1rem;
+//   border-bottom: 1px solid #e0e0e0;
+// }
