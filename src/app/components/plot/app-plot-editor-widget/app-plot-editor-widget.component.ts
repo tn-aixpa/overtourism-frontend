@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { ScenarioService } from '../../../services/scenario.service';
+import { ScenarioService, Widget } from '../../../services/scenario.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
@@ -9,7 +9,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./app-plot-editor-widget.component.scss']
 })
 export class AppPlotEditorWidgetComponent {
-  @Input() editorData: any;
+  @Input() widgets: Record<string, Widget[]> = {};
+  objectKeys = Object.keys;
+
   scenario: any;
   rangeValue = 50;
   formGroup: FormGroup;

@@ -1,0 +1,22 @@
+
+<div *ngIf="loading">
+    <it-spinner size="lg"></it-spinner>
+  </div>
+  
+  <div *ngIf="!loading">
+    <h3>{{ 'scenari.comparison_title' | translate }}</h3>
+  
+    <div class="row">
+      <div class="col-md-6">
+        <h4>{{ scenario1?.name }}</h4>
+        <p>{{ scenario1?.description }}</p>
+        <!-- Inserisci il grafico o componente già usato -->
+grafico      </div>
+  
+      <div class="col-md-6">
+        <h4>{{ scenario2?.name }}</h4>
+        <p>{{ scenario2?.description }}</p>
+        <!-- Inserisci il grafico o componente già usato -->
+grafico      </div>
+    </div>
+  </div>

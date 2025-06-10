@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ScenarioService } from '../../../services/scenario.service';
 import { Scenario } from '../../../models/scenario.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-scenari',
@@ -12,10 +12,14 @@ import { ActivatedRoute } from '@angular/router';
 export class ScenariComponent {
   scenari: Scenario[] = [];
   loading = true;
-  simulationId: any;
+  problemId: any;
   comparazioneAttiva = false;
   selectedScenari: any[] = [];
-  constructor(private scenarioService: ScenarioService,private route: ActivatedRoute) {}
+
+  constructor(
+    private scenarioService: ScenarioService,
+    private router: Router,
+    private route: ActivatedRoute) { }
   toggleComparazione() {
     this.comparazioneAttiva = !this.comparazioneAttiva;
     if (!this.comparazioneAttiva) {
@@ -30,7 +34,7 @@ export class ScenariComponent {
   isScenarioSelected(scenario: any): boolean {
     return this.selectedScenari.some(s => s.id === scenario.id);
   }
-  
+
   checkboxStates: { [id: string]: boolean } = {};
 
   onScenarioCheck(scenario: any, checked: boolean) {
@@ -45,22 +49,30 @@ export class ScenariComponent {
       this.selectedScenari = this.selectedScenari.filter(s => s.id !== scenario.id);
     }
   }
-  
+
   confrontaScenari() {
-    // Implementa la logica di confronto (es: naviga a una pagina di confronto)
-    // Esempio:
-    // this.router.navigate(['/simulazioni', simulationId, 'confronta', selectedScenari[0].id, selectedScenari[1].id]);
-    alert('Confronto tra: ' + this.selectedScenari.map(s => s.name).join(' e '));
+    const [s1, s2] = this.selectedScenari;
+    this.router.navigate([
+      '/problems',
+      this.problemId,
+      'scenari',
+      'confronta',
+      s1.id,
+      s2.id
+    ]);
   }
   ngOnInit(): void {
-    this.simulationId = this.route.snapshot.paramMap.get('simulationId')!;
+    this.problemId = this.route.snapshot.paramMap.get('problemId')!;
 
-    this.loadScenarios();
+    this.loadScenarios(this.problemId);
   }
 
-  loadScenarios(): void {
+  loadScenarios(problemId: any): void {
+    // this.loading = true;
+    // this.scenari=this.mockScenarios;
+    // this.loading = false;
     this.loading = true;
-    this.scenarioService.getScenarios().subscribe({
+    this.scenarioService.getScenariosByProblemId(problemId).subscribe({
       next: (data) => {
         this.scenari = data;
         this.loading = false;
@@ -70,5 +82,18 @@ export class ScenariComponent {
         this.loading = false;
       }
     });
+  }
+  deleteScenario(scenario: Scenario): void {
+    if (confirm(`Vuoi davvero eliminare lo scenario "${scenario.name}"?`)) {
+      this.scenarioService.deleteScenario(scenario.id).subscribe({
+        next: () => {
+          this.scenari = this.scenari.filter(s => s.id !== scenario.id);
+        },
+        error: err => {
+          console.error('Errore durante l\'eliminazione dello scenario', err);
+          // eventualmente mostrare un messaggio all'utente
+        }
+      });
+    }
   }
 }

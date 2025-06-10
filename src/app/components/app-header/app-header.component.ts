@@ -16,16 +16,16 @@ constructor(public router: Router) {
     document.body.classList.toggle('it-dark-mode', this.darkMode);
   }
   links = [
-    { label: 'Home', route: '/home' },
-    { label: 'Simulazioni', route: '/simulazioni' },
-    { label: 'FAQ', route: '/faqs' },
-    { label: 'Terms', route: '/terms' },
-    { label: 'Settings', route: '/settings' }
+    // { label: 'Home', route: '/home' },
+    { label: 'Problemi', route: '/problems' },
+    { label: 'FAQs', route: '/faqs' },
+    // { label: 'Terms', route: '/terms' },
+    // { label: 'Settings', route: '/settings' }
   ];
 
   isActive(link: any): boolean {
-    if (link.route === '/simulazioni') {
-      return this.router.url.startsWith('/simulazioni');
+    if (link.route === '/problems') {
+      return this.router.url.startsWith('/problems');
     }
     return this.router.url === link.route;
   }

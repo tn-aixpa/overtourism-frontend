@@ -5,33 +5,35 @@
   },
   "sidebar": {
     "home": "Home",
-    "simulazioni": "Simulazioni",
+    "problems": "Problems",
     "faqs": "FAQs",
     "terms": "Termini di servizio",
     "settings": "Impostazioni"
   },
-  
-    "kpi": {
-      "area": "Area Totale",
-      "overtourism_level": "Livello di Overturismo",
-      "constraint_level_parcheggi": "Livello vincolo Parcheggi",
-      "constraint_level_spiaggia": "Livello vincolo Spiaggia",
-      "constraint_level_alberghi": "Livello vincolo Alberghi",
-      "constraint_level_ristoranti": "Livello vincolo Ristoranti",
-      "critical_constraint": "Vincolo Critico"
-    },
-    "scenari": {
+  "kpi": {
+    "area": "Area Totale",
+    "overtourism_level": "Livello di Overturismo",
+    "constraint_level_parcheggi": "Livello vincolo Parcheggi",
+    "constraint_level_spiaggia": "Livello vincolo Spiaggia",
+    "constraint_level_alberghi": "Livello vincolo Alberghi",
+    "constraint_level_ristoranti": "Livello vincolo Ristoranti",
+    "critical_constraint": "Vincolo Critico"
+  },
+  "scenari": {
     "loading": "Caricamento scenari...",
     "title": "Scenari",
-    "description": "Descrizione breve degli scenari disponibili.",
-    "enable_compare": "Abilita comparazione",
-    "disable_compare": "Disabilita comparazione",
-    "compare_selected": "Confronta scenari selezionati",
-    "open": "Apri scenario {{name}}"
+    "open": "Apri scenario {{name}}",
+    "name": "Nome",
+    "description": "Descrizione",
+    "actions": "Azioni",
+    "open_scenario": "Apri scenario {{name}}",
+    "compare_selected": "Confronta selezionati",
+    "enable_compare": "Abilita confronto",
+    "disable_compare": "Disabilita confronto"
   },
   "plot": {
     "detailsTitle": "Dettagli Scenario",
-    "simulationId": "ID Simulazione",
+    "problemId": "ID Problema",
     "scenarioId": "ID Scenario",
     "edit": "Modifica",
     "save": "Salva",
@@ -46,6 +48,5 @@
       "sliderLabel": "Soglia di evidenza",
       "toggleLabel": "Attiva opzione avanzata"
     }
-
   }
 }

@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { NotificationService } from './services/notifications.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,10 +10,16 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   sidebarCollapsed = false;
+
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
   isMobile = false;
+  errorMessage$: Observable<string | null>;
+
+  constructor( public notificationService: NotificationService) {
+    this.errorMessage$ = this.notificationService.error$;
+  }
 
 ngOnInit() {
   this.isMobile = window.innerWidth < 768;

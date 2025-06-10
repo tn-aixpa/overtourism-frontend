@@ -9,7 +9,9 @@ import {
   HEATMAP_COLOR_SCALE,
   DEFAULT_LAYOUT
 } from './plot.config';
-import { ScenarioService } from '../../services/scenario.service';
+import { ScenarioService, Widget } from '../../services/scenario.service';
+import { firstValueFrom } from 'rxjs';
+import { NotificationService } from '../../services/notifications.service';
 
 @Component({
   selector: 'app-plot',
@@ -20,6 +22,9 @@ import { ScenarioService } from '../../services/scenario.service';
 export class PlotComponent implements AfterViewInit {
   @ViewChild('chartLib', { static: false }) chartLib!: ElementRef<HTMLElement>;
   @Input() editing: boolean = false;
+  @Input() scenarioId!: string;
+  @Input() problemId!: string;
+
 
   inputData: PlotInput | null = null;
   sottosistemaSelezionato = 'default';
@@ -31,8 +36,10 @@ export class PlotComponent implements AfterViewInit {
   monoDimensionale = false;
   kpisData: KPIs | undefined;
   noteUtente: string = '';
-
+  widgets: Record<string, Widget[]> = {};
   sottosistemi = SUBSYSTEM_OPTIONS;
+  objectKeys = Object.keys;
+
   // editSidebarVisible = false;
   selectedScenario: any = null;
   
@@ -44,31 +51,62 @@ export class PlotComponent implements AfterViewInit {
   //   // Aggiorna la lista/scenario con i nuovi dati
   //   this.editSidebarVisible = false;
   // }
-  constructor(private plotService: PlotService, private scenarioService: ScenarioService) { }
+  constructor(private plotService: PlotService, private scenarioService: ScenarioService,  private notificationService: NotificationService
+  ) { }
 
   ngAfterViewInit() {
     this.loadData();
+    this.loadWidgets();
   }
+  loadWidgets() {
+    this.scenarioService.getWidgets().subscribe({
+      next: (data) => this.widgets = data,
+      error: (err) => {
+        console.error('Errore caricamento widget', err);
+        this.notificationService.showError('Errore nel caricamento dei widget.');
+      }
+    });  }
   formatNumber(value: number): string {
     return value.toFixed(2);
   }
   async loadData() {
     this.loading = true;
-    const rawData = await this.scenarioService.fetchScenarioData();
-    this.inputData = this.plotService.preparePlotInput(rawData);
-    this.kpisData = this.inputData.kpis;
-    this.loading = false;
+    if (!this.scenarioId || !this.problemId) {
+      this.notificationService.showError('Scenario o problem mancanti.');
+      this.loading = false;
+      return;
+    }
+    try{
+    // const rawData = await this.scenarioService.fetchScenarioData();
+    //todo
+    const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId,this.problemId));
 
+    this.inputData = this.plotService.preparePlotInput(rawData.data);
+    this.kpisData = this.inputData.kpis;
+    this.setupSelectOptions();
+
+
+    this.renderPlot();
+  } catch (error) {
+    console.error('Errore nel caricamento dati scenario', error);
+    this.notificationService.showError(
+      'Errore nel caricamento dei dati dello scenario. Riprova più tardi.'
+    );
+  }
+
+  this.loading = false;
+  }
+  private setupSelectOptions() {
     if (this.inputData?.heatmapsByFunction) {
       this.selectOptions = [
         { value: 'default', text: 'Default' },
-        ...Object.keys(this.inputData.heatmapsByFunction).map(key => ({ value: key, text: key }))
+        ...Object.keys(this.inputData.heatmapsByFunction).map(key => ({
+          value: key,
+          text: key
+        }))
       ];
     }
-
-    this.renderPlot();
   }
-
   onFunzioneChange() {
     this.renderPlot();
   }

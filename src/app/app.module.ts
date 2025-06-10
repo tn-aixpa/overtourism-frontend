@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -7,20 +7,20 @@ import { AppComponent } from './app.component';
 import { DesignAngularKitModule } from 'design-angular-kit';
 
 // Translate
-import { HttpClientModule, HttpClient, HttpBackend } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpBackend, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HomeComponent } from './pages/home/home.component';
-import { SimulazioniComponent } from './pages/simulazioni/simulazioni/simulazioni.component';
-import { ScenariComponent } from './pages/simulazioni/scenari/scenari.component';
-import { PreferitiComponent } from './pages/simulazioni/preferiti/preferiti.component';
+import { ProblemsComponent } from './pages/problems/problems/problems.component';
+import { ScenariComponent } from './pages/problems/scenari/scenari.component';
+import { PreferitiComponent } from './pages/problems/preferiti/preferiti.component';
 import { FaqsComponent } from './pages/faqs/faqs.component';
 import { TermsComponent } from './pages/terms/terms.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { AppSideBarModule } from './components/app-side-bar/app-side-bar.module';
 import { AppHeaderModule } from './components/app-header/app-header.module';
 import { AppFooterModule } from './components/app-footer/app-footer.module';
-import { ScenarioDetailComponent } from './pages/simulazioni/scenario-detail/scenario-detail.component';
+import { ScenarioDetailComponent } from './pages/problems/scenario-detail/scenario-detail.component';
 import { PlotComponent } from './components/plot/plot.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MultiTranslateHttpLoader } from 'ngx-translate-multi-http-loader';
@@ -28,6 +28,9 @@ import { KpiBoxComponent } from './components/plot/kpi-box/kpi-box.component';
 import { PlotControlsComponent } from './components/plot/plot-controls/plot-controls.component';
 import { AppPlotEditorWidgetComponent } from './components/plot/app-plot-editor-widget/app-plot-editor-widget.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
+import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
+import { ConfigService } from './services/config.service';
+import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -37,9 +40,11 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     { prefix: './assets/i18n/app/', suffix: '.json' }, // traduzioni tue personalizzate
   ]);
 }
-
+export function initConfig(configService: ConfigService) {
+  return () => configService.loadConfig();
+}
 @NgModule({
-  declarations: [AppComponent, HomeComponent, SimulazioniComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent],
+  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -67,6 +72,19 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
         deps: [HttpBackend],
       }),
     }),
+  ],
+  providers: [
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [ConfigService],
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
 })

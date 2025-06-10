@@ -5,33 +5,35 @@
   },
   "sidebar": {
     "home": "Home",
-    "simulazioni": "Simulations",
+    "problems": "Problems",
     "faqs": "FAQs",
     "terms": "Terms of Service",
     "settings": "Settings"
   },
-  
-    "kpi": {
-      "area": "Total Area",
-      "overtourism_level": "Overtourism Level",
-      "constraint_level_parcheggi": "Parcheggi Constraint Level",
-      "constraint_level_spiaggia": "Spiaggia Constraint Level",
-      "constraint_level_alberghi": "Alberghi Constraint Level",
-      "constraint_level_ristoranti": "Ristoranti Constraint Level",
-      "critical_constraint": "Critical Constraint"
-    },
-    "scenari": {
-      "loading": "Loading scenarios...",
-      "title": "Scenarios",
-      "description": "Brief description of the available scenarios.",
-      "enable_compare": "Enable comparison",
-      "disable_compare": "Disable comparison",
-      "compare_selected": "Compare selected scenarios",
-      "open": "Open scenario {{name}}"
-    },
+  "kpi": {
+    "area": "Total Area",
+    "overtourism_level": "Overtourism Level",
+    "constraint_level_parcheggi": "Parking Constraint Level",
+    "constraint_level_spiaggia": "Beach Constraint Level",
+    "constraint_level_alberghi": "Hotels Constraint Level",
+    "constraint_level_ristoranti": "Restaurants Constraint Level",
+    "critical_constraint": "Critical Constraint"
+  },
+  "scenari": {
+    "loading": "Loading scenarios...",
+    "title": "Scenarios",
+    "open": "Open scenario {{name}}",
+    "name": "Name",
+    "description": "Description",
+    "actions": "Actions",
+    "open_scenario": "Open scenario {{name}}",
+    "compare_selected": "Compare selected",
+    "enable_compare": "Enable comparison",
+    "disable_compare": "Disable comparison"
+  },
   "plot": {
     "detailsTitle": "Scenario Details",
-    "simulationId": "Simulation ID",
+    "problemId": "Problem ID",
     "scenarioId": "Scenario ID",
     "edit": "Edit",
     "save": "Save",
@@ -46,5 +48,5 @@
       "sliderLabel": "Evidence Threshold",
       "toggleLabel": "Enable advanced option"
     }
-  
-  }}
+  }
+}

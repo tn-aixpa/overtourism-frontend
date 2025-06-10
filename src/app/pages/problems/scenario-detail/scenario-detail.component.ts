@@ -12,7 +12,7 @@ export class ScenarioDetailComponent  {
   @ViewChild('plotContainer') plotContainer!: ElementRef<HTMLDivElement>;
 
   scenarioId!: string;
-  simulationId!: string;
+  problemId!: string;
   isEditing = false;
 
   constructor(
@@ -21,7 +21,7 @@ export class ScenarioDetailComponent  {
   ) {}
 
   ngOnInit(): void {
-    this.simulationId = this.route.snapshot.paramMap.get('simulationId')!;
+    this.problemId = this.route.snapshot.paramMap.get('problemId')!;
     this.scenarioId = this.route.snapshot.paramMap.get('scenarioId')!;
   }
   toggleEditing(): void {

@@ -1,4 +1,4 @@
-export interface Simulazione {
+export interface Problem {
     id: string;
     name: string;
     description?: string;

@@ -1,0 +1,72 @@
+<h3>{{ 'scenari.title' | translate }}</h3>
+<p>{{ 'scenari.description' | translate }}</p>
+
+<button itButton="primary" class="mb-4" (click)="toggleComparazione()">
+  {{ comparazioneAttiva ? ('scenari.disable_compare' | translate) : ('scenari.enable_compare' | translate) }}
+</button>
+<div class="table-responsive">
+
+<it-table>
+  <ng-container thead>
+    <tr>
+      <th *ngIf="comparazioneAttiva"></th>
+      <th>{{ 'scenari.name' | translate }}</th>
+      <th>{{ 'scenari.description' | translate }}</th>
+      <th class="text-end">{{ 'scenari.actions' | translate }}</th>
+    </tr>
+  </ng-container>
+  <ng-container tbody>
+    <tr *ngFor="let scenario of scenari">
+      <td *ngIf="comparazioneAttiva">
+        <it-checkbox
+          class="me-2"
+          [label]="''"
+          [(ngModel)]="checkboxStates[scenario.id]"
+          [disabled]="!checkboxStates[scenario.id] && selectedScenari.length >= 2"
+          (ngModelChange)="onScenarioCheck(scenario, $event)">
+        </it-checkbox>
+      </td>
+      <td>{{ scenario.name }}</td>
+      <td>{{ scenario.description }}</td>
+      <td class="text-end">
+        <div class="d-flex flex-wrap justify-content-end gap-2">
+      
+          <!-- Pulsante Visualizza -->
+          <a [routerLink]="['/problems', problemId, 'scenari', scenario.id]"
+             class="btn btn-sm btn-icon"
+             [attr.aria-label]="'scenari.open_scenario' | translate:{name: scenario.name}"
+             [class.disabled]="comparazioneAttiva"
+             [attr.tabindex]="comparazioneAttiva ? -1 : null"
+             (click)="comparazioneAttiva ? $event.preventDefault() : null">
+            <span class="material-icons">visibility</span>
+          </a>
+      
+          <!-- Pulsante Modifica -->
+          <button class="btn btn-sm btn-icon"
+                  (click)="openEdit(scenario)"
+                  [disabled]="comparazioneAttiva"
+                  aria-label="Modifica scenario">
+            <span class="material-icons">edit</span>
+          </button>
+      
+          <!-- Pulsante Elimina -->
+          <button class="btn btn-sm btn-icon"
+                  (click)="deleteScenario(scenario)"
+                  [disabled]="comparazioneAttiva"
+                  aria-label="Elimina scenario">
+            <span class="material-icons">delete</span>
+          </button>
+        </div>
+      </td>
+      
+      
+    </tr>
+  </ng-container >
+</it-table>
+</div>
+
+<div *ngIf="comparazioneAttiva && selectedScenari.length === 2" class="mt-3">
+  <button itButton="primary" (click)="confrontaScenari()">
+    {{ 'scenari.compare_selected' | translate }}
+  </button>
+</div>
