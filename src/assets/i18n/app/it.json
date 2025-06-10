@@ -19,6 +19,11 @@
     "constraint_level_ristoranti": "Livello vincolo Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
+  "problems":{
+    "title":"Domande progettuali",
+    "loading":"Caricamento domande progettuali...",
+    "create":"Aggiungi o modifica domanda"
+  },
   "scenari": {
     "loading": "Caricamento scenari...",
     "title": "Scenari",
@@ -48,5 +53,8 @@
       "sliderLabel": "Soglia di evidenza",
       "toggleLabel": "Attiva opzione avanzata"
     }
+  },
+  "common":{
+    "back": "Indietro"
   }
 }

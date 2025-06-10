@@ -31,6 +31,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
 import { ConfigService } from './services/config.service';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
+import { BackButtonComponent } from './components/back-button/back-button.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -44,7 +45,7 @@ export function initConfig(configService: ConfigService) {
   return () => configService.loadConfig();
 }
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent],
+  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,39 +1,29 @@
-<!-- <div *ngIf="loading">Caricamento problemi...</div>
+
+<div *ngIf="loading">{{ 'loading' | translate }}</div>
 
 <div *ngIf="!loading" class="bd-example">
+  <h3>{{ 'problems.title' | translate }}  </h3>
 
-    <h3>problemi</h3>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-  <it-list>
-    <it-list-item *ngFor="let problem of problems" iconLeft="true" [routerLink]="['/problems', problem.id, 'scenari']" externalLink="false">
-      <div>
-        <h4 class="text m-0">{{ problem.name }}</h4>
-        <p class="small m-0">{{ problem.description }}</p>
-      </div>
-      <ng-container multiple>
-        <a [routerLink]="['/problems', problem.id, 'scenari']" [attr.aria-label]="'Apri problema ' + problem.name">
-          <it-icon name="arrow-right" color="primary"></it-icon>
-        </a>
-      </ng-container>
-    </it-list-item>
-  </it-list>
-</div> -->
-<div *ngIf="loading">Caricamento problemi...</div>
-
-<div *ngIf="!loading" class="bd-example">
-  <h3>Problemi</h3>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-
+  <button itButton="primary" class="mb-5 d-flex align-items-center gap-2">
+    <span class="material-icons">add_circle_outline</span>
+    <span>{{ 'problems.create' | translate }}</span>
+  </button>
+    <it-search
+      label="Cerca nel sito"
+      placeholder="Testo da cercare"
+      [searchData]="searchProblems$"
+      (searchSelectedEvent)="onSearchSelected($event)" 
+      />
   <div class="row">
     <div class="col-12 col-lg-4 mb-4" *ngFor="let problem of problems">
-      <div class="card-wrapper">
+      <div class="card-wrapper" [routerLink]="['/problems', problem.id, 'scenari']">
         <it-card background="true">
           <div class="categoryicon-top">
             <it-icon name="file"></it-icon>
-            <span class="text">Problema<br />{{ problem.name }}</span>
+            <span class="w-100 text-end">{{problem.updated|date:'dd/MM/yyyy'}}<br /></span>
           </div>
 
-          <a [routerLink]="['/problems', problem.id, 'scenari']">
+          <a >
             <h3 class="card-title h5">{{ problem.name }}</h3>
           </a>
 

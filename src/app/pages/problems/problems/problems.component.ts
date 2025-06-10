@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Problem } from '../../../models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
-import { of, delay } from 'rxjs';
+import { of, delay, Observable } from 'rxjs';
 import { NotificationService } from '../../../services/notifications.service';
+import { SearchItem } from 'design-angular-kit';
 
 @Component({
   selector: 'app-problems',
@@ -22,6 +23,18 @@ export class ProblemsComponent {
 
   ngOnInit(): void {
     this.loadProblems();
+  }
+
+    searchProblems$: (search?: string | null | undefined) => Observable<Array<SearchItem>> = (search) => {
+      if (!search) {
+      return of([]);
+    }
+
+    return of([]);
+  };
+
+  onSearchSelected(item: SearchItem): void {
+    console.log(item);
   }
 
   loadProblems(): void {

@@ -39,7 +39,7 @@ export class ScenarioService {
   //   return this.http.get<Scenario>(`${this.baseUrl}/v1/models/${id}/data`);
   // }
   getScenarioData(scenarioId: string, problemId: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/models/${scenarioId}/data`,{
+    return this.http.get<any>(`${this.baseUrl}/scenarios/${scenarioId}/data`,{
       params: { problem_id: problemId }
     });
   }

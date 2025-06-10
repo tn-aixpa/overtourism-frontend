@@ -19,6 +19,11 @@
     "constraint_level_ristoranti": "Restaurants Constraint Level",
     "critical_constraint": "Critical Constraint"
   },
+  "problems": {
+    "title": "Design Questions",
+    "loading": "Loading design questions...",
+    "create": "Add or edit question"
+  },
   "scenari": {
     "loading": "Loading scenarios...",
     "title": "Scenarios",
@@ -48,5 +53,8 @@
       "sliderLabel": "Evidence Threshold",
       "toggleLabel": "Enable advanced option"
     }
+  },
+  "common": {
+    "back": "Back"
   }
 }
