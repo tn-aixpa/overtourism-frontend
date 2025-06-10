@@ -6,26 +6,26 @@
 
 <div class="row my-2">
   <div class="col">
-    <h4>{{ 'plot.detailsTitle' | translate }}</h4>
+    <h4>{{ 'plot.detailsTitle' | translate }}{{ scenarioId }}</h4>
   </div>
 </div>
 
-<div class="row my-2">
+<!-- <div class="row my-2">
   <div class="col">
     <h5>{{ 'plot.problemId' | translate }}: {{ problemId }}</h5>
   </div>
   <div class="col">
     <h5>{{ 'plot.scenarioId' | translate }}: {{ scenarioId }}</h5>
   </div>
-  <it-icon [name]="isEditing ? 'check' : 'pencil'" color="primary" class="me-2" (click)="toggleEditing()">
+  -->
+  <!-- <it-icon [name]="isEditing ? 'check' : 'pencil'" color="primary" class="me-2" (click)="toggleEditing()">
     {{ isEditing ? ('plot.save' | translate) : ('plot.edit' | translate) }}
-  </it-icon>
-</div>
+  </it-icon> -->
 
 
 <div class="my-4 d-flex justify-content-between align-items-center">
 
-  <app-plot [editing]="isEditing"   [scenarioId]="scenarioId"  [problemId]="problemId"
+  <app-plot    [scenarioId]="scenarioId"  [problemId]="problemId"
 
   ></app-plot>
 

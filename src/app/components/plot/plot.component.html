@@ -8,57 +8,79 @@
   <div class="flex-grow-1 d-flex flex-row gap-4">
     <!-- Parte centrale: controlli + grafico -->
     <div class="flex-grow-1">
-      <app-plot-controls
-        [showAllSubsystems]="showAllSubsystems"
-        [mostraPunti]="mostraPunti"
-        [monoDimensionale]="monoDimensionale"
-        [heatmapAttiva]="heatmapAttiva"
-        [sottosistemi]="sottosistemi"
-        [sottosistemaSelezionato]="sottosistemaSelezionato"
-        (showAllSubsystemsChange)="showAllSubsystems = $event"
-        (mostraPuntiChange)="mostraPunti = $event"
-        (monoDimensionaleChange)="monoDimensionale = $event"
+      <app-plot-controls [showAllSubsystems]="showAllSubsystems" [mostraPunti]="mostraPunti"
+        [monoDimensionale]="monoDimensionale" [heatmapAttiva]="heatmapAttiva" [sottosistemi]="sottosistemi"
+        [sottosistemaSelezionato]="sottosistemaSelezionato" (showAllSubsystemsChange)="showAllSubsystems = $event"
+        (mostraPuntiChange)="mostraPunti = $event" (monoDimensionaleChange)="monoDimensionale = $event"
         (heatmapAttivaChange)="heatmapAttiva = $event"
-        (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event"
-        (funzioneChange)="onFunzioneChange()"
-        (heatmapToggle)="onHeatmapToggle()"
-      ></app-plot-controls>
+        (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
+        (heatmapToggle)="onHeatmapToggle()"></app-plot-controls>
 
       <div #chartLib style="min-height: 400px; position: relative;">
         <div *ngIf="loading" class="loading-spinner">Loading...</div>
         <!-- Qui va il grafico vero e proprio -->
       </div>
-
+      <div class="d-flex flex-row gap-4">
+      <button [itButton]="!isEditing ? 'primary' : 'secondary'"
+        class="m-4 d-flex justify-content-between align-items-center" (click)="toggleEditing()"> <span
+          class="material-icons me-2">
+          settings
+        </span> {{('plot.edit' | translate) }}
+      </button>
+      <button [itButton]="!isEditing ? 'primary' : 'secondary'"
+        class="m-4 d-flex justify-content-between align-items-center" (click)="toggleEditing()"> <span
+          class="material-icons me-2">
+          library_books
+        </span> {{('plot.compare' | translate) }}
+      </button>
+      </div>
+      <!-- <button (click)="toggleEditing()">
+      <it-icon [name]="isEditing ? 'check' : 'pencil'" color="primary" class="me-2" >
+        {{ isEditing ? ('plot.save' | translate) : ('plot.edit' | translate) }}
+      </it-icon>
+      {{('plot.edit' | translate) }}
+    </button> -->
       <!-- Info e note SEMPRE visibili -->
-      <div class="row mt-4">
-        <div class="col">
-          <div class="p-3 border rounded bg-light h-100">
-            <h6 class="mb-2">{{ 'plot.infoTitle' | translate }}</h6>
-            <p class="small text-muted mb-0">
-              {{ 'plot.infoText' | translate }}
-            </p>
-          </div>
-        </div>
-      </div>
+      <ng-container *ngIf="!isEditing">
+        <div class="row mt-4">
+          <div class="col">
+            <div class="p-3  h-100">
+              <div class="callout callout-highlight note">
 
-      <div class="row mt-4">
-        <div class="col">
-          <div class="p-3 border rounded bg-light h-100">
-            <h6 class="mb-2">{{ 'plot.notesTitle' | translate }}</h6>
-            <it-textarea
-              label="{{ 'plot.notesLabel' | translate }}"
-              [(ngModel)]="noteUtente"
-            ></it-textarea>
+                <h6 class=" text-primary mb-5 d-flex align-items-center gap-2"><span class="material-icons">
+                    error_outline
+                  </span>{{ 'plot.infoTitle' | translate }}</h6>
+                <p class="small text-muted mb-0">
+                  {{ 'plot.infoText' | translate }}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+
+        <div class="row mt-4">
+          <div class="col">
+            <div class="p-3  h-100">
+              <!-- <h6 class="mb-2">{{ 'plot.notesTitle' | translate }}</h6> -->
+              <it-textarea class="w-100" label="{{ 'plot.notesLabel' | translate }}"
+                [(ngModel)]="noteUtente"></it-textarea>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isEditing">
+        <div class="row mt-4">
+          <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
+          <app-plot-editor-widget [widgets]="widgets"></app-plot-editor-widget>
+        </div>
+        <!-- </div> -->
+      </ng-container>
     </div>
 
     <!-- Colonna destra: widget solo se editing -->
-    <div [class.visible]="editing"  class="plot-editor-sidebar flex-shrink-0">
-      <app-plot-editor-widget   [widgets]="widgets"
 
-    ></app-plot-editor-widget>
-    </div>
   </div>
 </div>
+
+
+<app-back-button></app-back-button>

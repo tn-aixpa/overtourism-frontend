@@ -42,6 +42,7 @@ export class PlotComponent implements AfterViewInit {
 
   // editSidebarVisible = false;
   selectedScenario: any = null;
+  isEditing: boolean=false;
   
   // openEdit() {
   //   this.editSidebarVisible = true;
@@ -68,6 +69,9 @@ export class PlotComponent implements AfterViewInit {
     });  }
   formatNumber(value: number): string {
     return value.toFixed(2);
+  }
+  toggleEditing(): void {
+    this.isEditing = !this.isEditing;
   }
   async loadData() {
     this.loading = true;

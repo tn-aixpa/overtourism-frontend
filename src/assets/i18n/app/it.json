@@ -11,6 +11,7 @@
     "settings": "Impostazioni"
   },
   "kpi": {
+    "title": "Indici",
     "area": "Area Totale",
     "overtourism_level": "Livello di Overturismo",
     "constraint_level_parcheggi": "Livello vincolo Parcheggi",
@@ -37,10 +38,11 @@
     "disable_compare": "Disabilita confronto"
   },
   "plot": {
-    "detailsTitle": "Dettagli Scenario",
+    "detailsTitle": "Scenario ",
     "problemId": "ID Problema",
     "scenarioId": "ID Scenario",
     "edit": "Modifica",
+    "compare": "Confronta",
     "save": "Salva",
     "viewMode": "Visualizzazione grafico",
     "editMode": "Modifica grafico",

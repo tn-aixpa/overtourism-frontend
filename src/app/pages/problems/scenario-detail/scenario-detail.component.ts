@@ -13,7 +13,7 @@ export class ScenarioDetailComponent  {
 
   scenarioId!: string;
   problemId!: string;
-  isEditing = false;
+  // isEditing = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -24,7 +24,5 @@ export class ScenarioDetailComponent  {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
     this.scenarioId = this.route.snapshot.paramMap.get('scenarioId')!;
   }
-  toggleEditing(): void {
-    this.isEditing = !this.isEditing;
-  }
+
 }
