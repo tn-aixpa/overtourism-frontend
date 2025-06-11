@@ -13,8 +13,10 @@ interface ScenarioResponse {
   }>;
 }
 export interface Widget {
+scale?: any;
   index_id: string;
   index_name: string;
+  index_category?: string;
   group: string;
   editable: boolean;
   description?: string;
@@ -23,6 +25,8 @@ export interface Widget {
   step: number;
   v?: number;
   loc?: number;
+  vMin?: number;
+  vMax?: number;
 }
 @Injectable({
   providedIn: 'root'

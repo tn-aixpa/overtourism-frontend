@@ -32,6 +32,7 @@ import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/co
 import { ConfigService } from './services/config.service';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { BackButtonComponent } from './components/back-button/back-button.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -54,6 +55,7 @@ export function initConfig(configService: ConfigService) {
     AppSideBarModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxSliderModule,
     HttpClientModule,
     TranslateModule.forRoot({
       loader: {

@@ -29,7 +29,15 @@ export class AppPlotEditorWidgetComponent {
         this.scenario = scenario;
       }
     });
-  
+  // Inizializza vMin e vMax per i widget che hanno scala
+  for (const group of this.objectKeys(this.widgets)) {
+    for (const widget of this.widgets[group]) {
+      if (widget.scale && widget.index_category !== '%') {
+        widget.vMin = widget.loc ;
+        widget.vMax = widget.loc+widget.scale;
+      }
+    }
+  }
     this.scenarioService.fetchScenarioData();
   
     // Imposta il primo tab attivo se ce n'è almeno uno
@@ -39,5 +47,15 @@ export class AppPlotEditorWidgetComponent {
     }
   }
   
+  increase(widget: Widget): void {
+    const step = widget.step || 1;
+    const max = widget.max ?? Infinity;
+    widget.v = Math.min(Number(widget.v ?? 0) + step, max);
+  }
   
+  decrease(widget: Widget): void {
+    const step = widget.step || 1;
+    const min = widget.min ?? -Infinity;
+    widget.v = Math.max(Number(widget.v ?? 0) - step, min);
+  }
 }

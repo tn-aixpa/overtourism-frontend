@@ -1,5 +1,5 @@
 <div class="p-3 border rounded">
-  <h6 class="mb-3">{{ 'plot.widget.title' | translate }}</h6>
+  <h6 class="mb-3">{{ "plot.widget.title" | translate }}</h6>
 
   <div class="bd-example-tabs">
     <div class="row">
@@ -33,31 +33,92 @@
             [class.active]="activeTab === group"
             [class.fade]="true"
           >
-            <div *ngFor="let widget of widgets[group]">
-              <div *ngIf="widget.editable">
+          <div class="row">
+            <div
+              *ngFor="let widget of widgets[group]"
+              class="col-12 col-md-6 mb-4"
+             
+            >
+            <div  *ngIf="widget.editable">
+              <div class="p-2  rounded h-100">
                 <label class="form-label d-block">
                   {{ widget.index_name }}
-                  <span
-                    *ngIf="widget.description"
-                    class="text-muted small"
-                  >
+                  <span *ngIf="widget.description" class="text-muted small">
                     ({{ widget.description }})
                   </span>
                 </label>
+          
+                <!-- Se index_category è '%' -->
+                <ng-container *ngIf="widget.index_category === '%'">
+                  <div class="input-group" >
 
-                <it-range
-                  [min]="widget.min"
-                  [max]="widget.max"
-                  [step]="widget.step"
-                  [(ngModel)]="widget.v"
-                  [label]="''"
-                ></it-range>
+                    <input
+                      type="number"
+                      class="form-control"
+                      [(ngModel)]="widget.v"
+                      [min]="widget.min"
+                      [max]="widget.max"
+                      [step]="widget.step || 1"
+                    />
+                    <button
+                    class="btn btn-outline-secondary"
+                    type="button"
+                    (click)="decrease(widget)"
+                  >
+                    −
+                  </button>
+                    <button
+                      class="btn btn-outline-secondary"
+                      type="button"
+                      (click)="increase(widget)"
+                    >
+                      +
+                    </button>
+                  </div>
+                </ng-container>
+          
+                <!-- Se ha una scala -->
+                <ng-container
+                  *ngIf="widget.index_category !== '%' && widget.scale"
+                >
+                <div class="custom-slider">
+
+                  <ngx-slider
+                    [(value)]="widget.vMin!"
+                    [(highValue)]="widget.vMax!"
+                    [options]="{
+                      floor: widget.min,
+                      ceil: widget.max,
+                      step: widget.step || 1
+                    }"
+                  ></ngx-slider>
+                  </div>
+                </ng-container>
+          
+                <!-- Default: it-range -->
+                <ng-container
+                  *ngIf="widget.index_category !== '%' && !widget.scale"
+                >
+                  <it-range
+                    [min]="widget.min"
+                    [max]="widget.max"
+                    [step]="widget.step"
+                    [(ngModel)]="widget.v"
+                    leftColor="var(--bs-primary)"
+                    rightColor="hsl(210, 100%, 70%)"
+                    [label]="''"
+                  ></it-range>
+                </ng-container>
+          
                 <div class="small text-end text-muted">{{ widget.v }}</div>
               </div>
             </div>
           </div>
+          
         </div>
       </div>
     </div>
   </div>
+  </div>
 </div>
+<!-- </div> -->
