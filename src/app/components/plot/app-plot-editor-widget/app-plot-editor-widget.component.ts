@@ -21,6 +21,8 @@ export class AppPlotEditorWidgetComponent {
     });
   }
   // constructor(private scenarioService: ScenarioService) {}
+  activeTab: string = '';
+
   ngOnInit(): void {
     this.scenarioService.currentScenario$.subscribe(scenario => {
       if (scenario) {
@@ -28,7 +30,14 @@ export class AppPlotEditorWidgetComponent {
       }
     });
   
-    this.scenarioService.fetchScenarioData(); // trigger iniziale
+    this.scenarioService.fetchScenarioData();
+  
+    // Imposta il primo tab attivo se ce n'è almeno uno
+    const groups = this.objectKeys(this.widgets);
+    if (groups.length) {
+      this.activeTab = groups[0];
+    }
   }
+  
   
 }

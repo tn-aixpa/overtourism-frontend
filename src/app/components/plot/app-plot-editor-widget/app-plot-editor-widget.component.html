@@ -1,27 +1,62 @@
 <div class="p-3 border rounded">
   <h6 class="mb-3">{{ 'plot.widget.title' | translate }}</h6>
 
-  <div *ngFor="let group of objectKeys(widgets)" >
-    <!-- <h6 class="mt-3">{{ group }}</h6> -->
-    <it-accordion [title]="group">
-
-    <div *ngFor="let widget of widgets[group]">
-      <div *ngIf="widget.editable">
-        <label class="form-label d-block">
-          {{ widget.index_name }}
-          <span *ngIf="widget.description" class="text-muted small">({{ widget.description }})</span>
-        </label>
-
-        <it-range
-          [min]="widget.min"
-          [max]="widget.max"
-          [step]="widget.step"
-          [(ngModel)]="widget.v"
-          [label]="''"
+  <div class="bd-example-tabs">
+    <div class="row">
+      <!-- Tab List -->
+      <div class="col-4 col-md-3">
+        <div
+          class="nav nav-tabs nav-tabs-vertical nav-tabs-vertical-background"
+          role="tablist"
+          aria-orientation="vertical"
         >
-        </it-range>
-        <div class="small text-end text-muted">{{ widget.v }}</div>
+          <a
+            *ngFor="let group of objectKeys(widgets)"
+            class="nav-link"
+            [class.active]="activeTab === group"
+            (click)="activeTab = group"
+            href="javascript:void(0)"
+            role="tab"
+          >
+            {{ group }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="col-8 col-md-9">
+        <div class="tab-content">
+          <div
+            *ngFor="let group of objectKeys(widgets)"
+            class="tab-pane p-3 fade"
+            [class.show]="activeTab === group"
+            [class.active]="activeTab === group"
+          >
+            <div *ngFor="let widget of widgets[group]">
+              <div *ngIf="widget.editable">
+                <label class="form-label d-block">
+                  {{ widget.index_name }}
+                  <span
+                    *ngIf="widget.description"
+                    class="text-muted small"
+                  >
+                    ({{ widget.description }})
+                  </span>
+                </label>
+
+                <it-range
+                  [min]="widget.min"
+                  [max]="widget.max"
+                  [step]="widget.step"
+                  [(ngModel)]="widget.v"
+                  [label]="''"
+                ></it-range>
+                <div class="small text-end text-muted">{{ widget.v }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    </it-accordion>
+  </div>
 </div>
