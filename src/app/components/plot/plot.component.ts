@@ -12,6 +12,7 @@ import {
 import { ScenarioService, Widget } from '../../services/scenario.service';
 import { firstValueFrom } from 'rxjs';
 import { NotificationService } from '../../services/notifications.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-plot',
@@ -42,17 +43,21 @@ export class PlotComponent implements AfterViewInit {
 
   // editSidebarVisible = false;
   selectedScenario: any = null;
-  isEditing: boolean=false;
-  
+  isEditing: boolean = false;
+  showControls: boolean = false; // per 'settings'
+
   // openEdit() {
   //   this.editSidebarVisible = true;
   // }
-  
+
   // onScenarioSave(edited: any) {
   //   // Aggiorna la lista/scenario con i nuovi dati
   //   this.editSidebarVisible = false;
   // }
-  constructor(private plotService: PlotService, private scenarioService: ScenarioService,  private notificationService: NotificationService
+  constructor(private plotService: PlotService,
+     private scenarioService: ScenarioService,
+      private notificationService: NotificationService,
+      private router: Router
   ) { }
 
   ngAfterViewInit() {
@@ -66,12 +71,28 @@ export class PlotComponent implements AfterViewInit {
         console.error('Errore caricamento widget', err);
         this.notificationService.showError('Errore nel caricamento dei widget.');
       }
-    });  }
+    });
+  }
   formatNumber(value: number): string {
     return value.toFixed(2);
   }
   toggleEditing(): void {
     this.isEditing = !this.isEditing;
+  }
+  toggleControls(): void {
+    this.showControls = !this.showControls;
+  }
+  goToCompare(): void {
+    // const [s1, s2] = this.selectedScenari;
+    // this.router.navigate([
+    //   '/problems',
+    //   this.problemId,
+    //   'scenari',
+    //   'confronta',
+    //   s1.id,
+    //   s2.id
+    // ]);
+    console.log('Vai alla pagina di confronto');
   }
   async loadData() {
     this.loading = true;
@@ -80,25 +101,25 @@ export class PlotComponent implements AfterViewInit {
       this.loading = false;
       return;
     }
-    try{
-    // const rawData = await this.scenarioService.fetchScenarioData();
-    //todo
-    const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId,this.problemId));
+    try {
+      // const rawData = await this.scenarioService.fetchScenarioData();
+      //todo
+      const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
 
-    this.inputData = this.plotService.preparePlotInput(rawData.data);
-    this.kpisData = this.inputData.kpis;
-    this.setupSelectOptions();
+      this.inputData = this.plotService.preparePlotInput(rawData.data);
+      this.kpisData = this.inputData.kpis;
+      this.setupSelectOptions();
 
 
-    this.renderPlot();
-  } catch (error) {
-    console.error('Errore nel caricamento dati scenario', error);
-    this.notificationService.showError(
-      'Errore nel caricamento dei dati dello scenario. Riprova più tardi.'
-    );
-  }
+      this.renderPlot();
+    } catch (error) {
+      console.error('Errore nel caricamento dati scenario', error);
+      this.notificationService.showError(
+        'Errore nel caricamento dei dati dello scenario. Riprova più tardi.'
+      );
+    }
 
-  this.loading = false;
+    this.loading = false;
   }
   private setupSelectOptions() {
     if (this.inputData?.heatmapsByFunction) {
@@ -149,7 +170,7 @@ export class PlotComponent implements AfterViewInit {
 
     const traceSampleT: Partial<Plotly.PlotData> = {
       x,
-      y: sortedIndices.map(i => sampleT[i]*1.2),
+      y: sortedIndices.map(i => sampleT[i] * 1.2),
       name: 'Turisti',
       marker: { color: PLOT_COLORS.sampleT },
       type: 'bar',
@@ -158,7 +179,7 @@ export class PlotComponent implements AfterViewInit {
 
     const traceSampleE: Partial<Plotly.PlotData> = {
       x,
-      y: sortedIndices.map(i => sampleE[i]*1.2),
+      y: sortedIndices.map(i => sampleE[i] * 1.2),
       name: 'Escursionisti',
       type: 'bar',
       marker: { color: PLOT_COLORS.sampleE },
@@ -176,27 +197,27 @@ export class PlotComponent implements AfterViewInit {
       yaxis: 'y1',
     };
     const threshold = this.sottosistemaSelezionato === 'default'
-    ? input.capacity_mean
-    : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
-  
+      ? input.capacity_mean
+      : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
+
 
     const updatedColor = sortedIndices.map(i =>
       usage[i] > (threshold ?? 0) ? PLOT_COLORS.overThreshold : PLOT_COLORS.underThreshold
     );
-  
-  const traceUsagePoints: Partial<Plotly.PlotData> = {
-    x,
-    y: sortedIndices.map(i => usage[i]),
-    type: 'scatter',
-    mode: 'markers',
-    name: 'Usage',
-    marker: {
-      color: updatedColor,
-      size: 6,
-      line: { width: 1, color: 'white' }
-    },
-    yaxis: 'y1'
-  };
+
+    const traceUsagePoints: Partial<Plotly.PlotData> = {
+      x,
+      y: sortedIndices.map(i => usage[i]),
+      type: 'scatter',
+      mode: 'markers',
+      name: 'Usage',
+      marker: {
+        color: updatedColor,
+        size: 6,
+        line: { width: 1, color: 'white' }
+      },
+      yaxis: 'y1'
+    };
 
     const heatmap = this.heatmapAttiva && capacityFlat.length
       ? [<Partial<Plotly.PlotData>>{
@@ -211,14 +232,14 @@ export class PlotComponent implements AfterViewInit {
         // showscale: true,
         hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
         colorbar: {
-          x: -0.15, 
+          x: -0.15,
           thickness: 15,
           len: 0.8
         }
       }]
       : [];
-      const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
-      const yAxisMax = usageMax * 1.2;
+    const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
+    const yAxisMax = usageMax * 1.2;
     const layout: Partial<Plotly.Layout> = {
       ...DEFAULT_LAYOUT,
       title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
@@ -229,7 +250,7 @@ export class PlotComponent implements AfterViewInit {
         title: { text: 'Overturismo (capacity)' },
         side: 'left',
         overlaying: undefined,
-        range: [0, yAxisMax]  
+        range: [0, yAxisMax]
 
       },
 
@@ -337,9 +358,9 @@ export class PlotComponent implements AfterViewInit {
     }
 
     const curvesToRender = this.sottosistemaSelezionato === 'default'
-    ? input.curves
-    : input.curves.filter(c => c.name === this.sottosistemaSelezionato);
-  
+      ? input.curves
+      : input.curves.filter(c => c.name === this.sottosistemaSelezionato);
+
 
     for (const curve of curvesToRender) {
       data.push({

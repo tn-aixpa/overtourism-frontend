@@ -1,33 +1,66 @@
-<!-- plot-controls.component.html -->
-<div class="p-3 mb-3 border rounded bg-light">
+<div class="col-auto border">
+  <it-callout appearance="highlight" color="note" label="Impostazione di visualizzazione">
+
+<div class="row  ">
+  <!-- Colonna 1: Heatmap -->
+  <div class="col-md-4">
+    <fieldset>
+      <legend class="fw-bold mb-2">Livello di rischio</legend>
+      <it-checkbox
+        [(ngModel)]="heatmapAttiva"
+        label="Mostra livello di rischio"
+        toggle="true"
+        (ngModelChange)="heatmapAttivaChange.emit($event); heatmapToggle.emit()">
+      </it-checkbox>
+      <div class="mt-3">
+        <div class="fw-bold mb-1">Legenda:</div>
+        <ul class="list-unstyled mb-0">
+          <li><span class="badge bg-success me-2">&nbsp;</span> 0% Nessun rischio</li>
+          <li><span class="badge bg-danger me-2">&nbsp;</span> 100% Certezza di sovraffollamento</li>
+        </ul>
+      </div>
+    </fieldset>
+  </div>
+  <div class="col-md-4">
+
+<fieldset>
+  <legend class="fw-bold mb-2">Tipo di Diagramma</legend>
+  <it-radio-button
+    name="tipoDiagramma"
+    value="true"
+    label="Diagramma Turisti / Escursionisti"
+    [checked]="monoDimensionale === true"
+    (click)="setMonoDimensionale(true)">
+  </it-radio-button>
+  <it-radio-button
+    name="tipoDiagramma"
+    value="false"
+    label="Diagramma di Carico Turistico"
+    [checked]="monoDimensionale === false"
+    (click)="setMonoDimensionale(false)">
+  </it-radio-button>
+  <it-checkbox
+  [(ngModel)]="mostraPunti"
+  label="Mostra punti"
+  toggle="true"
+  (ngModelChange)="mostraPuntiChange.emit($event); funzioneChange.emit()">
+</it-checkbox>
+</fieldset>
+</div>
+  <!-- Colonna 3: Resto delle opzioni -->
+  <div class="col-md-4">
     <fieldset>
       <legend class="fw-bold mb-2">Opzioni visualizzazione</legend>
-      <div class="d-flex flex-wrap gap-3 align-items-center">
+      <div class="d-flex flex-column gap-2">
         <it-checkbox
           [(ngModel)]="showAllSubsystems"
           label="Mostra tutti i sottosistemi"
           toggle="true"
           (ngModelChange)="showAllSubsystemsChange.emit($event); funzioneChange.emit()">
         </it-checkbox>
-        <it-checkbox
-          [(ngModel)]="mostraPunti"
-          label="Mostra punti"
-          toggle="true"
-          (ngModelChange)="mostraPuntiChange.emit($event); funzioneChange.emit()">
-        </it-checkbox>
-        <it-checkbox
-          [(ngModel)]="monoDimensionale"
-          label="Modalità monodimensionale"
-          toggle="true"
-          (ngModelChange)="monoDimensionaleChange.emit($event); funzioneChange.emit()">
-        </it-checkbox>
-        <it-checkbox
-          [(ngModel)]="heatmapAttiva"
-          label="Mostra heatmap"
-          toggle="true"
-          (ngModelChange)="heatmapAttivaChange.emit($event); heatmapToggle.emit()">
-        </it-checkbox>
+
       </div>
+
       <div *ngIf="!showAllSubsystems" class="mt-3">
         <fieldset>
           <legend class="me-2 fw-bold mb-0">Sottosistema:</legend>
@@ -43,3 +76,6 @@
       </div>
     </fieldset>
   </div>
+</div>
+</it-callout>
+</div>

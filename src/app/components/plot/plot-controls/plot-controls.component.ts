@@ -21,4 +21,9 @@ export class PlotControlsComponent {
   @Output() sottosistemaSelezionatoChange = new EventEmitter<string>();
   @Output() funzioneChange = new EventEmitter<void>();
   @Output() heatmapToggle = new EventEmitter<void>();
+  setMonoDimensionale(val: boolean) {
+    this.monoDimensionale = val;
+    this.monoDimensionaleChange.emit(val);
+    this.funzioneChange.emit();
+  }
 }

@@ -8,13 +8,15 @@
   <div class="flex-grow-1 d-flex flex-row gap-4">
     <!-- Parte centrale: controlli + grafico -->
     <div class="flex-grow-1">
-      <button [itButton]="!isEditing ? 'primary' : 'secondary'"
-      class="m-4 d-flex justify-content-between align-items-center" (click)="toggleEditing()"> <span
-        class="material-icons me-2">
-        library_books
-      </span> {{('plot.compare' | translate) }}
-    </button>
-      <app-plot-controls *ngIf="isEditing" [showAllSubsystems]="showAllSubsystems" [mostraPunti]="mostraPunti"
+      <div class="d-flex justify-content-end">
+        <button [itButton]="!showControls ? 'primary' : 'secondary'"
+          class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()"> 
+          <span class="material-icons me-2">
+        visibility
+          </span> {{('plot.edit' | translate) }}
+        </button>
+      </div>
+      <app-plot-controls *ngIf="showControls" [showAllSubsystems]="showAllSubsystems" [mostraPunti]="mostraPunti"
         [monoDimensionale]="monoDimensionale" [heatmapAttiva]="heatmapAttiva" [sottosistemi]="sottosistemi"
         [sottosistemaSelezionato]="sottosistemaSelezionato" (showAllSubsystemsChange)="showAllSubsystems = $event"
         (mostraPuntiChange)="mostraPunti = $event" (monoDimensionaleChange)="monoDimensionale = $event"
@@ -33,12 +35,12 @@
           settings
         </span> {{('plot.edit' | translate) }}
       </button>
-      <button [itButton]="!isEditing ? 'primary' : 'secondary'"
-        class="m-4 d-flex justify-content-between align-items-center" (click)="toggleEditing()"> <span
-          class="material-icons me-2">
-          library_books
-        </span> {{('plot.compare' | translate) }}
-      </button>
+      <button itButton="primary"
+      class="m-4 d-flex justify-content-between align-items-center"
+      (click)="goToCompare()">
+      <span class="material-icons me-2">library_books</span>
+      {{ 'plot.compare' | translate }}
+    </button>
       </div>
       <!-- <button (click)="toggleEditing()">
       <it-icon [name]="isEditing ? 'check' : 'pencil'" color="primary" class="me-2" >

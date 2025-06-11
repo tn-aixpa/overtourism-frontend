@@ -31,6 +31,7 @@
             class="tab-pane p-3 fade"
             [class.show]="activeTab === group"
             [class.active]="activeTab === group"
+            [class.fade]="true"
           >
             <div *ngFor="let widget of widgets[group]">
               <div *ngIf="widget.editable">
