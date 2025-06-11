@@ -84,14 +84,14 @@ export class PlotComponent implements AfterViewInit {
   }
   goToCompare(): void {
     // const [s1, s2] = this.selectedScenari;
-    // this.router.navigate([
-    //   '/problems',
-    //   this.problemId,
-    //   'scenari',
-    //   'confronta',
-    //   s1.id,
-    //   s2.id
-    // ]);
+    this.router.navigate([
+      '/problems',
+      this.problemId,
+      'scenari',
+      'confronta',
+      this.scenarioId,
+      'default'
+    ]);
     console.log('Vai alla pagina di confronto');
   }
   async loadData() {

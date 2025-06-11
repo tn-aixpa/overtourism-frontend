@@ -31,6 +31,7 @@ import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.compo
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
 import { ConfigService } from './services/config.service';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
+import { SessionInterceptor } from './interceptors/session.interceptor';
 import { BackButtonComponent } from './components/back-button/back-button.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
@@ -39,7 +40,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
   return new MultiTranslateHttpLoader(httpBackend, [
     { prefix: './assets/i18n/design-angular-kit/', suffix: '.json' }, // traduzioni design-angular-kit
-    { prefix: './assets/i18n/app/', suffix: '.json' }, // traduzioni tue personalizzate
+    { prefix: './assets/i18n/app/', suffix: '.json' }, // traduzioni  personalizzate
   ]);
 }
 export function initConfig(configService: ConfigService) {
@@ -81,6 +82,11 @@ export function initConfig(configService: ConfigService) {
       provide: APP_INITIALIZER,
       useFactory: initConfig,
       deps: [ConfigService],
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: SessionInterceptor,
       multi: true
     },
     {

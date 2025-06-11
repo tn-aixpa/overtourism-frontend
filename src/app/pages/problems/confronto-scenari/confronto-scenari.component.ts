@@ -35,16 +35,12 @@ export class ConfrontoScenariComponent implements OnInit {
       description: 'Aumento flusso di visitatori nel weekend'
     };
     this.loading = false;
-    // const id1 = this.route.snapshot.paramMap.get('id1')!;
-    // const id2 = this.route.snapshot.paramMap.get('id2')!;
-
-    // Promise.all([
-    //   firstValueFrom(this.scenarioService.getScenario(id1)),
-    //   firstValueFrom(this.scenarioService.getScenario(id2))
-    // ]).then(([s1, s2]) => {
-    //   this.scenario1 = s1;
-    //   this.scenario2 = s2;
-    //   this.loading = false;
-    // });
+    const id1 = this.route.snapshot.paramMap.get('id1');
+    const id2 = this.route.snapshot.paramMap.get('id2');
+  
+    if (id2 === 'default') {
+      // gestisci il caso di confronto con uno scenario solo
+      // il default e' altro
+    }
   }
 }
