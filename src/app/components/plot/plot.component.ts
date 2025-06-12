@@ -73,39 +73,7 @@ export class PlotComponent implements AfterViewInit {
       }
     });
   }
-  private areWidgetsEqual(
-    widgetsA: Record<string, Widget[]>,
-    widgetsB: Record<string, Widget[]>
-  ): boolean {
-    const keysA = Object.keys(widgetsA);
-    const keysB = Object.keys(widgetsB);
-    
-    if (keysA.length !== keysB.length) return false;
   
-    for (const key of keysA) {
-      if (!widgetsB[key]) return false;
-      const arrA = widgetsA[key];
-      const arrB = widgetsB[key];
-      
-      if (arrA.length !== arrB.length) return false;
-  
-      for (let i = 0; i < arrA.length; i++) {
-        // Compare only relevant properties
-        const widgetA = arrA[i];
-        const widgetB = arrB[i];
-        
-        // Compare specific properties that should trigger an update
-        if (
-          widgetA.v !== widgetB.v ||
-          widgetA.vMin !== widgetB.vMin ||
-          widgetA.vMax !== widgetB.vMax
-        ) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
   onWidgetsChanged(updatedWidgets: Record<string, Widget[]>) {
     console.log('Widgets changed:', updatedWidgets);
     
@@ -433,9 +401,9 @@ export class PlotComponent implements AfterViewInit {
         y: input.heatmap.y,
         type: 'heatmap',
         colorscale: [
-          [0, 'rgb(0,0,255)'],
+          [0, 'rgb(150, 0, 24)'],
           [0.5, 'rgb(255,255,255)'],
-          [1, 'rgb(150, 0, 24)']
+          [1, 'rgb(0,0,255)']
         ],
         zmin: 0,
         zmax: 1,

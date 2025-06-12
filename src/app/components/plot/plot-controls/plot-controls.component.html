@@ -29,15 +29,15 @@
     name="tipoDiagramma"
     value="true"
     label="Diagramma Turisti / Escursionisti"
-    [checked]="monoDimensionale === true"
-    (click)="setMonoDimensionale(true)">
+    [checked]="monoDimensionale === false"
+    (click)="setMonoDimensionale(false)">
   </it-radio-button>
   <it-radio-button
     name="tipoDiagramma"
     value="false"
     label="Diagramma di Carico Turistico"
-    [checked]="monoDimensionale === false"
-    (click)="setMonoDimensionale(false)">
+    [checked]="monoDimensionale === true"
+    (click)="setMonoDimensionale(true)">
   </it-radio-button>
   <it-checkbox
   [(ngModel)]="mostraPunti"
