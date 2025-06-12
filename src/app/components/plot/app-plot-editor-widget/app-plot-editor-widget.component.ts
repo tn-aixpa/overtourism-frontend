@@ -41,15 +41,15 @@ export class AppPlotEditorWidgetComponent {
         this.scenario = scenario;
       }
     });
-  // Inizializza vMin e vMax per i widget che hanno scala
-  for (const group of this.objectKeys(this.widgets)) {
-    for (const widget of this.widgets[group]) {
-      if (widget.scale && widget.index_category !== '%') {
-        widget.vMin = widget.loc ;
-        widget.vMax = widget.loc+widget.scale;
-      }
-    }
-  }
+  // // Inizializza vMin e vMax per i widget che hanno scala
+  // for (const group of this.objectKeys(this.widgets)) {
+  //   for (const widget of this.widgets[group]) {
+  //     if (widget.scale && widget.index_category !== '%') {
+  //       widget.vMin = widget.loc ;
+  //       widget.vMax = widget.loc+widget.scale;
+  //     }
+  //   }
+  // }
     this.scenarioService.fetchScenarioData();
   
     // Imposta il primo tab attivo se ce n'è almeno uno

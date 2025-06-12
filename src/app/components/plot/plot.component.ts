@@ -66,14 +66,28 @@ export class PlotComponent implements AfterViewInit {
   }
   loadWidgets() {
     this.scenarioService.getWidgets().subscribe({
-      next: (data) => this.widgets = data,
+      next: (data) => {
+        const initialized = this.initializeWidgetBounds(data);
+        this.widgets = initialized;
+      },
       error: (err) => {
         console.error('Errore caricamento widget', err);
         this.notificationService.showError('Errore nel caricamento dei widget.');
       }
     });
   }
-  
+  private initializeWidgetBounds(widgets: Record<string, Widget[]>): Record<string, Widget[]> {
+    const clone = JSON.parse(JSON.stringify(widgets));
+    for (const key of Object.keys(clone)) {
+      for (const widget of clone[key]) {
+        if (widget.scale && widget.index_category !== '%') {
+          widget.vMin ??= widget.loc;
+          widget.vMax ??= widget.loc + widget.scale;
+        }
+      }
+    }
+    return clone;
+  }
   onWidgetsChanged(updatedWidgets: Record<string, Widget[]>) {
     console.log('Widgets changed:', updatedWidgets);
     
