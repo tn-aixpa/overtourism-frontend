@@ -4,6 +4,7 @@ import { Scenario } from '../models/scenario.model';
 import { Observable, of, BehaviorSubject, map } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
 import { ConfigService } from './config.service';
+import { values } from 'video.js/dist/types/utils/obj';
 interface ScenarioResponse {
   scenarios: Array<{
     problem_id: string;
@@ -47,6 +48,17 @@ export class ScenarioService {
       params: { problem_id: problemId }
     });
   }
+  getUpdatedPlotInput(
+    scenarioId: string,
+    problemId: string,
+    values: Record<string, number | [number, number]>
+  ): Observable<any> {
+    return this.http.put<any>(
+      `${this.baseUrl}/scenarios/${scenarioId}`,
+      { values }, // body
+      { params: { problem_id: problemId } } // query
+    );
+  }
   deleteScenario(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/scenarios/${id}`);
   }
@@ -68,7 +80,6 @@ export class ScenarioService {
       `${this.baseUrl}/widgets`
     ).pipe(map(res => res.widgets));
   }
-  private dataUrl = 'assets/dataExample.json';
 
   private currentScenarioSubject = new BehaviorSubject<any>(null);
   public currentScenario$ = this.currentScenarioSubject.asObservable();

@@ -79,7 +79,8 @@
       <ng-container *ngIf="isEditing">
         <div class="row mt-4">
           <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
-          <app-plot-editor-widget [widgets]="widgets"></app-plot-editor-widget>
+          <app-plot-editor-widget [widgets]="widgets"
+          (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
         </div>
 
       </ng-container>

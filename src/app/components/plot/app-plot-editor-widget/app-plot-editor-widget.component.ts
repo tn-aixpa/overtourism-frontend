@@ -9,7 +9,19 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrls: ['./app-plot-editor-widget.component.scss']
 })
 export class AppPlotEditorWidgetComponent {
-  @Input() widgets: Record<string, Widget[]> = {};
+  @Input() set widgets(value: Record<string, Widget[]>) {
+    this._widgets = JSON.parse(JSON.stringify(value));
+  }
+  get widgets(): Record<string, Widget[]> {
+    return this._widgets;
+  }
+  private _widgets: Record<string, Widget[]> = {};
+  
+    @Output() widgetsChanged = new EventEmitter<Record<string, Widget[]>>();
+    onWidgetChange() {
+      const clonedWidgets = JSON.parse(JSON.stringify(this._widgets));
+      this.widgetsChanged.emit(clonedWidgets);
+    }
   objectKeys = Object.keys;
 
   scenario: any;
@@ -51,11 +63,13 @@ export class AppPlotEditorWidgetComponent {
     const step = widget.step || 1;
     const max = widget.max ?? Infinity;
     widget.v = Math.min(Number(widget.v ?? 0) + step, max);
+    this.onWidgetChange(); 
   }
   
   decrease(widget: Widget): void {
     const step = widget.step || 1;
     const min = widget.min ?? -Infinity;
     widget.v = Math.max(Number(widget.v ?? 0) - step, min);
+    this.onWidgetChange(); 
   }
 }

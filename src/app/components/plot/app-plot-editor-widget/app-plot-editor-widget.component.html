@@ -59,6 +59,7 @@
                       [min]="widget.min"
                       [max]="widget.max"
                       [step]="widget.step || 1"
+                      (ngModelChange)="onWidgetChange()"
                     />
                     <button
                     class="btn btn-outline-secondary"
@@ -91,6 +92,8 @@
                       ceil: widget.max,
                       step: widget.step || 1
                     }"
+                      (userChangeEnd)="onWidgetChange()"
+
                   ></ngx-slider>
                   </div>
                 </ng-container>
@@ -107,6 +110,8 @@
                     leftColor="var(--bs-primary)"
                     rightColor="hsl(210, 100%, 70%)"
                     [label]="''"
+                    (ngModelChange)="onWidgetChange()"
+
                   ></it-range>
                 </ng-container>
           

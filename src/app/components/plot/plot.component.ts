@@ -73,6 +73,93 @@ export class PlotComponent implements AfterViewInit {
       }
     });
   }
+  private areWidgetsEqual(
+    widgetsA: Record<string, Widget[]>,
+    widgetsB: Record<string, Widget[]>
+  ): boolean {
+    const keysA = Object.keys(widgetsA);
+    const keysB = Object.keys(widgetsB);
+    
+    if (keysA.length !== keysB.length) return false;
+  
+    for (const key of keysA) {
+      if (!widgetsB[key]) return false;
+      const arrA = widgetsA[key];
+      const arrB = widgetsB[key];
+      
+      if (arrA.length !== arrB.length) return false;
+  
+      for (let i = 0; i < arrA.length; i++) {
+        // Compare only relevant properties
+        const widgetA = arrA[i];
+        const widgetB = arrB[i];
+        
+        // Compare specific properties that should trigger an update
+        if (
+          widgetA.v !== widgetB.v ||
+          widgetA.vMin !== widgetB.vMin ||
+          widgetA.vMax !== widgetB.vMax
+        ) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+  onWidgetsChanged(updatedWidgets: Record<string, Widget[]>) {
+    console.log('Widgets changed:', updatedWidgets);
+    
+    const changedValues: Record<string, number | [number, number]> = {};
+  
+    for (const key of Object.keys(updatedWidgets)) {
+      const currentGroup = this.widgets[key] || [];
+      const updatedGroup = updatedWidgets[key];
+  
+      for (let i = 0; i < updatedGroup.length; i++) {
+        const updated = updatedGroup[i];
+        const original = currentGroup[i];
+  
+        if (!original) {
+          // Nuovo widget (unlikely ma per sicurezza)
+          changedValues[updated.index_id] = this.extractValue(updated);
+          continue;
+        }
+  
+        if (
+          updated.v !== original.v ||
+          updated.vMin !== original.vMin ||
+          updated.vMax !== original.vMax
+        ) {
+          changedValues[updated.index_id] = this.extractValue(updated);
+        }
+      }
+    }
+  
+    if (Object.keys(changedValues).length > 0) {
+      console.log('Sending changed widgets:', changedValues);
+      this.updateData(changedValues);
+    } else {
+      console.log('Widgets are equal, no update needed');
+    }
+  }
+  
+   extractValue(widget: Widget): number | [number, number] {
+    return widget.scale && widget.index_category !== '%'
+      ? [widget.vMin ?? 0, widget.vMax ?? 0]
+      : widget.v ?? 0;
+  }
+  updateData(values: Record<string, number | [number, number]>) {
+    this.scenarioService.getUpdatedPlotInput(this.scenarioId, this.problemId, values).subscribe({
+      next: (newInput) => {
+        this.inputData = this.plotService.preparePlotInput(newInput.data);
+        this.renderPlot();
+      },
+      error: (err) => {
+        console.error('Errore aggiornamento dati:', err);
+        this.notificationService.showError('Errore durante l\'aggiornamento del grafico.');
+      }
+    });
+  }
   formatNumber(value: number): string {
     return value.toFixed(2);
   }
