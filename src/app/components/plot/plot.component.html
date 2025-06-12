@@ -90,6 +90,23 @@
 
   </div>
 </div>
+<div class="d-flex justify-content-end mt-4" *ngIf="hasChanges">
+  <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center" (click)="openSaveModal()"> <span
+  class="material-icons me-2">save</span>
+    Salva come nuovo scenario
+  </button>
+</div>
 
+<it-modal #saveModal id="saveModal" closeButton="false">
+    <ng-container modalTitle>Salvataggio scenario modificato</ng-container>
+
+    <p>    Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
+    </p>
+
+    <ng-container footer>
+      <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button> 
+      <button itButton="primary" size="sm" type="button" (click)="confirmSave()">Azione 1</button>
+    </ng-container>
+  </it-modal>
 
 <app-back-button></app-back-button>

@@ -13,7 +13,7 @@ import { ScenarioService, Widget } from '../../services/scenario.service';
 import { firstValueFrom } from 'rxjs';
 import { NotificationService } from '../../services/notifications.service';
 import { Router } from '@angular/router';
-
+import { ItModalComponent } from 'design-angular-kit';
 @Component({
   selector: 'app-plot',
   templateUrl: './plot.component.html',
@@ -21,7 +21,10 @@ import { Router } from '@angular/router';
   styleUrls: ['./plot.component.scss']
 })
 export class PlotComponent implements AfterViewInit {
+
   @ViewChild('chartLib', { static: false }) chartLib!: ElementRef<HTMLElement>;
+  @ViewChild('saveModal') saveModal!: ItModalComponent;
+
   @Input() editing: boolean = false;
   @Input() scenarioId!: string;
   @Input() problemId!: string;
@@ -45,15 +48,10 @@ export class PlotComponent implements AfterViewInit {
   selectedScenario: any = null;
   isEditing: boolean = false;
   showControls: boolean = false; // per 'settings'
+  hasChanges: boolean=false;
+  changedWidgets!: Record<string, number | [number, number]>;
 
-  // openEdit() {
-  //   this.editSidebarVisible = true;
-  // }
 
-  // onScenarioSave(edited: any) {
-  //   // Aggiorna la lista/scenario con i nuovi dati
-  //   this.editSidebarVisible = false;
-  // }
   constructor(private plotService: PlotService,
      private scenarioService: ScenarioService,
       private notificationService: NotificationService,
@@ -64,6 +62,35 @@ export class PlotComponent implements AfterViewInit {
     this.loadData();
     this.loadWidgets();
   }
+  openSaveModal(): void {
+    this.saveModal.toggle();
+  }
+  
+  confirmSave(): void {
+    // this.saveModal.toggle();
+    this.saveAsNewScenario();
+  }
+  saveAsNewScenario(): void {
+    this.scenarioService.saveNewScenario(this.scenarioId, this.problemId,this.changedWidgets).subscribe({
+      next: (res) => {
+        // this.notificationService.showError('Scenario salvato con successo!');
+        this.hasChanges = false;
+        this.closeModal();
+        this.router.navigate(['/problems', this.problemId, 'scenari']);
+
+
+      },
+      error: (err) => {
+        this.notificationService.showError('Errore durante il salvataggio del nuovo scenario.');
+        console.error('Errore salvataggio:', err);
+        this.closeModal();
+
+      }
+    });
+  }
+  closeModal() {
+    this.saveModal.toggle();
+    }
   loadWidgets() {
     this.scenarioService.getWidgets().subscribe({
       next: (data) => {
@@ -119,8 +146,11 @@ export class PlotComponent implements AfterViewInit {
   
     if (Object.keys(changedValues).length > 0) {
       console.log('Sending changed widgets:', changedValues);
+      this.hasChanges = true;
+      this.changedWidgets = changedValues;
       this.updateData(changedValues);
     } else {
+      this.hasChanges = false;
       console.log('Widgets are equal, no update needed');
     }
   }

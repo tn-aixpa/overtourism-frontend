@@ -39,10 +39,16 @@ export class ScenarioService {
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.baseUrl = this.configService.apiBaseUrl;
   }
-
-  // getScenario(id: string): Observable<Scenario> {
-  //   return this.http.get<Scenario>(`${this.baseUrl}/v1/models/${id}/data`);
-  // }
+  saveNewScenario(scenarioId: string, 
+    problemId: string,
+    values: Record<string, number | [number, number]>)
+    : Observable<any> {
+    return this.http.post<any>(
+      `${this.baseUrl}/scenarios/${scenarioId}`,
+      { values }, // body
+      { params: { problem_id: problemId } } // query
+    );
+  }
   getScenarioData(scenarioId: string, problemId: string): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/scenarios/${scenarioId}`,{
       params: { problem_id: problemId }
