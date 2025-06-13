@@ -10,45 +10,48 @@
     <ng-container thead>
       <tr>
         <th *ngIf="comparazioneAttiva"></th>
+        <th>#</th>
+
         <th>{{ 'scenari.name' | translate }}</th>
         <th>{{ 'scenari.description' | translate }}</th>
         <th class="text-end">{{ 'scenari.actions' | translate }}</th>
       </tr>
     </ng-container>
     <ng-container tbody>
-      <tr *ngFor="let scenario of scenari">
+      <tr *ngFor="let scenario of scenari; let i = index"
+      [ngClass]="{'bg-light': i % 2 === 0, 'bg-white': i % 2 !== 0}" 
+      [routerLink]="['/problems', problemId, 'scenari', scenario.id]">
         <td *ngIf="comparazioneAttiva">
           <it-checkbox class="me-2" [label]="''" [(ngModel)]="checkboxStates[scenario.id]"
             [disabled]="!checkboxStates[scenario.id] && selectedScenari.length >= 2"
             (ngModelChange)="onScenarioCheck(scenario, $event)">
           </it-checkbox>
         </td>
+        <td>{{ i + 1 }}</td>
         <td>{{ scenario.name }}</td>
         <td>{{ scenario.description }}</td>
         <td class="text-end">
           <div class="d-flex flex-wrap justify-content-end gap-2">
-
-            <!-- Pulsante Visualizza -->
-            <a [routerLink]="['/problems', problemId, 'scenari', scenario.id]" class="btn btn-sm btn-icon"
-              [attr.aria-label]="'scenari.open_scenario' | translate:{name: scenario.name}"
-              [class.disabled]="comparazioneAttiva" [attr.tabindex]="comparazioneAttiva ? -1 : null"
-              (click)="comparazioneAttiva ? $event.preventDefault() : null">
-              <span class="material-icons">visibility</span>
-            </a>
-
             <!-- Pulsante Modifica -->
-            <button class="btn btn-sm btn-icon" (click)="openEdit(scenario)" [disabled]="comparazioneAttiva"
-              aria-label="Modifica scenario">
+            <button class="btn btn-sm btn-icon text-primary"
+                    (click)="openEdit(scenario)"
+                    [disabled]="comparazioneAttiva"
+                    aria-label="Modifica scenario"
+                    (click)="$event.stopPropagation()">
               <span class="material-icons">edit</span>
             </button>
-
+        
             <!-- Pulsante Elimina -->
-            <button class="btn btn-sm btn-icon" (click)="deleteScenario(scenario)" [disabled]="comparazioneAttiva"
-              aria-label="Elimina scenario">
+            <button class="btn btn-sm btn-icon text-primary"
+                    (click)="deleteScenario(scenario)"
+                    [disabled]="comparazioneAttiva"
+                    aria-label="Elimina scenario"
+                    (click)="$event.stopPropagation()">
               <span class="material-icons">delete</span>
             </button>
           </div>
         </td>
+        
 
 
       </tr>
