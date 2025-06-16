@@ -1,22 +1,29 @@
-
-<div *ngIf="loading">
-    <it-spinner size="lg"></it-spinner>
-  </div>
-  
-  <div *ngIf="!loading">
-    <h3>{{ 'scenari.comparison_title' | translate }}</h3>
-  
-    <div class="row">
-      <div class="col-md-6">
-        <h4>{{ scenario1?.name }}</h4>
-        <p>{{ scenario1?.description }}</p>
-        <!-- Inserisci il grafico o componente già usato -->
-grafico      </div>
-  
-      <div class="col-md-6">
-        <h4>{{ scenario2?.name }}</h4>
-        <p>{{ scenario2?.description }}</p>
-        <!-- Inserisci il grafico o componente già usato -->
-grafico      </div>
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <label for="scenario1Select" class="form-label">Scenario 1</label>
+      <it-select [(ngModel)]="selectedScenario1Id" (ngModelChange)="loadScenario(1)">
+        <option *ngFor="let s of scenari" [value]="s.id">{{ s.name }}</option>
+      </it-select>
+    </div>
+    <div class="col-md-6">
+      <label for="scenario2Select" class="form-label">Scenario 2</label>
+      <it-select [(ngModel)]="selectedScenario2Id" (ngModelChange)="loadScenario(2)">
+        <option *ngFor="let s of scenari" [value]="s.id">{{ s.name }}</option>
+      </it-select>
     </div>
   </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div #chartLeft style="min-height: 400px;"></div>
+      <app-kpi-box [kpisData]="kpisLeft" [formatNumber]="formatNumber"></app-kpi-box>
+    </div>
+    <div class="col-md-6">
+      <div #chartRight style="min-height: 400px;"></div>
+      <app-kpi-box [kpisData]="kpisRight" [formatNumber]="formatNumber"></app-kpi-box>
+    </div>
+  </div>
+
+  <app-back-button></app-back-button>
+</div>

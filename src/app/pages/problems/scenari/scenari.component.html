@@ -1,5 +1,5 @@
 <h3>{{ 'scenari.title' | translate }}</h3>
-<p>{{ 'scenari.description' | translate }}</p>
+<!-- <p>{{ 'scenari.description' | translate }}</p> -->
 
 <button itButton="primary" class="mb-4" (click)="toggleComparazione()">
   {{ comparazioneAttiva ? ('scenari.disable_compare' | translate) : ('scenari.enable_compare' | translate) }}
@@ -18,40 +18,33 @@
       </tr>
     </ng-container>
     <ng-container tbody>
-      <tr *ngFor="let scenario of scenari; let i = index"
-      [ngClass]="{'bg-light': i % 2 === 0, 'bg-white': i % 2 !== 0}" 
-      [routerLink]="['/problems', problemId, 'scenari', scenario.id]">
+      <tr *ngFor="let scenario of scenari; let i = index" [ngClass]="{'bg-light': i % 2 === 0, 'bg-white': i % 2 !== 0}"
+        (click)="goToScenario(scenario)" style="cursor: pointer;">
         <td *ngIf="comparazioneAttiva">
           <it-checkbox class="me-2" [label]="''" [(ngModel)]="checkboxStates[scenario.id]"
-            [disabled]="!checkboxStates[scenario.id] && selectedScenari.length >= 2"
+            [disabled]="!checkboxStates[scenario.id] && selectedScenari.length >= 2" (click)="$event.stopPropagation()"
             (ngModelChange)="onScenarioCheck(scenario, $event)">
           </it-checkbox>
         </td>
-        <td>{{ i + 1 }}</td>
-        <td>{{ scenario.name }}</td>
-        <td>{{ scenario.description }}</td>
-        <td class="text-end">
+        <td class="align-middle	">{{ i + 1 }}</td>
+        <td class="align-middle">{{ scenario.name }}</td>
+        <td class="align-middle">{{ scenario.description }}</td>
+        <td class="text-end align-middle">
           <div class="d-flex flex-wrap justify-content-end gap-2">
             <!-- Pulsante Modifica -->
-            <button class="btn btn-sm btn-icon text-primary"
-                    (click)="openEdit(scenario)"
-                    [disabled]="comparazioneAttiva"
-                    aria-label="Modifica scenario"
-                    (click)="$event.stopPropagation()">
+            <button class="btn btn-sm btn-icon text-primary" (click)="openEdit(scenario); $event.stopPropagation()"
+              [disabled]="comparazioneAttiva" aria-label="Modifica scenario">
               <span class="material-icons">edit</span>
             </button>
-        
-            <!-- Pulsante Elimina -->
+
             <button class="btn btn-sm btn-icon text-primary"
-                    (click)="deleteScenario(scenario)"
-                    [disabled]="comparazioneAttiva"
-                    aria-label="Elimina scenario"
-                    (click)="$event.stopPropagation()">
+              (click)="deleteScenario(scenario); $event.stopPropagation()" [disabled]="comparazioneAttiva"
+              aria-label="Elimina scenario">
               <span class="material-icons">delete</span>
             </button>
           </div>
         </td>
-        
+
 
 
       </tr>

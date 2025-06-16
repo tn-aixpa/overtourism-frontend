@@ -36,7 +36,10 @@ export class ScenariComponent {
   }
 
   checkboxStates: { [id: string]: boolean } = {};
-
+  goToScenario(scenario: Scenario): void {
+    if (this.comparazioneAttiva) return; // Se la comparazione è attiva, non navigare
+    this.router.navigate(['/problems', this.problemId, 'scenari', scenario.id]);
+  }
   onScenarioCheck(scenario: any, checked: boolean) {
     if (checked) {
       if (this.selectedScenari.length < 2 && !this.isScenarioSelected(scenario)) {
