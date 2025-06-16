@@ -1,14 +1,44 @@
 <div class="container-fluid">
   <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content">
+        <button [itButton]="!showControls ? 'primary' : 'secondary'"
+          class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()"> 
+          <span class="material-icons me-2">
+        visibility
+          </span> {{('plot.edit' | translate) }}
+        </button>
+      </div>
+      <app-plot-controls
+      *ngIf="showControls"
+      [showAllSubsystems]="showAllSubsystems"
+      [mostraPunti]="mostraPunti"
+      [monoDimensionale]="monoDimensionale"
+      [heatmapAttiva]="heatmapAttiva"
+      [sottosistemi]="sottosistemi"
+      [sottosistemaSelezionato]="sottosistemaSelezionato"
+      (showAllSubsystemsChange)="onShowAllSubsystemsChange($event)"
+      (mostraPuntiChange)="onMostraPuntiChange($event)"
+      (monoDimensionaleChange)="onMonoDimensionaleChange($event)"
+      (heatmapAttivaChange)="onHeatmapAttivaChange($event)"
+      (sottosistemaSelezionatoChange)="onSottosistemaSelezionatoChange($event)"
+      (funzioneChange)="onFunzioneChange()"
+      (heatmapToggle)="onHeatmapToggle()">
+    </app-plot-controls>
+    </div>
+  </div>
+  <div class="row mb-4">
     <div class="col-md-6">
       <label for="scenario1Select" class="form-label">Scenario 1</label>
-      <it-select [(ngModel)]="selectedScenario1Id" (ngModelChange)="loadScenario(1)">
+      <it-select [(ngModel)]="selectedScenario1Id" (ngModelChange)="loadScenario(1)"
+      class="btn btn-outline-primary w-100">
         <option *ngFor="let s of scenari" [value]="s.id">{{ s.name }}</option>
       </it-select>
     </div>
     <div class="col-md-6">
       <label for="scenario2Select" class="form-label">Scenario 2</label>
-      <it-select [(ngModel)]="selectedScenario2Id" (ngModelChange)="loadScenario(2)">
+      <it-select [(ngModel)]="selectedScenario2Id" (ngModelChange)="loadScenario(2)"
+      class="btn btn-outline-primary w-100">
         <option *ngFor="let s of scenari" [value]="s.id">{{ s.name }}</option>
       </it-select>
     </div>

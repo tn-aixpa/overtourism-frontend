@@ -1,11 +1,12 @@
-
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Plotly from 'plotly.js-dist-min';
-import { KPIs, PlotInput } from '../../../models/plot.model';
+import { KPIs, PlotInput, Curve } from '../../../models/plot.model';
 import { PlotService } from '../../../services/plot.service';
 import { ScenarioService } from '../../../services/scenario.service';
-
+import { SUBSYSTEM_OPTIONS,  PLOT_COLORS,
+  HEATMAP_COLOR_SCALE,
+  DEFAULT_LAYOUT } from '../../../components/plot/plot.config';
 
 @Component({
   selector: 'app-confronto-scenari',
@@ -18,12 +19,20 @@ export class ConfrontoScenariComponent {
   selectedScenario1Id!: string;
   selectedScenario2Id!: string;
   problemId!: string;
+  selectedControlOption!: string;
 
   kpisLeft?: KPIs;
   kpisRight?: KPIs;
+  heatmapAttiva = true;
+  mostraPunti = true;
+  monoDimensionale = false;
+  showAllSubsystems = true;
+  sottosistemi = SUBSYSTEM_OPTIONS;
+  sottosistemaSelezionato = 'default';
 
   @ViewChild('chartLeft', { static: true }) chartLeft!: ElementRef<HTMLElement>;
   @ViewChild('chartRight', { static: true }) chartRight!: ElementRef<HTMLElement>;
+  showControls: boolean = false; // per 'settings'
 
   constructor(
     private scenarioService: ScenarioService,
@@ -32,7 +41,6 @@ export class ConfrontoScenariComponent {
   ) {}
 
   ngOnInit() {
-    // this.problemId = this.scenarioService.getCurrentProblemId(); // O altro metodo
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
 
     this.scenarioService.getScenariosByProblemId(this.problemId).subscribe(scenari => {
@@ -46,6 +54,51 @@ export class ConfrontoScenariComponent {
     });
   }
 
+  onPlotControlChange(value: string) {
+    this.selectedControlOption = value;
+    this.renderBoth()
+  }
+
+  onShowAllSubsystemsChange(value: boolean) {
+    this.showAllSubsystems = value;
+    this.renderBoth();
+  }
+
+  onMostraPuntiChange(value: boolean) {
+    this.mostraPunti = value;
+    this.renderBoth();
+  }
+
+  onMonoDimensionaleChange(value: boolean) {
+    this.monoDimensionale = value;
+    this.renderBoth();
+  }
+
+  onHeatmapAttivaChange(value: boolean) {
+    this.heatmapAttiva = value;
+    this.renderBoth();
+  }
+
+  onSottosistemaSelezionatoChange(value: string) {
+    this.sottosistemaSelezionato = value;
+    this.renderBoth();
+  }
+
+  onFunzioneChange() {
+    this.renderBoth();
+  }
+
+  onHeatmapToggle() {
+    this.renderBoth();
+  }
+  toggleControls(): void {
+    this.showControls = !this.showControls;
+  }
+  renderBoth() {
+    this.loadScenario(1);
+    this.loadScenario(2);
+  }
+
   async loadScenario(slot: 1 | 2) {
     const id = slot === 1 ? this.selectedScenario1Id : this.selectedScenario2Id;
     if (!id) return;
@@ -53,34 +106,297 @@ export class ConfrontoScenariComponent {
     const res = await this.scenarioService.getScenarioData(id, this.problemId).toPromise();
     const input = this.plotService.preparePlotInput(res.data);
 
-    if (slot === 1) {
-      this.kpisLeft = input.kpis;
-      this.renderChart(this.chartLeft.nativeElement, input);
-    } else {
-      this.kpisRight = input.kpis;
-      this.renderChart(this.chartRight.nativeElement, input);
-    }
+    const container = slot === 1 ? this.chartLeft.nativeElement : this.chartRight.nativeElement;
+    if (slot === 1) this.kpisLeft = input.kpis;
+    else this.kpisRight = input.kpis;
+
+    this.renderChart(container, input);
   }
 
   renderChart(container: HTMLElement, input: PlotInput) {
-    const data: Partial<Plotly.PlotData>[] = input.curves.map(c => ({
-      x: c.x,
-      y: c.y,
-      type: 'scatter',
-      mode: 'lines',
-      name: c.name,
-      line: { color: c.color ?? 'black', dash: c.dash ?? 'solid', width: 3 }
-    }));
-
+    const cloned = JSON.parse(JSON.stringify(input)) as PlotInput;
+  
+    // === MONODIMENSIONALE ===
+    if (this.monoDimensionale) {
+      this.renderMonoDimensionale(container, cloned);
+      return;
+    }
+  
+    // === Heatmap custom ===
+    if (this.sottosistemaSelezionato !== 'default' && cloned.heatmapsByFunction) {
+      const specific = cloned.heatmapsByFunction[this.sottosistemaSelezionato];
+      if (specific) {
+        cloned.heatmap = {
+          x: cloned.heatmap?.x || [],
+          y: cloned.heatmap?.y || [],
+          z: specific,
+        };
+      }
+    }
+  
+    // === Punti colorati ===
+    if (this.mostraPunti && cloned.points?.length) {
+      cloned.points = cloned.points.map(pt => {
+        const updatedColor = pt.y.map((_y, i) => {
+          const xVal = pt.x[i];
+          let violates = false;
+  
+          const curvesToCheck = this.showAllSubsystems
+            ? cloned.curves
+            : cloned.curves.filter(c => c.name === this.sottosistemaSelezionato);
+  
+          for (const c of curvesToCheck) {
+            const yExpected = this.getYFromCurve(c, xVal);
+            if (yExpected !== null && pt.y[i] > yExpected) {
+              violates = true;
+              break;
+            }
+          }
+  
+          return violates ? '#BA0C2F' : '#32CD32';
+        });
+  
+        return { ...pt, color: updatedColor };
+      });
+    } else {
+      cloned.points = [];
+    }
+  
+    const data: Partial<Plotly.PlotData>[] = [];
+  
+    // === Heatmap ===
+    if (this.heatmapAttiva && cloned.heatmap) {
+      const y = cloned.heatmap.y;
+      const yRange = y.length > 0 ? [Math.min(...y), Math.max(...y)] : undefined;
+  
+      data.push({
+        z: cloned.heatmap.z,
+        x: cloned.heatmap.x,
+        y: y,
+        type: 'heatmap',
+        colorscale: [
+          [0, 'rgb(150, 0, 24)'],
+          [0.5, 'rgb(255,255,255)'],
+          [1, 'rgb(0,0,255)']
+        ],
+        zmin: 0,
+        zmax: 1,
+        showscale: true,
+        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
+      });
+  
+      // Forziamo il range y se definito
+      if (yRange) {
+        data.push({}); // dummy per forzare layout più compatto
+      }
+    }
+  
+    // === Curve ===
+    const curvesToRender = this.sottosistemaSelezionato === 'default'
+      ? cloned.curves
+      : cloned.curves.filter(c => c.name === this.sottosistemaSelezionato);
+  
+    for (const curve of curvesToRender) {
+      data.push({
+        x: curve.x,
+        y: curve.y,
+        mode: 'lines',
+        name: curve.name,
+        line: {
+          color: curve.color ?? 'black',
+          dash: curve.dash ?? 'solid',
+          width: 3,
+        },
+        type: 'scatter'
+      });
+    }
+  
+    // === Punti ===
+    if (cloned.points?.length) {
+      for (const pt of cloned.points) {
+        data.push({
+          x: pt.x,
+          y: pt.y,
+          type: 'scatter',
+          mode: 'markers',
+          name: pt.name,
+          marker: {
+            color: pt.color ?? 'black',
+            size: 8,
+            line: { width: 1, color: 'black' },
+          },
+          hoverinfo: 'x+y+name'
+        });
+      }
+    }
+  
     const layout: Partial<Plotly.Layout> = {
       margin: { t: 30, l: 50, r: 30, b: 50 },
-      xaxis: { title: { text: 'Turisti' } },
-      yaxis: { title: { text: 'Escursionisti'}},
+      yaxis: {
+        title: { text: 'Escursionisti' },
+        range: [0, input.yMax ?? undefined]
+      },
+      xaxis: {
+        title: { text: 'Turisti' },
+        range: [0, input.xMax ?? undefined]
+      },
       title: { text: '' },
-      showlegend: true
+      showlegend: true,
+      legend: {
+        orientation: 'h',
+        x: 0,
+        y: -0.2,
+        xanchor: 'left',
+        yanchor: 'top',
+      }
     };
-
+  
     Plotly.newPlot(container, data, layout, { responsive: true });
+  }
+  
+  renderMonoDimensionale(container: HTMLElement, input: PlotInput): void {
+    const sampleT = input.sample_t;
+    const sampleE = input.sample_e;
+  
+    if (!sampleT || !sampleE) return;
+  
+    const usage = this.sottosistemaSelezionato === 'default'
+      ? input.usage
+      : input.usage_by_constraint?.[this.sottosistemaSelezionato];
+  
+    const capacityMean = this.sottosistemaSelezionato === 'default'
+      ? input.capacity_mean
+      : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
+  
+    const capacity = this.sottosistemaSelezionato === 'default'
+      ? input.capacity
+      : input.capacity_by_constraint?.[this.sottosistemaSelezionato];
+  
+    if (!usage || !capacity) return;
+  
+    const sortedIndices = usage
+      .map((val, idx) => ({ val, idx }))
+      .sort((a, b) => a.val - b.val)
+      .map(obj => obj.idx);
+  
+    const x = sortedIndices.map((_, i) => i);
+  
+    const capacityFlat = Array.isArray(capacity)
+      ? capacity.map(row => Array.isArray(row) ? row[0] : 0)
+      : [];
+  
+    const traceSampleT: Partial<Plotly.PlotData> = {
+      x,
+      y: sortedIndices.map(i => sampleT[i] * 1.2),
+      name: 'Turisti',
+      marker: { color: PLOT_COLORS.sampleT },
+      type: 'bar',
+      yaxis: 'y2',
+    };
+  
+    const traceSampleE: Partial<Plotly.PlotData> = {
+      x,
+      y: sortedIndices.map(i => sampleE[i] * 1.2),
+      name: 'Escursionisti',
+      type: 'bar',
+      marker: { color: PLOT_COLORS.sampleE },
+      yaxis: 'y2',
+    };
+  
+    const traceCapacityMean: Partial<Plotly.PlotData> = {
+      x,
+      y: Array(x.length).fill(capacityMean),
+      type: 'scatter',
+      mode: 'lines',
+      name: 'Capacity Mean',
+      line: { color: PLOT_COLORS.capacityMean, dash: 'dash', width: 2 },
+      yaxis: 'y1',
+    };
+  
+    const threshold = this.sottosistemaSelezionato === 'default'
+    ? input.capacity_mean
+    : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
+
+
+  const updatedColor = sortedIndices.map(i =>
+    usage[i] > (threshold ?? 0) ? PLOT_COLORS.overThreshold : PLOT_COLORS.underThreshold
+  );
+  
+    const traceUsagePoints: Partial<Plotly.PlotData> = {
+      x,
+      y: sortedIndices.map(i => usage[i]),
+      type: 'scatter',
+      mode: 'markers',
+      name: 'Usage',
+      marker: {
+        color: updatedColor,
+        size: 6,
+        line: { width: 1, color: 'white' }
+      },
+      yaxis: 'y1'
+    };
+  
+    const heatmap: Partial<Plotly.PlotData>[] = (this.heatmapAttiva && capacityFlat.length)
+      ? [{
+        z: capacityFlat.map(val => Array(x.length).fill(val)),
+        x,
+        y: capacityFlat.map((_, i) => i),
+        type: 'heatmap',
+        zmin: 0,
+        zmax: 1,
+        colorscale: HEATMAP_COLOR_SCALE,
+        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
+        colorbar: {
+          x: -0.15,
+          thickness: 15,
+          len: 0.8
+        }
+      }]
+      : [];
+  
+    const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
+    const yAxisMax = usageMax * 1.2;
+  
+    const layout: Partial<Plotly.Layout> = {
+      title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
+      barmode: 'stack',
+      xaxis: { title: { text: 'Indice ordinato per usage' } },
+      yaxis: {
+        title: { text: 'Overturismo (capacity)' },
+        side: 'left',
+        overlaying: undefined,
+        range: [0, yAxisMax]
+
+      },
+
+      yaxis2: {
+        title: { text: 'Presenze (turisti + escursionisti)' },
+        side: 'right',
+        overlaying: 'y',
+      }
+    };
+  
+    const traces: Partial<Plotly.PlotData>[] = [
+      ...heatmap,
+      traceSampleE,
+      traceSampleT,
+      traceCapacityMean
+    ];
+  
+    if (this.mostraPunti) {
+      traces.push(traceUsagePoints);
+    }
+  
+    Plotly.newPlot(container, traces, layout, { responsive: true });
+  }
+  
+  getYFromCurve(curve: Curve, xVal: number): number | null {
+    const idx = curve.x.findIndex((xi, i) => i < curve.x.length - 1 && curve.x[i] <= xVal && xVal <= curve.x[i + 1]);
+    if (idx === -1) return null;
+    const x0 = curve.x[idx], x1 = curve.x[idx + 1];
+    const y0 = curve.y[idx], y1 = curve.y[idx + 1];
+    const t = (xVal - x0) / (x1 - x0);
+    return y0 + t * (y1 - y0);
   }
 
   formatNumber(value: number): string {
