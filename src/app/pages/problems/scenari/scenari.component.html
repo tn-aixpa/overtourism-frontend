@@ -31,17 +31,21 @@
         <td class="align-middle">{{ scenario.description }}</td>
         <td class="text-end align-middle">
           <div class="d-flex flex-wrap justify-content-end gap-2">
-            <!-- Pulsante Modifica -->
-            <button class="btn btn-sm btn-icon text-primary" (click)="openEdit(scenario); $event.stopPropagation()"
+            <button class="btn btn-sm btn-icon text-primary" (click)="goToScenario(scenario); $event.stopPropagation()"
+            [disabled]="comparazioneAttiva" aria-label="Dettaglio scenario">
+            <span class="material-icons">
+              visibility
+              </span>
+             </button>
+            <!-- <button class="btn btn-sm btn-icon text-primary" (click)="openEdit(scenario); $event.stopPropagation()"
               [disabled]="comparazioneAttiva" aria-label="Modifica scenario">
               <span class="material-icons">edit</span>
             </button>
-
             <button class="btn btn-sm btn-icon text-primary"
               (click)="deleteScenario(scenario); $event.stopPropagation()" [disabled]="comparazioneAttiva"
               aria-label="Elimina scenario">
               <span class="material-icons">delete</span>
-            </button>
+            </button> -->
           </div>
         </td>
 
