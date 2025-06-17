@@ -9,22 +9,22 @@
     <!-- Parte centrale: controlli + grafico -->
     <div class="flex-grow-1">
       <div class="d-flex justify-content">
-        <button [itButton]="!showControls ? 'primary' : 'secondary'"
+        <button [itButton]="!showControls ? 'outline-primary' : 'outline-secondary'"
           class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()"> 
           <span class="material-icons me-2">
         visibility
           </span> {{('plot.edit' | translate) }}
         </button>
       </div>
-      <app-plot-controls *ngIf="showControls" [showAllSubsystems]="showAllSubsystems" [mostraPunti]="mostraPunti"
+      <app-plot-controls *ngIf="showControls" [showAllSubsystems]="showAllSubsystems" 
         [monoDimensionale]="monoDimensionale" [heatmapAttiva]="heatmapAttiva" [sottosistemi]="sottosistemi"
         [sottosistemaSelezionato]="sottosistemaSelezionato" (showAllSubsystemsChange)="showAllSubsystems = $event"
-        (mostraPuntiChange)="mostraPunti = $event" (monoDimensionaleChange)="monoDimensionale = $event"
+         (monoDimensionaleChange)="monoDimensionale = $event"
         (heatmapAttivaChange)="heatmapAttiva = $event"
         (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
         (heatmapToggle)="onHeatmapToggle()"></app-plot-controls>
 
-      <div #chartLib style="min-height: 400px; position: relative;">
+      <div #chartLib style="min-height: 600px; position: relative;">
         <div *ngIf="loading" class="loading-spinner">Loading...</div>
         <!-- Qui va il grafico vero e proprio -->
       </div>
@@ -48,8 +48,17 @@
       </it-icon>
       {{('plot.edit' | translate) }}
     </button> -->
-      <!-- Info e note SEMPRE visibili -->
-      <ng-container *ngIf="!isEditing">
+     
+      <ng-container *ngIf="isEditing">
+        <div class="row mt-4">
+          <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
+          <app-plot-editor-widget [widgets]="widgets"
+          (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
+        </div>
+
+      </ng-container>
+       <!-- Info e note SEMPRE visibili -->
+       <ng-container >
         <div class="row mt-4">
           <div class="col">
             <div class="p-3  h-100">
@@ -80,19 +89,12 @@
           <div class="col">
             <div class="p-3  h-100">
               <!-- <h6 class="mb-2">{{ 'plot.notesTitle' | translate }}</h6> -->
-              <it-textarea class="w-100" label="{{ 'plot.notesLabel' | translate }}"
-                [(ngModel)]="noteUtente"></it-textarea>
+              <!-- <it-textarea class="w-100" label="{{ 'plot.notesLabel' | translate }}"
+              [(ngModel)]="titolo"></it-textarea> -->
+
             </div>
           </div>
         </div>
-      </ng-container>
-      <ng-container *ngIf="isEditing">
-        <div class="row mt-4">
-          <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
-          <app-plot-editor-widget [widgets]="widgets"
-          (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
-        </div>
-
       </ng-container>
     </div>
 
@@ -100,7 +102,7 @@
 
   </div>
 </div>
-<div class="d-flex justify-content-end mt-4" *ngIf="hasChanges">
+<div class="d-flex justify-content-end mt-4" *ngIf="indexDiffs && objectKeys(indexDiffs).length">
   <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center" (click)="openSaveModal()"> <span
   class="material-icons me-2">save</span>
     Salva come nuovo scenario
@@ -112,7 +114,10 @@
 
     <p>    Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
     </p>
-
+    <it-input  label="{{ 'plot.title' | translate }}"
+    [(ngModel)]="titolo"></it-input>
+    <it-textarea class="w-100" label="{{ 'plot.description' | translate }}"
+    [(ngModel)]="descrizione"></it-textarea>
     <ng-container footer>
       <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button> 
       <button itButton="primary" size="sm" type="button" (click)="confirmSave()">Salva</button>

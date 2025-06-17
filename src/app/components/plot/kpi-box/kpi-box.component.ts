@@ -24,19 +24,33 @@ export class KpiBoxComponent {
       });
     }
     const cc = this.kpisData?.['critical_constraint'];
-    if (
-      cc &&
-      typeof cc === 'object' &&
-      'name' in cc &&
-      'level' in cc
-    ) {
-      const dynamicKey = `constraint_level_${cc.name}`;
-      this.kpiKeys = [dynamicKey, ...this.kpiKeys.filter(k => k !== dynamicKey)];
+let dynamicKey: string | null = null;
+if (
+  cc &&
+  typeof cc === 'object' &&
+  'name' in cc &&
+  'level' in cc
+) {
+  dynamicKey = `constraint_level_${cc.name}`;
+  this.criticalConstraintKey = dynamicKey;
+} else {
+  this.criticalConstraintKey = null;
+}
 
-      this.criticalConstraintKey = dynamicKey;
-    } else {
-      this.criticalConstraintKey = null;
-    }
+let keys = this.kpiKeys.filter(k => k !== dynamicKey && k !== 'overtourism_level');
+
+this.kpiKeys = [];
+
+if (this.kpisData && 'overtourism_level' in this.kpisData) {
+  this.kpiKeys.push('overtourism_level');
+}
+
+if (dynamicKey) {
+  this.kpiKeys.push(dynamicKey);
+}
+
+this.kpiKeys.push(...keys);
+
   }
   
   getKpiValue(key: string): number {

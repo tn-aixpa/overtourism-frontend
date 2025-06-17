@@ -14,24 +14,28 @@
  </div> -->
 
  <!-- Altri KPI -->
- <ng-container *ngFor="let key of kpiKeys">
-   <div class="mb-3 p-3  "
+ <ng-container *ngFor="let key of kpiKeys" 
+              [ngSwitch]="key !== 'critical_constraint'">
+  <ng-container *ngSwitchCase="true">
+    <div class="mb-3 p-3">
+      <h6 class="mb-1 text-primary d-flex align-items-center gap-2">
+        {{ kpiLabels[key] | translate }}
+        <span
+          *ngIf="key === criticalConstraintKey"
+          class="badge bg-danger text-white"
+          style="font-size: 0.75rem;"
+          title="Critical constraint"
         >
-        <h6 class="mb-1 text-primary d-flex align-items-center gap-2">
-          {{ kpiLabels[key]| translate }}
-          <span
-            *ngIf="key === criticalConstraintKey"
-            class="badge bg-danger text-white"
-            style="font-size: 0.75rem;"
-            title="Critical constraint"
-          >
-            ⚠️ Critico
-          </span>
-        </h6>     <p class=" h3 text-secondary">
-       {{ formatNumber(getKpiValue(key)) + '%'}}
-     </p>
-   </div>
- </ng-container>
+          ⚠️ Critico
+        </span>
+      </h6>
+      <p class="h3 text-secondary">
+        {{ formatNumber(getKpiValue(key)) + '%' }}
+      </p>
+    </div>
+  </ng-container>
+</ng-container>
+
     </it-card>
   </div>
   </div>

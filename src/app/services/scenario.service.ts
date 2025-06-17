@@ -40,13 +40,13 @@ export class ScenarioService {
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.baseUrl = this.configService.apiBaseUrl;
   }
-  saveNewScenario(scenarioId: string, 
-    problemId: string,
-    values: Record<string, number | [number, number]>)
+  saveNewScenario(scenarioId: string, problemId: string, values: Record<string, number | [number, number]>, titolo: string, descrizione: string)
     : Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}/scenarios/${scenarioId}`,
-      { values }, // body
+      { values,
+        scenario_name: titolo, scenario_description: descrizione
+       }, // body
       { params: { problem_id: problemId } } // query
     );
   }

@@ -34,19 +34,52 @@ export class PlotService {
     const heatmapsByFunction: Record<string, number[][]> = module.uncertainty_constraint ?? {};
 
     // Points
-    const points = module.sample_t && module.sample_e
-      ? [{
-          name: 'Campioni osservati',
-          x: module.sample_t,
-          y: module.sample_e,
-          color: 'black',
-        }]
-      : [];
+    const points = Array.isArray(module.kpis?.uncertainty)
+    ? [{
+        name: 'Incertezza',
+        x: module.kpis.uncertainty.map((p: any) => p.tourists),
+        y: module.kpis.uncertainty.map((p: any) => p.excursionists),
+        customdata: module.kpis.uncertainty.map((p: any) => p.index),
+        marker: {
+          color: module.kpis.uncertainty.map((p: any) => p.index),
+          colorscale: [
+            [0.0, 'rgb(5, 102, 8)'],
+            [0.05, 'rgb(100, 180, 90)'],
+            [0.20, 'rgb(180, 230, 170)'],
+            [0.40, 'rgb(230, 250, 225)'],
+            [0.50, 'yellow'],
+            [0.60, 'rgb(255, 242, 242)'],
+            [0.80, 'rgb(242, 204, 204)'],
+            [0.95, 'rgb(204, 76, 76)'],
+            [1.0, 'rgb(180, 4, 38)']
+          ],
+          reversescale: true,
+          cmin: 0,
+          cmax: 1,
+          size: 6,
+          line: {
+            color: 'black',
+            width: 0.5
+          },
+          colorbar: {
+            title: 'Indice incertezza',
+            titleside: 'right'
+          }
+        },
+        mode: 'markers',
+        type: 'scatter',
+        hovertemplate:
+          '<b>Contesto:</b> %{customdata}<br>' +
+          '<b>Turisti:</b> %{x}<br>' +
+          '<b>Escursionisti:</b> %{y}<br>' +
+          '<extra></extra>',
+        showlegend: false
+      }]
+    : [];
 
     // KPIs
     const kpis = module.kpis && typeof module.kpis === 'object'
       ? {
-          area: module.kpis.area ?? 0,
           overtourism_level: module.kpis.overtourism_level ?? 0,
           critical_constraint: {
             name: module.kpis['critical constraint']?.name ?? '',
@@ -56,7 +89,7 @@ export class PlotService {
           constraint_level_spiaggia: module.kpis['constraint level spiaggia'] ?? 0,
           constraint_level_alberghi: module.kpis['constraint level alberghi'] ?? 0,
           constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0
-        }
+        } 
       : undefined;
 
     // Main return

@@ -36,7 +36,6 @@ export class PlotComponent implements AfterViewInit {
   selectOptions: Array<{ value: string; text: string }> = [{ value: 'default', text: 'Default' }];
   heatmapAttiva = true;
   showAllSubsystems = true;
-  mostraPunti = true;
   monoDimensionale = false;
   kpisData: KPIs | undefined;
   noteUtente: string = '';
@@ -51,7 +50,8 @@ export class PlotComponent implements AfterViewInit {
   hasChanges: boolean=false;
   changedWidgets!: Record<string, number | [number, number]>;
   indexDiffs: Record<string, number> = {};
-
+  titolo: string = '';
+  descrizione: string = '';
 
   constructor(private plotService: PlotService,
      private scenarioService: ScenarioService,
@@ -72,7 +72,7 @@ export class PlotComponent implements AfterViewInit {
     this.saveAsNewScenario();
   }
   saveAsNewScenario(): void {
-    this.scenarioService.saveNewScenario(this.scenarioId, this.problemId,this.changedWidgets).subscribe({
+    this.scenarioService.saveNewScenario(this.scenarioId, this.problemId,this.changedWidgets,this.titolo,this.descrizione).subscribe({
       next: (res) => {
         // this.notificationService.showError('Scenario salvato con successo!');
         this.hasChanges = false;
@@ -378,9 +378,7 @@ export class PlotComponent implements AfterViewInit {
       traceCapacityMean
     ];
 
-    if (this.mostraPunti) {
       traces.push(traceUsagePoints);
-    }
 
     Plotly.newPlot(this.chartLib.nativeElement, traces, layout, { responsive: true });
   }
@@ -406,32 +404,7 @@ export class PlotComponent implements AfterViewInit {
       }
     }
 
-    if (this.mostraPunti && input.points?.length) {
-      input.points = input.points.map(pt => {
-        const updatedColor = pt.y.map((_y, i) => {
-          const xVal = pt.x[i];
-          let violates = false;
-
-          const curvesToCheck = this.showAllSubsystems
-            ? input.curves
-            : input.curves.filter(c => c.name === this.sottosistemaSelezionato);
-
-          for (const c of curvesToCheck) {
-            const yExpected = this.getYFromCurve(c, xVal);
-            if (yExpected !== null && pt.y[i] > yExpected) {
-              violates = true;
-              break;
-            }
-          }
-
-          return violates ? '#BA0C2F' : '#32CD32';
-        });
-
-        return { ...pt, color: updatedColor };
-      });
-    } else {
-      input.points = [];
-    }
+    
 
     this.renderFunctionPlot(this.chartLib.nativeElement, input);
   }
@@ -445,27 +418,27 @@ export class PlotComponent implements AfterViewInit {
     return y0 + t * (y1 - y0);
   }
 
-  renderFunctionPlot(container: HTMLElement, input: PlotInput) {
+  async renderFunctionPlot(container: HTMLElement, input: PlotInput) {
 
     const data: Partial<Plotly.PlotData>[] = [];
 
-    if (this.heatmapAttiva && input.heatmap) {
-      data.push({
-        z: input.heatmap.z,
-        x: input.heatmap.x,
-        y: input.heatmap.y,
-        type: 'heatmap',
-        colorscale: [
-          [0, 'rgb(150, 0, 24)'],
-          [0.5, 'rgb(255,255,255)'],
-          [1, 'rgb(0,0,255)']
-        ],
-        zmin: 0,
-        zmax: 1,
-        showscale: true,
-        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
-      });
-    }
+    // if (this.heatmapAttiva && input.heatmap) {
+    //   data.push({
+    //     z: input.heatmap.z,
+    //     x: input.heatmap.x,
+    //     y: input.heatmap.y,
+    //     type: 'heatmap',
+    //     colorscale: [
+    //       [0, 'rgb(150, 0, 24)'],
+    //       [0.5, 'rgb(255,255,255)'],
+    //       [1, 'rgb(0,0,255)']
+    //     ],
+    //     zmin: 0,
+    //     zmax: 1,
+    //     showscale: true,
+    //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
+    //   });
+    // }
 
     const curvesToRender = this.sottosistemaSelezionato === 'default'
       ? input.curves
@@ -498,7 +471,7 @@ export class PlotComponent implements AfterViewInit {
           type: 'scatter',
           mode: 'markers',
           name: pt.name,
-          marker: {
+          marker: pt.marker ?? {
             color: pt.color ?? 'black',
             size: 8,
             line: { width: 1, color: 'black' },
@@ -507,22 +480,59 @@ export class PlotComponent implements AfterViewInit {
         });
       }
     }
-
     const layout: Partial<Plotly.Layout> = {
+      plot_bgcolor: 'white',
       title: { text: 'Scenario con Heatmap' },
-      xaxis: { title: { text: 'Turisti' }, range: [0, input.xMax ?? undefined] },
-      yaxis: { title: { text: 'Escursionisti' }, range: [0, input.yMax ?? undefined] },
-      margin: { l: 60, r: 30, t: 40, b: 50 },
+      margin: { t: 50, b: 130, l: 20, r: 20 },
+      xaxis: {
+        title: { text: 'TURISTI' },
+        range: [0, 10000],
+        tickformat: '.0f',
+        showline: true,
+        linewidth: 1,
+        linecolor: 'grey',
+        dtick: 1000
+      },
+      yaxis: {
+        title: { text: 'ESCURSIONISTI' },
+        range: [0, 10000],
+        tickformat: '.0f',
+        showline: true,
+        linewidth: 1,
+        linecolor: 'grey',
+        dtick: 1000
+      },
+      shapes: [
+        {
+          type: 'line',
+          x0: 0, y0: 10000,
+          x1: 10000, y1: 10000,
+          xref: 'x', yref: 'y',
+          line: { color: 'grey', width: 2 }
+        },
+        {
+          type: 'line',
+          x0: 10000, y0: 0,
+          x1: 10000, y1: 10000,
+          xref: 'x', yref: 'y',
+          line: { color: 'grey', width: 2 }
+        }
+      ],
       showlegend: true,
       legend: {
         orientation: 'h',
-        x: 0,
-        y: -0.2,
-        xanchor: 'left',
         yanchor: 'top',
-      }
+        y: -0.2,
+        xanchor: 'center',
+        x: 0.5,
+      },
     };
 
-    Plotly.newPlot(container, data, layout, { responsive: true });
+    await Plotly.newPlot(container, data, layout, { responsive: true });
+    this.chartLib.nativeElement.addEventListener('plotly_click', (data: any) => {
+      return false
+    });
+
+  
   }
 }

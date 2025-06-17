@@ -24,7 +24,7 @@ export class ConfrontoScenariComponent {
   kpisLeft?: KPIs;
   kpisRight?: KPIs;
   heatmapAttiva = true;
-  mostraPunti = true;
+  // mostraPunti = true;
   monoDimensionale = false;
   showAllSubsystems = true;
   sottosistemi = SUBSYSTEM_OPTIONS;
@@ -65,10 +65,10 @@ export class ConfrontoScenariComponent {
     this.renderBoth();
   }
 
-  onMostraPuntiChange(value: boolean) {
-    this.mostraPunti = value;
-    this.renderBoth();
-  }
+  // onMostraPuntiChange(value: boolean) {
+  //   this.mostraPunti = value;
+  //   this.renderBoth();
+  // }
 
   onMonoDimensionaleChange(value: boolean) {
     this.monoDimensionale = value;
@@ -136,7 +136,7 @@ export class ConfrontoScenariComponent {
     }
   
     // === Punti colorati ===
-    if (this.mostraPunti && cloned.points?.length) {
+    if (cloned.points?.length) {
       cloned.points = cloned.points.map(pt => {
         const updatedColor = pt.y.map((_y, i) => {
           const xVal = pt.x[i];
@@ -254,7 +254,14 @@ export class ConfrontoScenariComponent {
   
     Plotly.newPlot(container, data, layout, { responsive: true });
   }
-  
+  onScenarioSelect(slot: 1 | 2, selectedId: string) {
+    if (slot === 1) {
+      this.selectedScenario1Id = selectedId;
+    } else {
+      this.selectedScenario2Id = selectedId;
+    }
+    this.loadScenario(slot);
+  }
   renderMonoDimensionale(container: HTMLElement, input: PlotInput): void {
     const sampleT = input.sample_t;
     const sampleE = input.sample_e;
@@ -384,9 +391,9 @@ export class ConfrontoScenariComponent {
       traceCapacityMean
     ];
   
-    if (this.mostraPunti) {
+    // if (this.mostraPunti) {
       traces.push(traceUsagePoints);
-    }
+    // }
   
     Plotly.newPlot(container, traces, layout, { responsive: true });
   }

@@ -1,5 +1,7 @@
 // src/app/plot.model.ts
 
+import { ScatterMarker, ColorScale, PlotType } from "plotly.js-dist-min";
+
 
 export type Curve = {
   x: number[];
@@ -15,12 +17,19 @@ export type Heatmap = {
   z: number[][];
 };
 
-export type Point = {
+export interface Point {
+  name: string;
   x: number[];
   y: number[];
-  name: string;
   color?: string | string[];
-};
+  marker?: any;
+  customdata?: any[];
+  hovertemplate?: string;
+  mode?: any;
+  type?: any;
+  showlegend?: boolean;
+}
+
 
 export interface CriticalConstraint {
   name: string;
@@ -40,22 +49,23 @@ export interface KPIs {
   [key: string]: number | undefined | { name: string; level: number };
 }
 
-export type PlotInput = {
+export interface PlotInput {
   curves: Curve[];
-  heatmap?: Heatmap;
-  points?: Point[];
-  heatmapsByFunction?: Record<string, number[][]>;
+  heatmap?: { x: number[]; y: number[]; z: number[][] };
   xMax?: number;
   yMax?: number;
+  points: Point[];
+  heatmapsByFunction?: Record<string, number[][]>;
   usage?: number[];
-  usage_by_constraint?: Record<string, number[]>;
-  capacity_by_constraint?: Record<string, number[][]>;
-  capacity_mean_by_constraint?: Record<string, number>;
   sample_t?: number[];
   sample_e?: number[];
   capacity?: number[][];
   capacity_mean?: number;
-  kpis?: KPIs;  // Add new KPIs property
-};
+  kpis?: KPIs;
+  usage_by_constraint?: Record<string, number[]>;
+  capacity_by_constraint?: Record<string, number[][]>;
+  capacity_mean_by_constraint?: Record<string, number>;
+}
+
 
 
