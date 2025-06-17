@@ -54,16 +54,27 @@
           <div class="col">
             <div class="p-3  h-100">
               <div class="callout callout-highlight note ">
-                <h6 class=" text-primary mb-5 d-flex align-items-center gap-2"><span class="material-icons">
-                    error_outline
-                  </span>{{ 'plot.infoTitle' | translate }}</h6>
-                <p class="small text-muted mb-0">
-                  {{ 'plot.infoText' | translate }}
+                <h6 class="text-primary mb-3 d-flex align-items-center gap-2">
+                  <span class="material-icons">error_outline</span>
+                  {{ 'plot.infoTitle' | translate }}
+                </h6>
+                <p class="small text-muted mb-2">
+                  Differenze rispetto allo scenario originale:
                 </p>
+        
+                <div *ngIf="indexDiffs && objectKeys(indexDiffs).length">
+                  <!-- <h6 class="fw-semibold mt-3 mb-2">Differenze rispetto allo scenario originale:</h6> -->
+                  <ul class="list-unstyled small">
+                    <li *ngFor="let key of objectKeys(indexDiffs)">
+                      <span class="fw-bold">{{ getIndexNameFromKey(key) }}</span>: {{ indexDiffs[key] }}
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        
 
         <div class="row mt-4">
           <div class="col">

@@ -50,6 +50,7 @@ export class PlotComponent implements AfterViewInit {
   showControls: boolean = false; // per 'settings'
   hasChanges: boolean=false;
   changedWidgets!: Record<string, number | [number, number]>;
+  indexDiffs: Record<string, number> = {};
 
 
   constructor(private plotService: PlotService,
@@ -87,6 +88,13 @@ export class PlotComponent implements AfterViewInit {
 
       }
     });
+  }
+  getIndexNameFromKey(key: string): string {
+    for (const group of Object.keys(this.widgets)) {
+      const widget = this.widgets[group].find(w => w.index_id === key);
+      if (widget) return widget.index_name;
+    }
+    return key; // fallback se non trovato
   }
   closeModal() {
     this.saveModal.toggle();
@@ -164,6 +172,7 @@ export class PlotComponent implements AfterViewInit {
     this.scenarioService.getUpdatedPlotInput(this.scenarioId, this.problemId, values).subscribe({
       next: (newInput) => {
         this.inputData = this.plotService.preparePlotInput(newInput.data);
+        this.indexDiffs = newInput.index_diffs || {};
         this.renderPlot();
       },
       error: (err) => {
@@ -206,6 +215,8 @@ export class PlotComponent implements AfterViewInit {
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
 
       this.inputData = this.plotService.preparePlotInput(rawData.data);
+      this.indexDiffs = rawData.index_diffs || {};
+
       this.kpisData = this.inputData.kpis;
       this.setupSelectOptions();
 
