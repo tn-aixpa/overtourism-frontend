@@ -1,22 +1,21 @@
 <it-header
-slimTitle="{{ 'header.title' | translate }}"
-slimTitleLink="#"
-[showSearch]="false"
-[sticky]="true"
-[expand]="true"
+  slimTitle="{{ 'header.title' | translate }}"
+  slimTitleLink="#"
+  [showSearch]="false"
+  [sticky]="true"
+  [expand]="true"
 >
-<ng-container brand>
-  <a href="#">
-    <!-- <it-icon name="designers-italia"></it-icon> -->
-    <img src="assets/images/logo.png" alt="IAxPA Logo" style="height: 90px; margin-right: 0.5rem;" />
+  <ng-container brand>
+    <a href="#" class="d-flex align-items-center">
+      <img src="assets/images/logo.png" alt="IAxPA Logo" class="responsive-logo me-2" />
+      <div class="it-brand-text">
+        <div class="it-brand-title responsive-title">Analisi dell'affollamento turistico</div>
+        <div class="it-brand-tagline d-none d-md-block"></div>
+      </div>
+    </a>
+  </ng-container>
 
-    <div class="it-brand-text">
-      <div class="it-brand-title">Analisi dell'affollamento turistico</div>
-      <div class="it-brand-tagline d-none d-md-block"></div>
-    </div>
-  </a>
-</ng-container>
-<ng-container slimRightZone>
+  <ng-container slimRightZone>
   <!-- <it-language-switcher mode="nav"></it-language-switcher> -->
   <!-- <button itButton="outline-primary" class="me-2"  (click)="toggleTheme()"> {{ darkMode ? 'Light' : 'Dark' }} Mode</button> -->
 </ng-container>
