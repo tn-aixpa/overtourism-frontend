@@ -9,12 +9,13 @@
   <it-table>
     <ng-container thead>
       <tr>
-        <th *ngIf="comparazioneAttiva"></th>
-        <th>#</th>
+        <th *ngIf="comparazioneAttiva" class="text-start align-middle"></th>
+        <th class="text-start align-middle">#</th>
 
-        <th>{{ 'scenari.name' | translate }}</th>
-        <th>{{ 'scenari.description' | translate }}</th>
-        <th class="text-end">{{ 'scenari.actions' | translate }}</th>
+        <th class="text-start align-middle">{{ 'scenari.name' | translate }}</th>
+        <th class="text-start align-middle">{{ 'scenari.description' | translate }}</th>
+        <th class="text-start align-middle" >{{ 'scenari.parameters' | translate }}</th>
+        <th class="text-start align-middle">{{ 'scenari.actions' | translate }}</th>
       </tr>
     </ng-container>
     <ng-container tbody>
@@ -26,11 +27,15 @@
             (ngModelChange)="onScenarioCheck(scenario, $event)">
           </it-checkbox>
         </td>
-        <td class="align-middle	">{{ i + 1 }}</td>
-        <td class="align-middle">{{ scenario.name }}</td>
-        <td class="align-middle">{{ scenario.description }}</td>
-        <td class="text-end align-middle">
-          <div class="d-flex flex-wrap justify-content-end gap-2">
+        <td class="text-start align-middle">{{ i + 1 }}</td>
+        <td class="text-start align-middle">{{ scenario.name }}</td>
+        <td class="text-start align-middle">{{ scenario.description }}</td>
+        <td class="text-start align-middle">
+          <span *ngIf="hasParams(scenario)" class="material-icons" title="Parametri presenti">description</span>
+          <!-- <span *ngIf="!hasParams(scenario)" class="text-muted material-icons" title="Nessun parametro">remove_circle_outline</span> -->
+        </td>
+        <td class="text-start align-middle">
+          <div class="d-flex flex-wrap justify-content-start gap-2">
             <button class="btn btn-sm btn-icon text-primary" (click)="goToScenario(scenario); $event.stopPropagation()"
             [disabled]="comparazioneAttiva" aria-label="Dettaglio scenario">
             <span class="material-icons">

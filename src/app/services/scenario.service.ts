@@ -11,6 +11,7 @@ interface ScenarioResponse {
     scenario_id: string;
     scenario_name: string;
     scenario_description: string;
+    index_diffs?: { [key: string]: number };
   }>;
 }
 export interface Widget {
@@ -76,7 +77,8 @@ export class ScenarioService {
           id: scenario.scenario_id,
           name: scenario.scenario_name,
           description: scenario.scenario_description,
-          problemId: scenario.problem_id
+          problemId: scenario.problem_id,
+          index_diffs: scenario.index_diffs || {}
         })))
       );
   }

@@ -40,6 +40,10 @@ export class ScenariComponent {
     if (this.comparazioneAttiva) return; // Se la comparazione è attiva, non navigare
     this.router.navigate(['/problems', this.problemId, 'scenari', scenario.id]);
   }
+  hasParams(scenario: any): boolean {
+    return !!scenario.index_diffs && Object.keys(scenario.index_diffs).length > 0;
+  }
+  
   onScenarioCheck(scenario: any, checked: boolean) {
     if (checked) {
       if (this.selectedScenari.length < 2 && !this.isScenarioSelected(scenario)) {

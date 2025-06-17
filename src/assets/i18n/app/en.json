@@ -35,7 +35,8 @@
     "open_scenario": "Open scenario {{name}}",
     "compare_selected": "Compare selected",
     "enable_compare": "Enable comparison",
-    "disable_compare": "Disable comparison"
+    "disable_compare": "Disable comparison",
+    "parameters": "Parameters"
   },
   "plot": {
     "detailsTitle": "Scenario ",
