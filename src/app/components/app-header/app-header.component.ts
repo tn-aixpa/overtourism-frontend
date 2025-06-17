@@ -18,7 +18,7 @@ constructor(public router: Router) {
   links = [
     // { label: 'Home', route: '/home' },
     { label: 'Problemi', route: '/problems' },
-    { label: 'FAQs', route: '/faqs' },
+    // { label: 'FAQs', route: '/faqs' },
     // { label: 'Terms', route: '/terms' },
     // { label: 'Settings', route: '/settings' }
   ];
