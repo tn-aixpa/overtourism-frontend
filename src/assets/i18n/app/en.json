@@ -13,11 +13,11 @@
   "kpi": {
     "title": "Indicators",
     "area": "Total Area",
-    "overtourism_level": "Overtourism Level",
-    "constraint_level_parcheggi": "Parking Constraint Level",
-    "constraint_level_spiaggia": "Beach Constraint Level",
-    "constraint_level_alberghi": "Hotels Constraint Level",
-    "constraint_level_ristoranti": "Restaurants Constraint Level",
+    "overtourism_level": "Overtourism Risk Days",
+    "constraint_level_parcheggi": "Parking System Risk",
+    "constraint_level_spiaggia": "Beach System Risk",
+    "constraint_level_alberghi": "Hotel System Risk",
+    "constraint_level_ristoranti": "Restaurant System Risk",
     "critical_constraint": "Critical Constraint"
   },
   "problems": {

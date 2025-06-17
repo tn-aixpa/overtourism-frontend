@@ -8,11 +8,12 @@ import { KPIs } from '../../../models/plot.model';
 })
 export class KpiBoxComponent {
   @Input() kpisData?: KPIs;
-  @Input() formatNumber: (value: number) => string = (v) => v.toString();
-
+  @Input() formatNumber: (value: number) => string = (v) =>
+    `${(v * 100).toLocaleString('it-IT', { maximumFractionDigits: 1 })}`;
   kpiKeys: string[] = [];
   kpiLabels: { [key: string]: string } = {};
-  
+  criticalConstraintKey: string | null = null;
+
   ngOnChanges() {
     if (this.kpisData) {
       this.kpiKeys = Object.keys(this.kpisData)
@@ -22,7 +23,22 @@ export class KpiBoxComponent {
         this.kpiLabels[key] = 'kpi.' + key.replace(/ /g, '_');
       });
     }
+    const cc = this.kpisData?.['critical_constraint'];
+    if (
+      cc &&
+      typeof cc === 'object' &&
+      'name' in cc &&
+      'level' in cc
+    ) {
+      const dynamicKey = `constraint_level_${cc.name}`;
+      this.kpiKeys = [dynamicKey, ...this.kpiKeys.filter(k => k !== dynamicKey)];
+
+      this.criticalConstraintKey = dynamicKey;
+    } else {
+      this.criticalConstraintKey = null;
+    }
   }
+  
   getKpiValue(key: string): number {
     const value = this.kpisData?.[key];
     return typeof value === 'number' ? value : 0;

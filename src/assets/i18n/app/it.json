@@ -13,11 +13,11 @@
   "kpi": {
     "title": "Indici",
     "area": "Area Totale",
-    "overtourism_level": "Livello di Overturismo",
-    "constraint_level_parcheggi": "Livello vincolo Parcheggi",
-    "constraint_level_spiaggia": "Livello vincolo Spiaggia",
-    "constraint_level_alberghi": "Livello vincolo Alberghi",
-    "constraint_level_ristoranti": "Livello vincolo Ristoranti",
+    "overtourism_level": "Giorni di rischio sovraffollamento",
+    "constraint_level_parcheggi": "Rischio sistema Parcheggi",
+    "constraint_level_spiaggia": "Rischio sistema Spiaggia",
+    "constraint_level_alberghi": "Rischio sistema Alberghi",
+    "constraint_level_ristoranti": "Rischio sistema Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
   "problems":{
