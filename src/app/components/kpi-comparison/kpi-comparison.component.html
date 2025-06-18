@@ -1,0 +1,39 @@
+<div *ngIf="kpisLeft && kpisRight" class="card-wrapper">
+    <it-card background="true">
+      <h3 class="mb-3 p-3 h3">Comparazione indici</h3>
+  
+      <div class="p-3">
+        <div *ngFor="let key of kpiKeys" class="mb-4 border-bottom pb-3">
+          <!-- KPI Label -->
+          <h6 class="text-primary mb-2">
+            {{ ('kpi.' + key) | translate }}
+        </h6>
+  
+          <!-- Valori a confronto -->
+          <div class="row text-secondary mb-2">
+            <div class="col-6 text-start">
+              <div class="h5">{{ formatNumber(kpisLeft[key]) }}</div>
+            </div>
+            <div class="col-6 ">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="h5 mb-0">{{ formatNumber(kpisRight[key]) }}</div>
+                    <ng-container *ngIf=" kpisRight[key] != kpisLeft[key]">
+                    <span class="btn  "
+                      [ngClass]="{
+                        'btn-outline-success': kpisRight[key] < kpisLeft[key],
+                        'btn-outline-danger': kpisRight[key] > kpisLeft[key],
+                      }">
+                      {{ getDeltaPerc(kpisLeft[key], kpisRight[key]) }}
+                    </span>
+                </ng-container>
+                  </div>
+            </div>
+          </div>
+  
+          <!-- Differenza percentuale -->
+
+        </div>
+      </div>
+    </it-card>
+  </div>
+  

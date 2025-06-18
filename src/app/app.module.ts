@@ -34,6 +34,7 @@ import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { SessionInterceptor } from './interceptors/session.interceptor';
 import { BackButtonComponent } from './components/back-button/back-button.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
+import { KpiComparisonComponent } from './components/kpi-comparison/kpi-comparison.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -47,7 +48,7 @@ export function initConfig(configService: ConfigService) {
   return () => configService.loadConfig();
 }
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent],
+  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

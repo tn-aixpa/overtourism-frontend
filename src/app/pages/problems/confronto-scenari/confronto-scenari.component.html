@@ -43,13 +43,16 @@
   <div class="row">
     <div class="col-md-6">
       <div #chartLeft style="min-height: 400px;"></div>
-      <app-kpi-box [kpisData]="kpisLeft" ></app-kpi-box>
+      <!-- <app-kpi-box [kpisData]="kpisLeft" ></app-kpi-box> -->
     </div>
     <div class="col-md-6">
       <div #chartRight style="min-height: 400px;"></div>
-      <app-kpi-box [kpisData]="kpisRight" ></app-kpi-box>
+      <!-- <app-kpi-box [kpisData]="kpisRight" ></app-kpi-box> -->
     </div>
   </div>
+  <div class="row">
+    <app-kpi-comparison [kpisLeft]="kpisLeft ?? {}" [kpisRight]="kpisRight ?? {}"></app-kpi-comparison>
 
+  </div>
   <app-back-button></app-back-button>
 </div>
