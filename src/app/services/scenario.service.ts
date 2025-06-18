@@ -5,6 +5,7 @@ import { Observable, of, BehaviorSubject, map } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
 import { ConfigService } from './config.service';
 import { values } from 'video.js/dist/types/utils/obj';
+import { environment } from '../../environments/environment';
 interface ScenarioResponse {
   scenarios: Array<{
     problem_id: string;
@@ -38,7 +39,7 @@ export class ScenarioService {
   private baseUrl: string;
 
   constructor(private http: HttpClient, private configService: ConfigService) {
-    this.baseUrl = this.configService.apiBaseUrl;
+    this.baseUrl = environment.apiBaseUrl;
   }
   saveNewScenario(scenarioId: string, problemId: string, values: Record<string, number | [number, number]>, titolo: string, descrizione: string)
     : Observable<any> {

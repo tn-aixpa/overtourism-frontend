@@ -29,7 +29,7 @@ import { PlotControlsComponent } from './components/plot/plot-controls/plot-cont
 import { AppPlotEditorWidgetComponent } from './components/plot/app-plot-editor-widget/app-plot-editor-widget.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
-import { ConfigService } from './services/config.service';
+// import { ConfigService } from './services/config.service';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { SessionInterceptor } from './interceptors/session.interceptor';
 import { BackButtonComponent } from './components/back-button/back-button.component';
@@ -44,9 +44,9 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     { prefix: './assets/i18n/app/', suffix: '.json' }, // traduzioni  personalizzate
   ]);
 }
-export function initConfig(configService: ConfigService) {
-  return () => configService.loadConfig();
-}
+// export function initConfig(configService: ConfigService) {
+//   return () => configService.loadConfig();
+// }
 @NgModule({
   declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent],
   imports: [
@@ -79,12 +79,12 @@ export function initConfig(configService: ConfigService) {
     }),
   ],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initConfig,
-      deps: [ConfigService],
-      multi: true
-    },
+    // {
+    //   provide: APP_INITIALIZER,
+    //   useFactory: initConfig,
+    //   deps: [ConfigService],
+    //   multi: true
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SessionInterceptor,

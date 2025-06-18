@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { Problem } from '../models/problem.model';
 import { ConfigService } from './config.service';
+import { environment } from '../../environments/environment';
+
 interface ProblemResponse {
   problems: Array<{
     problem_id: string;
@@ -18,7 +20,7 @@ interface ProblemResponse {
 export class ProblemService {
   private baseUrl: string;
   constructor(private http: HttpClient, private configService: ConfigService) {
-    this.baseUrl = this.configService.apiBaseUrl;
+    this.baseUrl = environment.apiBaseUrl;
   }
   getProblems(): Observable<Problem[]> {
     return this.http
