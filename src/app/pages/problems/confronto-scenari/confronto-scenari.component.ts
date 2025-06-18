@@ -48,7 +48,7 @@ export class ConfrontoScenariComponent {
       this.scenari = scenari;
       if (scenari.length >= 2) {
         this.selectedScenario1Id = this.route.snapshot.paramMap.get('id1')!;
-        this.selectedScenario2Id = this.route.snapshot.paramMap.get('id2')!;
+        this.selectedScenario2Id = this.route.snapshot.paramMap.get('id2') ?? scenari[1].id ?? '';
         this.loadScenario(1);
         this.loadScenario(2);
       }
@@ -123,18 +123,62 @@ export class ConfrontoScenariComponent {
       return;
     }
   
-    // === Heatmap custom ===
-    if (this.sottosistemaSelezionato !== 'default' && cloned.heatmapsByFunction) {
-      const specific = cloned.heatmapsByFunction[this.sottosistemaSelezionato];
-      if (specific) {
-        cloned.heatmap = {
-          x: cloned.heatmap?.x || [],
-          y: cloned.heatmap?.y || [],
-          z: specific,
-        };
+    // // === Heatmap custom ===
+    // if (this.sottosistemaSelezionato !== 'default' && cloned.heatmapsByFunction) {
+    //   const specific = cloned.heatmapsByFunction[this.sottosistemaSelezionato];
+    //   if (specific) {
+    //     cloned.heatmap = {
+    //       x: cloned.heatmap?.x || [],
+    //       y: cloned.heatmap?.y || [],
+    //       z: specific,
+    //     };
+    //   }
+    // }
+    // if (!cloned.points || !cloned.points.length) {
+      let uncertaintyData: any[] = [];
+      if (this.sottosistemaSelezionato === 'default') {
+        uncertaintyData = Array.isArray(cloned.kpis?.['uncertainty']) ? cloned.kpis['uncertainty'] : [];
+      } else {
+        uncertaintyData = (cloned.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
       }
-    }
-  
+    
+      cloned.points = [{
+        name: 'Presenze',
+        x: uncertaintyData.map((p: any) => p.tourists),
+        y: uncertaintyData.map((p: any) => p.excursionists),
+        customdata: uncertaintyData.map((p: any) => p.index),
+        marker: {
+          color: uncertaintyData.map((p: any) => p.index),
+          colorscale: [
+            [0.0, 'rgb(5, 102, 8)'],
+            [0.05, 'rgb(100, 180, 90)'],
+            [0.20, 'rgb(180, 230, 170)'],
+            [0.40, 'rgb(230, 250, 225)'],
+            [0.50, 'yellow'],
+            [0.60, 'rgb(255, 242, 242)'],
+            [0.80, 'rgb(242, 204, 204)'],
+            [0.95, 'rgb(204, 76, 76)'],
+            [1.0, 'rgb(180, 4, 38)']
+          ],
+          reversescale: true,
+          cmin: 0,
+          cmax: 1,
+          size: 7,
+          colorbar: {
+            title: 'Indice incertezza',
+            titleside: 'right'
+          }
+        },
+        mode: 'markers',
+        type: 'scatter',
+        hovertemplate:
+          '<b>Contesto:</b> %{customdata}<br>' +
+          '<b>Turisti:</b> %{x}<br>' +
+          '<b>Escursionisti:</b> %{y}<br>' +
+          '<extra></extra>',
+        showlegend: false
+      }];
+    // }
     // === Punti colorati ===
     if (cloned.points?.length) {
       cloned.points = cloned.points.map(pt => {
@@ -165,32 +209,32 @@ export class ConfrontoScenariComponent {
   
     const data: Partial<Plotly.PlotData>[] = [];
   
-    // === Heatmap ===
-    if (this.heatmapAttiva && cloned.heatmap) {
-      const y = cloned.heatmap.y;
-      const yRange = y.length > 0 ? [Math.min(...y), Math.max(...y)] : undefined;
+    // // === Heatmap ===
+    // if (this.heatmapAttiva && cloned.heatmap) {
+    //   const y = cloned.heatmap.y;
+    //   const yRange = y.length > 0 ? [Math.min(...y), Math.max(...y)] : undefined;
   
-      data.push({
-        z: cloned.heatmap.z,
-        x: cloned.heatmap.x,
-        y: y,
-        type: 'heatmap',
-        colorscale: [
-          [0, 'rgb(150, 0, 24)'],
-          [0.5, 'rgb(255,255,255)'],
-          [1, 'rgb(0,0,255)']
-        ],
-        zmin: 0,
-        zmax: 1,
-        showscale: true,
-        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
-      });
+    //   data.push({
+    //     z: cloned.heatmap.z,
+    //     x: cloned.heatmap.x,
+    //     y: y,
+    //     type: 'heatmap',
+    //     colorscale: [
+    //       [0, 'rgb(150, 0, 24)'],
+    //       [0.5, 'rgb(255,255,255)'],
+    //       [1, 'rgb(0,0,255)']
+    //     ],
+    //     zmin: 0,
+    //     zmax: 1,
+    //     showscale: true,
+    //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
+    //   });
   
-      // Forziamo il range y se definito
-      if (yRange) {
-        data.push({}); // dummy per forzare layout più compatto
-      }
-    }
+    //   // Forziamo il range y se definito
+    //   if (yRange) {
+    //     data.push({}); // dummy per forzare layout più compatto
+    //   }
+    // }
   
     // === Curve ===
     const curvesToRender = this.sottosistemaSelezionato === 'default'
@@ -218,15 +262,17 @@ export class ConfrontoScenariComponent {
         data.push({
           x: pt.x,
           y: pt.y,
-          type: 'scatter',
-          mode: 'markers',
+          type: pt.type ?? 'scatter',
+          mode: pt.mode ?? 'markers',
           name: pt.name,
-          marker: {
+          customdata: pt.customdata,
+          marker: pt.marker ?? {
             color: pt.color ?? 'black',
             size: 8,
             line: { width: 1, color: 'black' },
           },
-          hoverinfo: 'x+y+name'
+          hovertemplate: pt.hovertemplate ?? 'x: %{x}<br>y: %{y}<br><extra></extra>',
+          showlegend: pt.showlegend ?? true
         });
       }
     }
