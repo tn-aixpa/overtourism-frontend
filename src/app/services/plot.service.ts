@@ -59,7 +59,7 @@ export class PlotService {
           size: 6,
           line: {
             color: 'black',
-            width: 0
+            width: 1
           },
           colorbar: {
             title: 'Indice incertezza',

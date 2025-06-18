@@ -249,7 +249,7 @@ export class PlotComponent implements AfterViewInit {
   onHeatmapToggle() {
     this.renderPlot(); // Ricalcola il grafico quando lo switch cambia
   }
-  renderMonoDimensionale(input: PlotInput | null) {
+  async renderMonoDimensionale(input: PlotInput | null) {
     if (!this.chartLib || !input || !input.usage || !input.sample_t || !input.sample_e) return;
 
     const usage = this.sottosistemaSelezionato === 'default' ?
@@ -321,34 +321,34 @@ export class PlotComponent implements AfterViewInit {
       y: sortedIndices.map(i => usage[i]),
       type: 'scatter',
       mode: 'markers',
-      name: 'Usage',
+      name: 'Presenze',
       marker: {
         color: updatedColor,
         size: 6,
-        line: { width: 1, color: 'white' }
+        // line: { width: 1, color: 'white' }
       },
       yaxis: 'y1'
     };
 
-    const heatmap = this.heatmapAttiva && capacityFlat.length
-      ? [<Partial<Plotly.PlotData>>{
-        z: capacityFlat.map(val => Array(x.length).fill(val)),
-        x,
-        y: capacityFlat.map((_, i) => i),
-        type: 'heatmap',
-        zmin: 0,
-        zmax: 1,
-        colorscale: HEATMAP_COLOR_SCALE,
+    // const heatmap = this.heatmapAttiva && capacityFlat.length
+    //   ? [<Partial<Plotly.PlotData>>{
+    //     z: capacityFlat.map(val => Array(x.length).fill(val)),
+    //     x,
+    //     y: capacityFlat.map((_, i) => i),
+    //     type: 'heatmap',
+    //     zmin: 0,
+    //     zmax: 1,
+    //     colorscale: HEATMAP_COLOR_SCALE,
 
-        // showscale: true,
-        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
-        colorbar: {
-          x: -0.15,
-          thickness: 15,
-          len: 0.8
-        }
-      }]
-      : [];
+    //     // showscale: true,
+    //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
+    //     colorbar: {
+    //       x: -0.15,
+    //       thickness: 15,
+    //       len: 0.8
+    //     }
+    //   }]
+      // : [];
     const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
     const yAxisMax = usageMax * 1.2;
     const layout: Partial<Plotly.Layout> = {
@@ -373,7 +373,7 @@ export class PlotComponent implements AfterViewInit {
     };
 
     const traces: Partial<Plotly.PlotData>[] = [
-      ...heatmap,
+      // ...heatmap,
       traceSampleE,
       traceSampleT,
       traceCapacityMean
@@ -381,7 +381,10 @@ export class PlotComponent implements AfterViewInit {
 
       traces.push(traceUsagePoints);
 
-    Plotly.newPlot(this.chartLib.nativeElement, traces, layout, { responsive: true });
+      const plot= await Plotly.newPlot(this.chartLib.nativeElement, traces, layout, { responsive: true });
+    // const plot= await Plotly.newPlot(container, data, layout, { responsive: true });
+    plot.on('plotly_legendclick', () => false);
+    plot.on('plotly_legenddoubleclick', () => false);
   }
 
 
@@ -423,11 +426,11 @@ export class PlotComponent implements AfterViewInit {
         reversescale: true,
         cmin: 0,
         cmax: 1,
-        size: 6,
-        line: {
-          color: 'black',
-          width: 0
-        },
+        size: 7,
+        // line: {
+        //   color: 'black',
+        //   width: 0
+        // },
         colorbar: {
           title: 'Indice incertezza',
           titleside: 'right'
@@ -562,13 +565,12 @@ export class PlotComponent implements AfterViewInit {
         y: -0.2,
         xanchor: 'center',
         x: 0.5,
-      },
+            },
     };
 
-    await Plotly.newPlot(container, data, layout, { responsive: true });
-    this.chartLib.nativeElement.addEventListener('plotly_click', (data: any) => {
-      return false
-    });
+    const plot= await Plotly.newPlot(container, data, layout, { responsive: true });
+    plot.on('plotly_legendclick', () => false);
+    plot.on('plotly_legenddoubleclick', () => false);
 
   
   }
