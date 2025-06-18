@@ -54,7 +54,20 @@ export class ConfrontoScenariComponent {
       }
     });
   }
-
+  getScenarioName(id: string | undefined): string | undefined {
+    return this.scenari.find(s => s.id === id)?.name;
+  }
+  
+  selectScenario(slot: 1 | 2, id: string): void {
+    if (slot === 1) {
+      this.selectedScenario1Id = id;
+      this.loadScenario(1);
+    } else {
+      this.selectedScenario2Id = id;
+      this.loadScenario(2);
+    }
+  }
+  
   onPlotControlChange(value: string) {
     this.selectedControlOption = value;
     this.renderBoth()

@@ -23,23 +23,57 @@
     </div>
   </div>
   <div class="row mb-4">
+    <!-- Scenario 1 -->
     <div class="col-md-6">
-
-      <label for="scenario1Select" class="form-label">Scenario 1</label>
-      <it-select [(ngModel)]="selectedScenario1Id" (ngModelChange)="loadScenario(1)"
-      class="btn btn-outline-primary w-100">
-        <option *ngFor="let s of scenari" [value]="s.id">{{ s.name }}</option>
-      </it-select>
+      <!-- <label class="form-label">{{ 'scenario.1' | translate }}</label> -->
+      <div class="dropdown d-block">
+        <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+  <span>{{ getScenarioName(selectedScenario1Id) || ('select.scenario' | translate) }}</span>
+  <span class="material-icons ms-2">expand_more</span>
+</button>
+        <div class="dropdown-menu w-100">
+          <div class="link-list-wrapper">
+            <ul class="link-list">
+              <li *ngFor="let s of scenari">
+                <a class="list-item" (click)="selectScenario(1, s.id)">
+                  <span>{{ s.name }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
+  
+    <!-- Scenario 2 -->
     <div class="col-md-6">
-      <label for="scenario2Select" class="form-label">Scenario 2</label>
-      <it-select [(ngModel)]="selectedScenario2Id" (ngModelChange)="loadScenario(2)"
-      class="btn btn-outline-primary w-100">
-        <option *ngFor="let s of scenari" [value]="s.id">{{ s.name }}</option>
-      </it-select>
+      <!-- <label class="form-label">{{ 'scenario.2' | translate }}</label> -->
+      <div class="dropdown d-block">
+        <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center"
+        type="button"
+        data-bs-toggle="dropdown"
+        aria-expanded="false">
+  <span>{{ getScenarioName(selectedScenario2Id) || ('select.scenario' | translate) }}</span>
+  <span class="material-icons ms-2">expand_more</span>
+</button>
+        <div class="dropdown-menu w-100">
+          <div class="link-list-wrapper">
+            <ul class="link-list">
+              <li *ngFor="let s of scenari">
+                <a class="list-item" (click)="selectScenario(2, s.id)">
+                  <span>{{ s.name }}</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-
+  
   <div class="row">
     <div class="col-md-6">
       <div #chartLeft style="min-height: 400px;"></div>
