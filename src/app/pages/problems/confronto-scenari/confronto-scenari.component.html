@@ -11,11 +11,9 @@
       </div>
       <app-plot-controls
       *ngIf="showControls"
-      [showAllSubsystems]="showAllSubsystems"
       [monoDimensionale]="monoDimensionale"
       [sottosistemi]="sottosistemi"
       [sottosistemaSelezionato]="sottosistemaSelezionato"
-      (showAllSubsystemsChange)="onShowAllSubsystemsChange($event)"
       (monoDimensionaleChange)="onMonoDimensionaleChange($event)"
       (heatmapAttivaChange)="onHeatmapAttivaChange($event)"
       (sottosistemaSelezionatoChange)="onSottosistemaSelezionatoChange($event)"
@@ -45,11 +43,11 @@
   <div class="row">
     <div class="col-md-6">
       <div #chartLeft style="min-height: 400px;"></div>
-      <app-kpi-box [kpisData]="kpisLeft" [formatNumber]="formatNumber"></app-kpi-box>
+      <app-kpi-box [kpisData]="kpisLeft" ></app-kpi-box>
     </div>
     <div class="col-md-6">
       <div #chartRight style="min-height: 400px;"></div>
-      <app-kpi-box [kpisData]="kpisRight" [formatNumber]="formatNumber"></app-kpi-box>
+      <app-kpi-box [kpisData]="kpisRight" ></app-kpi-box>
     </div>
   </div>
 

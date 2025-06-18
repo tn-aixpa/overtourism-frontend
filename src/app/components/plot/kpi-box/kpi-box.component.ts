@@ -8,8 +8,19 @@ import { KPIs } from '../../../models/plot.model';
 })
 export class KpiBoxComponent {
   @Input() kpisData?: KPIs;
-  @Input() formatNumber: (value: number) => string = (v) =>
-    `${(v * 100).toLocaleString('it-IT', { maximumFractionDigits: 1 })}`;
+  formatNumber(v: number): string {
+    if (typeof v !== 'number' || isNaN(v)) return '-';
+    const scaled = v ;
+    if (scaled < 1 && scaled > 0) return '<1%';
+    return `${Math.round(scaled)}%`;
+  }
+  getKpiValue(key: string): number {
+    const value = this.kpisData?.[key];
+    if (typeof value === 'number') return value;
+    if (typeof value === 'object' && value !== null && 'level' in value) return value.level;
+    return 0;
+  }
+  
   kpiKeys: string[] = [];
   kpiLabels: { [key: string]: string } = {};
   criticalConstraintKey: string | null = null;
@@ -53,10 +64,10 @@ this.kpiKeys.push(...keys);
 
   }
   
-  getKpiValue(key: string): number {
-    const value = this.kpisData?.[key];
-    return typeof value === 'number' ? value : 0;
-  }
+  // getKpiValue(key: string): number {
+  //   const value = this.kpisData?.[key];
+  //   return typeof value === 'number' ? value : 0;
+  // }
   getKpiRawValue(key: string): number | { level: number } | undefined {
     return this.kpisData?.[key];
   }

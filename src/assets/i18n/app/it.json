@@ -13,11 +13,11 @@
   "kpi": {
     "title": "Indici",
     "area": "Area Totale",
-    "overtourism_level": "Giorni di rischio sovraffollamento",
-    "constraint_level_parcheggi": "Rischio sistema Parcheggi",
-    "constraint_level_spiaggia": "Rischio sistema Spiaggia",
-    "constraint_level_alberghi": "Rischio sistema Alberghi",
-    "constraint_level_ristoranti": "Rischio sistema Ristoranti",
+    "overtourism_level": "Giorni di criticità",
+    "constraint_level_parcheggi": "Giorni di criticità Parcheggi",
+    "constraint_level_spiaggia": "Giorni di criticità Spiaggia",
+    "constraint_level_alberghi": "Giorni di criticità Alberghi",
+    "constraint_level_ristoranti": "Giorni di criticità Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
   "problems":{
@@ -39,11 +39,23 @@
     "parameters": "Parametri"
 
   },
+  "save":{
+    "title": "Salva scenario",
+    "name": "Nome dello scenario",
+    "description": "Descrizione dello scenario",
+    "save": "Salva",
+    "cancel": "Annulla",
+    "error": {
+      "nameRequired": "Il nome dello scenario è obbligatorio.",
+      "descriptionRequired": "La descrizione dello scenario è obbligatoria."
+    }
+  },
   "plot": {
     "detailsTitle": "Scenario ",
     "problemId": "ID Problema",
     "scenarioId": "ID Scenario",
     "edit": "Modifica Parametri",
+    "visualizza": "Visualizza Parametri",
     "compare": "Comparazione",
     "save": "Salva",
     "viewMode": "Visualizzazione grafico",

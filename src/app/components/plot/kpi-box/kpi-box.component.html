@@ -1,41 +1,25 @@
-
-  <div class="col-12">
+<div class="col-12">
 
   <div class="card-wrapper" *ngIf="kpisData">
     <it-card background="true">
       <h3 class="mb1 p-3 h3 ">{{ 'kpi.title' | translate }}</h3>
-      <!-- <div class="mb-3 p-3  " 
-      *ngIf="criticalConstraint" 
-      >
-   <h6 class="mb-1 text-primary">{{ 'kpi.critical_constraint' | translate }}</h6>
-   <p class="small text-muted ">
-     {{ criticalConstraint.name }}: {{ formatNumber(criticalConstraint.level) }}
-   </p>
- </div> -->
-
- <!-- Altri KPI -->
- <ng-container *ngFor="let key of kpiKeys" 
-              [ngSwitch]="key !== 'critical_constraint'">
-  <ng-container *ngSwitchCase="true">
-    <div class="mb-3 p-3">
-      <h6 class="mb-1 text-primary d-flex align-items-center gap-2">
-        {{ kpiLabels[key] | translate }}
-        <span
-          *ngIf="key === criticalConstraintKey"
-          class="badge bg-danger text-white"
-          style="font-size: 0.75rem;"
-          title="Critical constraint"
-        >
-          ⚠️ Critico
-        </span>
-      </h6>
-      <p class="h3 text-secondary">
-        {{ formatNumber(getKpiValue(key)) + '%' }}
-      </p>
-    </div>
-  </ng-container>
-</ng-container>
+      <ng-container *ngFor="let key of kpiKeys" [ngSwitch]="key !== 'critical_constraint'">
+        <ng-container *ngSwitchCase="true">
+          <div class="mb-3 p-3">
+            <h6 class="mb-1 text-primary d-flex align-items-center gap-2">
+              {{ kpiLabels[key] | translate }}
+              <span *ngIf="key === criticalConstraintKey" class="badge bg-danger text-white" style="font-size: 0.75rem;"
+                title="Critical constraint">
+                ⚠️ Critico
+              </span>
+            </h6>
+            <p class="h3 text-secondary">
+              {{ formatNumber(getKpiValue(key)) }}
+            </p>
+          </div>
+        </ng-container>
+      </ng-container>
 
     </it-card>
   </div>
-  </div>
+</div>

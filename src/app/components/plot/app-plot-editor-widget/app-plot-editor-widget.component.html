@@ -28,7 +28,7 @@
                     </label>
 
                     <!-- Se index_category è '%' -->
-                    <ng-container *ngIf="widget.index_category === '%'">
+                    <!-- <ng-container *ngIf="widget.index_category === '%'">
                       <div class="input-group">
 
                         <input type="number" class="form-control" [(ngModel)]="widget.v" [min]="widget.min"
@@ -40,7 +40,7 @@
                           +
                         </button>
                       </div>
-                    </ng-container>
+                    </ng-container> -->
 
                     <!-- Se ha una scala -->
                     <ng-container *ngIf="widget.index_category !== '%' && widget.scale">
@@ -55,7 +55,7 @@
                     </ng-container>
 
                     <!-- Default: it-range -->
-                    <ng-container *ngIf="widget.index_category !== '%' && !widget.scale">
+                    <ng-container *ngIf=" !widget.scale">
                       <it-range [min]="widget.min" [max]="widget.max" [step]="widget.step" [(ngModel)]="widget.v"
                         leftColor="var(--bs-primary)" rightColor="hsl(210, 100%, 70%)" [label]="''"
                         (ngModelChange)="onWidgetChange()"></it-range>

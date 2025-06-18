@@ -54,8 +54,8 @@
   <!-- Colonna 3: Resto delle opzioni -->
   <div class="col-md-4">
     <fieldset>
-      <legend class="fw-bold mb-2">Opzioni visualizzazione</legend>
-      <div class="d-flex flex-column gap-2">
+      <!-- <legend class="fw-bold mb-2">Opzioni visualizzazione</legend> -->
+      <!-- <div class="d-flex flex-column gap-2">
         <it-checkbox
           [(ngModel)]="showAllSubsystems"
           label="Mostra tutti i sottosistemi"
@@ -63,9 +63,9 @@
           (ngModelChange)="showAllSubsystemsChange.emit($event); funzioneChange.emit()">
         </it-checkbox>
 
-      </div>
+      </div> -->
 
-      <div *ngIf="!showAllSubsystems" class="mt-3">
+      <div  class="mt-3">
         <fieldset>
           <legend class="me-2 fw-bold mb-0">Sottosistema:</legend>
           <it-radio-button

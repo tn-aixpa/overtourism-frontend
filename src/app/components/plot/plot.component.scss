@@ -17,3 +17,6 @@
   .plot-editor-sidebar.visible {
     opacity: 1;
     visibility: visible;  }
+    .ng-invalid.ng-touched .form-control {
+      border-color: red !important;
+    }

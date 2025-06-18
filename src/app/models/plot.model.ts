@@ -46,7 +46,7 @@ export interface CriticalConstraint {
 //   constraint_level_ristoranti: number;
 // }
 export interface KPIs {
-  [key: string]: number | undefined | { name: string; level: number };
+  [key: string]: any;
 }
 
 export interface PlotInput {

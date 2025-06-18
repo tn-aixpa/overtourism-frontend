@@ -35,7 +35,7 @@ export class PlotComponent implements AfterViewInit {
   loading = true;
   selectOptions: Array<{ value: string; text: string }> = [{ value: 'default', text: 'Default' }];
   heatmapAttiva = true;
-  showAllSubsystems = true;
+  // showAllSubsystems = true;
   monoDimensionale = false;
   kpisData: KPIs | undefined;
   noteUtente: string = '';
@@ -66,9 +66,13 @@ export class PlotComponent implements AfterViewInit {
   openSaveModal(): void {
     this.saveModal.toggle();
   }
-  
+  formInvalid = false;
+
   confirmSave(): void {
-    // this.saveModal.toggle();
+    if (!this.titolo?.trim() || !this.descrizione?.trim()) {
+      this.formInvalid = true;
+      return;
+    }     this.formInvalid = false;
     this.saveAsNewScenario();
   }
   saveAsNewScenario(): void {
@@ -180,9 +184,6 @@ export class PlotComponent implements AfterViewInit {
         this.notificationService.showError('Errore durante l\'aggiornamento del grafico.');
       }
     });
-  }
-  formatNumber(value: number): string {
-    return value.toFixed(2);
   }
   toggleEditing(): void {
     this.isEditing = !this.isEditing;
@@ -352,7 +353,7 @@ export class PlotComponent implements AfterViewInit {
     const yAxisMax = usageMax * 1.2;
     const layout: Partial<Plotly.Layout> = {
       ...DEFAULT_LAYOUT,
-      title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
+      // title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
       barmode: 'stack',
       xaxis: { title: { text: 'Indice ordinato per usage' } },
 
@@ -390,22 +391,58 @@ export class PlotComponent implements AfterViewInit {
       this.renderMonoDimensionale(this.inputData);
       return;
     }
-    // Clona l'input per manipolarlo senza effetti collaterali
     const input = JSON.parse(JSON.stringify(this.inputData)) as PlotInput;
-
-    if (this.sottosistemaSelezionato !== 'default' && input.heatmapsByFunction) {
-      const specific = input.heatmapsByFunction[this.sottosistemaSelezionato];
-      if (specific) {
-        input.heatmap = {
-          x: input.heatmap?.x || [],
-          y: input.heatmap?.y || [],
-          z: specific,
-        };
-      }
+  
+    // Scegli la sorgente dei punti in base al sottosistema selezionato
+    let uncertaintyData: any[] = [];
+    if (this.sottosistemaSelezionato === 'default') {
+       uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];   
+       } else {
+      uncertaintyData = (input.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
     }
-
-    
-
+  
+    // Ricostruisci i punti per il grafico
+    input.points = [{
+      name: 'Presenze',
+      x: uncertaintyData.map((p: any) => p.tourists),
+      y: uncertaintyData.map((p: any) => p.excursionists),
+      customdata: uncertaintyData.map((p: any) => p.index),
+      marker: {
+        color: uncertaintyData.map((p: any) => p.index),
+        colorscale: [
+          [0.0, 'rgb(5, 102, 8)'],
+          [0.05, 'rgb(100, 180, 90)'],
+          [0.20, 'rgb(180, 230, 170)'],
+          [0.40, 'rgb(230, 250, 225)'],
+          [0.50, 'yellow'],
+          [0.60, 'rgb(255, 242, 242)'],
+          [0.80, 'rgb(242, 204, 204)'],
+          [0.95, 'rgb(204, 76, 76)'],
+          [1.0, 'rgb(180, 4, 38)']
+        ],
+        reversescale: true,
+        cmin: 0,
+        cmax: 1,
+        size: 6,
+        line: {
+          color: 'black',
+          width: 0
+        },
+        colorbar: {
+          title: 'Indice incertezza',
+          titleside: 'right'
+        }
+      },
+      mode: 'markers',
+      type: 'scatter',
+      hovertemplate:
+        '<b>Contesto:</b> %{customdata}<br>' +
+        '<b>Turisti:</b> %{x}<br>' +
+        '<b>Escursionisti:</b> %{y}<br>' +
+        '<extra></extra>',
+      showlegend: false
+    }];
+  
     this.renderFunctionPlot(this.chartLib.nativeElement, input);
   }
 
@@ -482,8 +519,8 @@ export class PlotComponent implements AfterViewInit {
     }
     const layout: Partial<Plotly.Layout> = {
       plot_bgcolor: 'white',
-      title: { text: 'Scenario con Heatmap' },
-      margin: { t: 50, b: 130, l: 20, r: 20 },
+      // title: { text: 'Scenario con Heatmap' },
+      margin: { t: 50, b: 130, l: 80, r: 20 },
       xaxis: {
         title: { text: 'TURISTI' },
         range: [0, 10000],

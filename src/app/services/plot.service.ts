@@ -59,7 +59,7 @@ export class PlotService {
           size: 6,
           line: {
             color: 'black',
-            width: 0.5
+            width: 0
           },
           colorbar: {
             title: 'Indice incertezza',
@@ -88,9 +88,30 @@ export class PlotService {
           constraint_level_parcheggi: module.kpis['constraint level parcheggi'] ?? 0,
           constraint_level_spiaggia: module.kpis['constraint level spiaggia'] ?? 0,
           constraint_level_alberghi: module.kpis['constraint level alberghi'] ?? 0,
-          constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0
-        } 
-      : undefined;
+          constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0,
+          uncertainty: Array.isArray(module.kpis.uncertainty)
+          ? module.kpis.uncertainty.map((u: { tourists: any; excursionists: any; index: any; }) => ({
+              tourists: u.tourists ?? 0,
+              excursionists: u.excursionists ?? 0,
+              index: u.index ?? 0
+            }))
+          : [],
+        uncertainty_by_constraint: module.kpis.uncertainty_by_constraint && typeof module.kpis.uncertainty_by_constraint === 'object'
+          ? Object.fromEntries(
+              Object.entries(module.kpis.uncertainty_by_constraint).map(([key, value]) => [
+                key,
+                Array.isArray(value)
+                  ? value.map(u => ({
+                      tourists: u.tourists ?? 0,
+                      excursionists: u.excursionists ?? 0,
+                      index: u.index ?? 0
+                    }))
+                  : []
+              ])
+            )
+          : {}
+      }
+    : undefined;
 
     // Main return
     return {

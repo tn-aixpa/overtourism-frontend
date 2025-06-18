@@ -1,7 +1,7 @@
 <div class="d-flex flex-row gap-4">
   <!-- KPI a sinistra -->
   <div class="flex-shrink-0" style="min-width: 300px;">
-    <app-kpi-box [kpisData]="kpisData" [formatNumber]="formatNumber"></app-kpi-box>
+    <app-kpi-box [kpisData]="kpisData" ></app-kpi-box>
   </div>
 
   <!-- Grafico al centro + widget opzionale -->
@@ -13,12 +13,12 @@
           class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()"> 
           <span class="material-icons me-2">
         visibility
-          </span> {{('plot.edit' | translate) }}
+          </span> {{('plot.visualizza' | translate) }}
         </button>
       </div>
-      <app-plot-controls *ngIf="showControls" [showAllSubsystems]="showAllSubsystems" 
+      <app-plot-controls *ngIf="showControls"
         [monoDimensionale]="monoDimensionale" [heatmapAttiva]="heatmapAttiva" [sottosistemi]="sottosistemi"
-        [sottosistemaSelezionato]="sottosistemaSelezionato" (showAllSubsystemsChange)="showAllSubsystems = $event"
+        [sottosistemaSelezionato]="sottosistemaSelezionato" 
          (monoDimensionaleChange)="monoDimensionale = $event"
         (heatmapAttivaChange)="heatmapAttiva = $event"
         (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
@@ -114,14 +114,40 @@
 
     <p>    Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
     </p>
-    <it-input  label="{{ 'plot.title' | translate }}"
-    [(ngModel)]="titolo"></it-input>
-    <it-textarea class="w-100" label="{{ 'plot.description' | translate }}"
-    [(ngModel)]="descrizione"></it-textarea>
+    <it-input
+    label="{{ 'save.title' | translate }}"
+    name="titolo"
+    required
+    [(ngModel)]="titolo"
+    #titoloInput="ngModel">
+  </it-input>
+  <div *ngIf="titoloInput.invalid && titoloInput.touched" class="text-danger small">
+    Il titolo è obbligatorio.
+  </div>
+  
+  <it-textarea
+    class="w-100"
+    label="{{ 'save.description' | translate }}"
+    name="descrizione"
+    required
+    [(ngModel)]="descrizione"
+    #descrizioneInput="ngModel">
+  </it-textarea>
+  <div *ngIf="descrizioneInput.invalid && descrizioneInput.touched" class="text-danger small">
+    La descrizione è obbligatoria.
+  </div>
+  
     <ng-container footer>
       <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button> 
-      <button itButton="primary" size="sm" type="button" (click)="confirmSave()">Salva</button>
-    </ng-container>
+      <button
+      itButton="primary"
+      size="sm"
+      type="button"
+      [disabled]="(titoloInput.invalid ?? false) || (descrizioneInput.invalid ?? false)"
+      (click)="confirmSave()">
+      Salva
+    </button>
+        </ng-container>
   </it-modal>
 
 <app-back-button></app-back-button>
