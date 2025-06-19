@@ -23,7 +23,7 @@ export class ConfrontoScenariComponent {
 
   kpisLeft?: KPIs;
   kpisRight?: KPIs;
-  heatmapAttiva = true;
+  // heatmapAttiva = true;
   // mostraPunti = true;
   monoDimensionale = false;
   showAllSubsystems = true;
@@ -88,10 +88,10 @@ export class ConfrontoScenariComponent {
     this.renderBoth();
   }
 
-  onHeatmapAttivaChange(value: boolean) {
-    this.heatmapAttiva = value;
-    this.renderBoth();
-  }
+  // onHeatmapAttivaChange(value: boolean) {
+  //   this.heatmapAttiva = value;
+  //   this.renderBoth();
+  // }
 
   onSottosistemaSelezionatoChange(value: string) {
     this.sottosistemaSelezionato = value;
@@ -102,9 +102,9 @@ export class ConfrontoScenariComponent {
     this.renderBoth();
   }
 
-  onHeatmapToggle() {
-    this.renderBoth();
-  }
+  // onHeatmapToggle() {
+  //   this.renderBoth();
+  // }
   toggleControls(): void {
     this.showControls = !this.showControls;
   }
@@ -403,23 +403,23 @@ export class ConfrontoScenariComponent {
       yaxis: 'y1'
     };
   
-    const heatmap: Partial<Plotly.PlotData>[] = (this.heatmapAttiva && capacityFlat.length)
-      ? [{
-        z: capacityFlat.map(val => Array(x.length).fill(val)),
-        x,
-        y: capacityFlat.map((_, i) => i),
-        type: 'heatmap',
-        zmin: 0,
-        zmax: 1,
-        colorscale: HEATMAP_COLOR_SCALE,
-        hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
-        colorbar: {
-          x: -0.15,
-          thickness: 15,
-          len: 0.8
-        }
-      }]
-      : [];
+    // const heatmap: Partial<Plotly.PlotData>[] = (this.heatmapAttiva && capacityFlat.length)
+    //   ? [{
+    //     z: capacityFlat.map(val => Array(x.length).fill(val)),
+    //     x,
+    //     y: capacityFlat.map((_, i) => i),
+    //     type: 'heatmap',
+    //     zmin: 0,
+    //     zmax: 1,
+    //     colorscale: HEATMAP_COLOR_SCALE,
+    //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
+    //     colorbar: {
+    //       x: -0.15,
+    //       thickness: 15,
+    //       len: 0.8
+    //     }
+    //   }]
+    //   : [];
   
     const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
     const yAxisMax = usageMax * 1.2;
@@ -444,7 +444,7 @@ export class ConfrontoScenariComponent {
     };
   
     const traces: Partial<Plotly.PlotData>[] = [
-      ...heatmap,
+      // ...heatmap,
       traceSampleE,
       traceSampleT,
       traceCapacityMean
