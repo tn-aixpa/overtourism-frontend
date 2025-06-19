@@ -11,16 +11,16 @@ stages:
 variables:
   SECURE_LOG_LEVEL: info
   DOCKER_DRIVER: overlay
-  CONTAINER_IMAGE: smartcommunitylab/overtourism-backend:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
-  CONTAINER_IMAGE_LATEST: smartcommunitylab/overtourism-backend:latest
-  CS_IMAGE: smartcommunitylab/overtourism-backend:latest
+  CONTAINER_IMAGE: smartcommunitylab/overtourism-frontend:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+  CONTAINER_IMAGE_LATEST: smartcommunitylab/overtourism-frontend:latest
+  CS_IMAGE: smartcommunitylab/overtourism-frontend:latest
 
 include:
   - template: Security/Container-Scanning.gitlab-ci.yml
   - template: Security/Dependency-Scanning.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
 
-backend-container-build:
+frontend-container-build:
   stage: test
   variables:
     BUILDKIT_PROGRESS: plain
@@ -38,7 +38,7 @@ backend-container-build:
 container_scanning:
   stage: test
   dependencies:
-    - backend-container-build
+    - frontend-container-build
   variables:
     DOCKER_IMAGE: $CONTAINER_IMAGE
     DOCKERFILE_PATH: "Dockerfile"
@@ -56,8 +56,8 @@ deploy-prod:
   environment:
     name: digitalhub-test
   script:
-    - echo "deploy backend"
-    - kubectl -n aixpa-overtourism-demo set image deployments/aixpa-overtourism-demo-backend aixpa-overtourism-demo-backend=$CONTAINER_IMAGE --record=true
-    - kubectl -n aixpa-overtourism-demo rollout status deployment aixpa-overtourism-demo-backend
+    - echo "deploy frontend"
+    - kubectl -n aixpa-overtourism-demo set image deployments/aixpa-overtourism-demo-frontend aixpa-overtourism-demo-frontend=$CONTAINER_IMAGE --record=true
+    - kubectl -n aixpa-overtourism-demo rollout status deployment aixpa-overtourism-demo-frontend
   only:
     - main
