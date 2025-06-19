@@ -9,6 +9,7 @@ import { ProblemsComponent } from './pages/problems/problems/problems.component'
 import { TermsComponent } from './pages/terms/terms.component';
 import { ScenarioDetailComponent } from './pages/problems/scenario-detail/scenario-detail.component';
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
+import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'problems', pathMatch: 'full' },
@@ -21,6 +22,7 @@ const routes: Routes = [
         path: '',
         component: ProblemsComponent
       },
+      { path: 'create', component: ProblemCreateComponent }, 
       {
         path: ':problemId/scenari',
         data: { breadcrumb: 'Scenari' },

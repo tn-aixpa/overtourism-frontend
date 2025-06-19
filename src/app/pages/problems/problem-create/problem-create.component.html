@@ -1,0 +1,74 @@
+<it-card background="true" class="p-4">
+    <h3 class="mb-4">{{ 'problems.createTitle' | translate }}</h3>
+    <div class="callout callout-highlight mb-4">
+      <h6 class="text-muted">{{ 'problems.descriptionTitle' | translate }}</h6>
+    </div>
+  
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="table-responsive mb-4">
+        <table class="table table-borderless">
+          <tbody>
+            <!-- Titolo -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label for="title">
+                  {{ 'problems.fields.title' | translate }}
+                </label>
+              </td>
+              <td>
+                <it-input
+                  id="title"
+                  name="name"
+                  [(ngModel)]="model.name"
+                  required
+                  placeholder="{{ 'problems.fields.titlePlaceholder' | translate }}"
+                ></it-input>
+              </td>
+            </tr>
+  
+            <!-- Descrizione -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label for="description">
+                  {{ 'problems.fields.description' | translate }}
+                </label>
+              </td>
+              <td>
+                <it-textarea
+                  id="description"
+                  name="description"
+                  [(ngModel)]="model.description"
+                  [rows]=4
+                  placeholder="{{ 'problems.fields.descriptionPlaceholder' | translate }}"
+                ></it-textarea>
+              </td>
+            </tr>
+            <tr>
+                <td class="fw-bold w-25">
+                  <label for="description">
+                    {{ 'problems.fields.descriptionProblem' | translate }}
+                  </label>
+                </td>
+                <td>
+                  <it-textarea
+                    id="descriptionProblem"
+                    name="descriptionProblem"
+                    [(ngModel)]="model.descriptionProblem"
+                    [rows]=4
+                    placeholder="{{ 'problems.fields.descriptionPlaceholder' | translate }}"
+                  ></it-textarea>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- footer grigio con pulsante salva -->
+      <div class=" border-top pt-3 mt-4 d-flex justify-content-end">
+        <button itButton="primary" type="submit" [disabled]="form.invalid ?? false">
+          {{ 'common.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </it-card>
+  <app-back-button></app-back-button>

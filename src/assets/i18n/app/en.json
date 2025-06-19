@@ -23,7 +23,18 @@
   "problems": {
     "title": "Design Questions",
     "loading": "Loading design questions...",
-    "create": "Add or edit question"
+    "descriptionTitle": "In this section, you can enter the main information related to the problem and the scenarios you intend to simulate. This is a crucial preliminary phase to contextualize the analysis and correctly guide the choice of subsequent parameters. Scenarios can specify, for example, the geographical area of reference, the time of year, the type of expected visitors (tourists, hikers, residents), any special events, and the objectives of the simulation (e.g., reduce traffic, improve flow distribution, test new solutions). This information will help build a realistic scenario consistent with the policies or strategies you want to evaluate.",
+    "create": "Add or edit question",
+    "createTitle": "Problem Definition",
+    "fields": {
+      "title": "Title",
+      "titlePlaceholder": "Enter title",
+      "description": "Description",
+      "descriptionPlaceholder": "Enter description",
+      "deadline": "Deadline",
+      "owner": "Owner",
+      "priority": "Priority"
+    }
   },
   "scenari": {
     "loading": "Loading scenarios...",
@@ -69,8 +80,11 @@
       "toggleLabel": "Enable advanced option"
     }
   },
+  
   "common": {
     "back": "Back",
-    "selectScenario": "Select a scenario"
+    "selectScenario": "Select a scenario",
+    "cancel": "Cancel",
+    "save": "Save"    
   }
 }
