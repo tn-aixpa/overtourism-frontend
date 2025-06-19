@@ -1,0 +1,27 @@
+.gradient-legend {
+    /* contiene la barra e le etichette */
+    width: 100%;
+    
+    .gradient-bar {
+      height: 16px;
+      border-radius: 4px;
+      background: linear-gradient(
+        to right,
+        rgb(5,102,8)   0%,
+        rgb(100,180,90) 5%,
+        rgb(180,230,170) 20%,
+        rgb(230,250,225) 40%,
+        yellow          50%,
+        rgb(255,242,242) 60%,
+        rgb(242,204,204) 80%,
+        rgb(204,76,76)   95%,
+        rgb(180,4,38)   100%
+      );
+    }
+  
+    .gradient-labels {
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: gray /* o un grigio a piacere */
+    }
+  }

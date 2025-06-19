@@ -261,11 +261,12 @@ export class PlotComponent implements AfterViewInit {
     const capacityMean = this.sottosistemaSelezionato === 'default' ?
       input.capacity_mean :
       input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
-    const capacity = this.sottosistemaSelezionato === 'default' ?
-      input.capacity :
-      input.capacity_by_constraint?.[this.sottosistemaSelezionato];
+    // const capacity = this.sottosistemaSelezionato === 'default' ?
+    //   input.capacity :
+    //   input.capacity_by_constraint?.[this.sottosistemaSelezionato];
 
-    if (!usage || !capacity) return;
+    // if (!usage || !capacity) return;
+    if (!usage ) return;
     const sampleT = input.sample_t;
     const sampleE = input.sample_e;
     // const capacityMean = capacity ?? 0;
@@ -279,26 +280,26 @@ export class PlotComponent implements AfterViewInit {
     const x = sortedIndices.map((_, i) => i);
 
     // Flatten della capacity: da number[][] → number[]
-    const capacityFlat = Array.isArray(capacity) ? capacity.map(row => Array.isArray(row) ? row[0] : 0) : [];
+    // const capacityFlat = Array.isArray(capacity) ? capacity.map(row => Array.isArray(row) ? row[0] : 0) : [];
 
-    const traceSampleT: Partial<Plotly.PlotData> = {
-      x,
-      y: sortedIndices.map(i => sampleT[i] * 1.2),
-      name: 'Turisti',
-      marker: { color: PLOT_COLORS.sampleT },
-      type: 'bar',
-      yaxis: 'y2',
-    };
+    // const traceSampleT: Partial<Plotly.PlotData> = {
+    //   x,
+    //   y: sortedIndices.map(i => sampleT[i] * 1.2),
+    //   name: 'Turisti',
+    //   marker: { color: PLOT_COLORS.sampleT },
+    //   type: 'bar',
+    //   yaxis: 'y2',
+    // };
 
-    const traceSampleE: Partial<Plotly.PlotData> = {
-      x,
-      y: sortedIndices.map(i => sampleE[i] * 1.2),
-      name: 'Escursionisti',
-      type: 'bar',
-      marker: { color: PLOT_COLORS.sampleE },
+    // const traceSampleE: Partial<Plotly.PlotData> = {
+    //   x,
+    //   y: sortedIndices.map(i => sampleE[i] * 1.2),
+    //   name: 'Escursionisti',
+    //   type: 'bar',
+    //   marker: { color: PLOT_COLORS.sampleE },
 
-      yaxis: 'y2',
-    };
+    //   yaxis: 'y2',
+    // };
 
     const traceCapacityMean: Partial<Plotly.PlotData> = {
       x,
@@ -357,27 +358,35 @@ export class PlotComponent implements AfterViewInit {
       ...DEFAULT_LAYOUT,
       // title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
       barmode: 'stack',
-      xaxis: { title: { text: 'Indice ordinato per usage' } },
+      xaxis: { title: { text: 'Giorni (ordinati per livello di utilizzo)' } },
 
       yaxis: {
-        title: { text: 'Overturismo (capacity)' },
+        title: { text: 'Livello di saturazione della destinazione' },
         side: 'left',
         overlaying: undefined,
         range: [0, yAxisMax]
 
       },
 
-      yaxis2: {
-        title: { text: 'Presenze (turisti + escursionisti)' },
-        side: 'right',
-        overlaying: 'y',
-      }
+      // yaxis2: {
+      //   // title: { text: 'Livello di saturazione della destinazione' },
+      //   side: 'right',
+      //   overlaying: 'y',
+      // },
+      showlegend: true,
+      legend: {
+        orientation: 'h',
+        yanchor: 'top',
+        y: -0.2,
+        xanchor: 'center',
+        x: 0.5,
+            },
     };
 
     const traces: Partial<Plotly.PlotData>[] = [
       // ...heatmap,
-      traceSampleE,
-      traceSampleT,
+      // traceSampleE,
+      // traceSampleT,
       traceCapacityMean
     ];
 
@@ -425,6 +434,7 @@ export class PlotComponent implements AfterViewInit {
           [0.95, 'rgb(204, 76, 76)'],
           [1.0, 'rgb(180, 4, 38)']
         ],
+        showscale: false,
         reversescale: true,
         cmin: 0,
         cmax: 1,

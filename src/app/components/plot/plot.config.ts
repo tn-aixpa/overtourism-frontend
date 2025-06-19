@@ -10,8 +10,8 @@ export const SUBSYSTEM_OPTIONS = [
   export const PLOT_COLORS = {
     sampleT: 'rgba(211, 211, 211, 0.7)',      // Light gray
     sampleE: 'rgba(64, 64, 64, 0.7)',         // Dark gray
-    overThreshold: '#BA0C2F',
-    underThreshold: '#32CD32',
+    overThreshold: 'rgb(180,4,38)',
+    underThreshold: 'rgb(5,102,8)',
     capacityMean: 'red',
   };
   

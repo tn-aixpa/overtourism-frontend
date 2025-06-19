@@ -174,6 +174,7 @@ export class ConfrontoScenariComponent {
             [0.95, 'rgb(204, 76, 76)'],
             [1.0, 'rgb(180, 4, 38)']
           ],
+          showscale: false,
           reversescale: true,
           cmin: 0,
           cmax: 1,
@@ -282,9 +283,7 @@ export class ConfrontoScenariComponent {
           customdata: pt.customdata,
           marker: pt.marker ?? {
             color: pt.color ?? 'black',
-            size: 8,
-            line: { width: 1, color: 'black' },
-          },
+            size: 8          },
           hovertemplate: pt.hovertemplate ?? 'x: %{x}<br>y: %{y}<br><extra></extra>',
           showlegend: pt.showlegend ?? true
         });
@@ -336,12 +335,13 @@ export class ConfrontoScenariComponent {
       ? input.capacity_mean
       : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
   
-    const capacity = this.sottosistemaSelezionato === 'default'
-      ? input.capacity
-      : input.capacity_by_constraint?.[this.sottosistemaSelezionato];
+    // const capacity = this.sottosistemaSelezionato === 'default'
+    //   ? input.capacity
+    //   : input.capacity_by_constraint?.[this.sottosistemaSelezionato];
   
-    if (!usage || !capacity) return;
-  
+    // if (!usage || !capacity) return;
+    if (!usage ) return;
+
     const sortedIndices = usage
       .map((val, idx) => ({ val, idx }))
       .sort((a, b) => a.val - b.val)
@@ -349,27 +349,27 @@ export class ConfrontoScenariComponent {
   
     const x = sortedIndices.map((_, i) => i);
   
-    const capacityFlat = Array.isArray(capacity)
-      ? capacity.map(row => Array.isArray(row) ? row[0] : 0)
-      : [];
+    // const capacityFlat = Array.isArray(capacity)
+    //   ? capacity.map(row => Array.isArray(row) ? row[0] : 0)
+    //   : [];
   
-    const traceSampleT: Partial<Plotly.PlotData> = {
-      x,
-      y: sortedIndices.map(i => sampleT[i] * 1.2),
-      name: 'Turisti',
-      marker: { color: PLOT_COLORS.sampleT },
-      type: 'bar',
-      yaxis: 'y2',
-    };
+    // const traceSampleT: Partial<Plotly.PlotData> = {
+    //   x,
+    //   y: sortedIndices.map(i => sampleT[i] * 1.2),
+    //   name: 'Turisti',
+    //   marker: { color: PLOT_COLORS.sampleT },
+    //   type: 'bar',
+    //   yaxis: 'y2',
+    // };
   
-    const traceSampleE: Partial<Plotly.PlotData> = {
-      x,
-      y: sortedIndices.map(i => sampleE[i] * 1.2),
-      name: 'Escursionisti',
-      type: 'bar',
-      marker: { color: PLOT_COLORS.sampleE },
-      yaxis: 'y2',
-    };
+    // const traceSampleE: Partial<Plotly.PlotData> = {
+    //   x,
+    //   y: sortedIndices.map(i => sampleE[i] * 1.2),
+    //   name: 'Escursionisti',
+    //   type: 'bar',
+    //   marker: { color: PLOT_COLORS.sampleE },
+    //   yaxis: 'y2',
+    // };
   
     const traceCapacityMean: Partial<Plotly.PlotData> = {
       x,
@@ -399,7 +399,6 @@ export class ConfrontoScenariComponent {
       marker: {
         color: updatedColor,
         size: 6,
-        line: { width: 1, color: 'white' }
       },
       yaxis: 'y1'
     };
@@ -426,11 +425,11 @@ export class ConfrontoScenariComponent {
     const yAxisMax = usageMax * 1.2;
   
     const layout: Partial<Plotly.Layout> = {
-      title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
+      // title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
       barmode: 'stack',
       xaxis: { title: { text: 'Indice ordinato per usage' } },
       yaxis: {
-        title: { text: 'Overturismo (capacity)' },
+        title: { text: 'Capacità' },
         side: 'left',
         overlaying: undefined,
         range: [0, yAxisMax]
@@ -441,13 +440,21 @@ export class ConfrontoScenariComponent {
         title: { text: 'Presenze (turisti + escursionisti)' },
         side: 'right',
         overlaying: 'y',
-      }
+      },
+      showlegend: true,
+      legend: {
+        orientation: 'h',
+        yanchor: 'top',
+        y: -0.2,
+        xanchor: 'center',
+        x: 0.5,
+            },
     };
   
     const traces: Partial<Plotly.PlotData>[] = [
       // ...heatmap,
-      traceSampleE,
-      traceSampleT,
+      // traceSampleE,
+      // traceSampleT,
       traceCapacityMean
     ];
   
