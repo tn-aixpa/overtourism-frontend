@@ -70,6 +70,7 @@
     }
   },
   "common": {
-    "back": "Back"
+    "back": "Back",
+    "selectScenario": "Select a scenario"
   }
 }

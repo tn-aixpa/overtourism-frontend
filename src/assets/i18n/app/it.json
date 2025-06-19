@@ -71,6 +71,7 @@
     }
   },
   "common":{
-    "back": "Indietro"
+    "back": "Indietro",
+    "selectScenario": "Seleziona uno scenario"
   }
 }

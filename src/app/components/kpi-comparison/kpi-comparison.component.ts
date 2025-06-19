@@ -31,4 +31,11 @@ export class KpiComparisonComponent {
     if (percent > 0) return `+${percent}%`;
     return `${percent}%`;
   }  
+  getDeltaClass(left: number, right: number): string {
+    const deltaPerc = (right - left);
+  
+    if (Math.abs(deltaPerc) <= 2) return 'btn-outline-secondary'; // Grigio
+    if (deltaPerc > 2) return 'btn-outline-danger';              // Rosso
+    return 'btn-outline-success';                                // Verde
+  }
 }

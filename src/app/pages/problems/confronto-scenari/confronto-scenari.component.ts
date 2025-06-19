@@ -48,7 +48,8 @@ export class ConfrontoScenariComponent {
       this.scenari = scenari;
       if (scenari.length >= 2) {
         this.selectedScenario1Id = this.route.snapshot.paramMap.get('id1')!;
-        this.selectedScenario2Id = this.route.snapshot.paramMap.get('id2') ?? scenari[1].id ?? '';
+        const id2 = this.route.snapshot.paramMap.get('id2');
+        this.selectedScenario2Id = id2 && id2 !== 'default' ? id2 : '';
         this.loadScenario(1);
         this.loadScenario(2);
       }
