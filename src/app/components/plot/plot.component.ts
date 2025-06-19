@@ -178,6 +178,8 @@ export class PlotComponent implements AfterViewInit {
       next: (newInput) => {
         this.inputData = this.plotService.preparePlotInput(newInput.data);
         this.indexDiffs = newInput.index_diffs || {};
+        this.kpisData = this.inputData.kpis;
+
         this.renderPlot();
       },
       error: (err) => {
