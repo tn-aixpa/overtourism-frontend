@@ -4,6 +4,7 @@ import { ProblemService } from '../../../services/problem.service';
 import { of, delay, Observable } from 'rxjs';
 import { NotificationService } from '../../../services/notifications.service';
 import { SearchItem } from 'design-angular-kit';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-problems',
@@ -17,7 +18,8 @@ export class ProblemsComponent {
   errorMessage = '';
 
   constructor(private problemService: ProblemService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router
 
   ) {}
 
@@ -30,11 +32,27 @@ export class ProblemsComponent {
       return of([]);
     }
 
-    return of([]);
+    return of(this.problems.map(problem => ({
+      value: problem.id, // Assuming 'id' is a unique identifier in Problem
+      label: problem.name // Assuming 'name' is a property in Problem for display
+    })));
   };
 
+  // searchProblems$ = (search?: string): Observable<Array<SearchItem>> => {
+  //   if (!search) {
+  //     return of([]);
+  //   }
+
+  //   // API request for retrieve data, use `search` to filter data
+  //   return of(this.problems.map(problem => ({
+  //     value: problem.id, // Assuming 'id' is a unique identifier in Problem
+  //     label: problem.name // Assuming 'name' is a property in Problem for display
+  //   })));
+  // };
+
   onSearchSelected(item: SearchItem): void {
-    console.log(item);
+    this.router.navigate(['/problems', item.value, 'scenari']);
+    
   }
 
   loadProblems(): void {
