@@ -52,6 +52,7 @@
         <div class="row mt-4">
           <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
           <app-plot-editor-widget [widgets]="widgets"
+          [editableIndexes]="editableIndexes || []"
           (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
         </div>
 

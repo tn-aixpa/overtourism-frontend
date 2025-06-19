@@ -54,4 +54,12 @@
       background: var(--bs-primary);
     }
   }
-  
+  .disabled-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+    position: relative;
+  }
+  .disabled-slider-wrapper {
+    pointer-events: none;
+    opacity: 0.5;
+  }

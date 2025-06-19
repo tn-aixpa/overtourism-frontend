@@ -15,6 +15,8 @@ export class AppPlotEditorWidgetComponent implements OnInit, OnDestroy {
   @Input() set widgets(value: Record<string, Widget[]>) {
     this._widgets = JSON.parse(JSON.stringify(value));
   }
+  @Input() editableIndexes: string[] = [];
+
   private widgetChange$ = new Subject<void>();
   private destroy$ = new Subject<void>();
 
@@ -72,7 +74,10 @@ export class AppPlotEditorWidgetComponent implements OnInit, OnDestroy {
         this.widgetsChanged.emit(clonedWidgets); // emetti SOLO dopo il debounce
       });
   }
-  
+  isEditable(widget: Widget): boolean {
+    // return true
+    return this.editableIndexes.includes(widget.index_id); 
+  }
   increase(widget: Widget): void {
     const step = widget.step || 1;
     const max = widget.max ?? Infinity;

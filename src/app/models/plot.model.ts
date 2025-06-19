@@ -65,6 +65,7 @@ export interface PlotInput {
   usage_by_constraint?: Record<string, number[]>;
   capacity_by_constraint?: Record<string, number[][]>;
   capacity_mean_by_constraint?: Record<string, number>;
+  editable_indexes?: string[];
 }
 
 

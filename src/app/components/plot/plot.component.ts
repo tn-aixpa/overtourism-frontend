@@ -41,6 +41,7 @@ export class PlotComponent implements AfterViewInit {
   noteUtente: string = '';
   widgets: Record<string, Widget[]> = {};
   sottosistemi = SUBSYSTEM_OPTIONS;
+  editableIndexes : string[] = [];
   objectKeys = Object.keys;
 
   // editSidebarVisible = false;
@@ -216,6 +217,7 @@ export class PlotComponent implements AfterViewInit {
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
 
       this.inputData = this.plotService.preparePlotInput(rawData.data);
+      this.editableIndexes = rawData.editable_indexes || [];
       this.indexDiffs = rawData.index_diffs || {};
 
       this.kpisData = this.inputData.kpis;
