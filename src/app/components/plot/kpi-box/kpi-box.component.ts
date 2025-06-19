@@ -8,6 +8,7 @@ import { KPIs } from '../../../models/plot.model';
 })
 export class KpiBoxComponent {
   @Input() kpisData?: KPIs;
+
   formatNumber(v: number): string {
     if (typeof v !== 'number' || isNaN(v)) return '-';
     const scaled = v ;
@@ -27,8 +28,10 @@ export class KpiBoxComponent {
 
   ngOnChanges() {
     if (this.kpisData) {
+      const excluded = ['critical constraint', 'uncertainty', 'uncertainty_by_constraint'];
+
       this.kpiKeys = Object.keys(this.kpisData)
-        .filter(key => key !== 'critical constraint');
+      .filter(key => !excluded.includes(key));
       this.kpiLabels = {};
       this.kpiKeys.forEach(key => {
         this.kpiLabels[key] = 'kpi.' + key.replace(/ /g, '_');

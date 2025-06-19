@@ -40,7 +40,7 @@
 
   },
   "save":{
-    "title": "Salva scenario",
+    "title": "Nome scenario",
     "name": "Nome dello scenario",
     "description": "Descrizione dello scenario",
     "save": "Salva",
@@ -55,7 +55,7 @@
     "problemId": "ID Problema",
     "scenarioId": "ID Scenario",
     "edit": "Modifica Parametri",
-    "visualizza": "Visualizza Parametri",
+    "visualizza": "Impostazioni di visualizzazione",
     "compare": "Comparazione",
     "save": "Salva",
     "viewMode": "Visualizzazione grafico",

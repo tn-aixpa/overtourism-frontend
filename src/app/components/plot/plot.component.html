@@ -17,10 +17,9 @@
         </button>
       </div>
       <app-plot-controls *ngIf="showControls"
-        [monoDimensionale]="monoDimensionale" [heatmapAttiva]="heatmapAttiva" [sottosistemi]="sottosistemi"
+        [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
         [sottosistemaSelezionato]="sottosistemaSelezionato" 
          (monoDimensionaleChange)="monoDimensionale = $event"
-        (heatmapAttivaChange)="heatmapAttiva = $event"
         (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
         (heatmapToggle)="onHeatmapToggle()"></app-plot-controls>
 

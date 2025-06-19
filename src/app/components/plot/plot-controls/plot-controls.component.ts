@@ -9,13 +9,13 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class PlotControlsComponent {
   // @Input() showAllSubsystems!: boolean;
   @Input() monoDimensionale!: boolean;
-  @Input() heatmapAttiva!: boolean;
+  // @Input() heatmapAttiva!: boolean;
   @Input() sottosistemi!: Array<{ value: string; label: string }>;
   @Input() sottosistemaSelezionato!: string;
 
   // @Output() showAllSubsystemsChange = new EventEmitter<boolean>();
   @Output() monoDimensionaleChange = new EventEmitter<boolean>();
-  @Output() heatmapAttivaChange = new EventEmitter<boolean>();
+  // @Output() heatmapAttivaChange = new EventEmitter<boolean>();
   @Output() sottosistemaSelezionatoChange = new EventEmitter<string>();
   @Output() funzioneChange = new EventEmitter<void>();
   @Output() heatmapToggle = new EventEmitter<void>();

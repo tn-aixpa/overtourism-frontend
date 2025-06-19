@@ -39,7 +39,7 @@
     "parameters": "Parameters"
   },
   "save": {
-    "title": "Save Scenario",
+    "title": "Scenario Name",
     "name": "Scenario Name",
     "description": "Scenario Description",
     "save": "Save",
@@ -54,7 +54,7 @@
     "problemId": "Problem ID",
     "scenarioId": "Scenario ID",
     "edit": "Edit Parameters",
-    "visualizza": "View Parameters",
+    "view": "View Settings",
     "save": "Save",
     "compare": "Compare",
     "viewMode": "Viewing graph",

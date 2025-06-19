@@ -34,7 +34,7 @@ export class PlotComponent implements AfterViewInit {
   sottosistemaSelezionato = 'default';
   loading = true;
   selectOptions: Array<{ value: string; text: string }> = [{ value: 'default', text: 'Default' }];
-  heatmapAttiva = true;
+  // heatmapAttiva = true;
   // showAllSubsystems = true;
   monoDimensionale = false;
   kpisData: KPIs | undefined;
