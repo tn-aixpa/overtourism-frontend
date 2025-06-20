@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ScenarioService } from '../../../services/scenario.service';
+import { ScenarioService, Widget } from '../../../services/scenario.service';
 import { Scenario } from '../../../models/scenario.model';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -15,6 +15,7 @@ export class ScenariComponent {
   problemId: any;
   comparazioneAttiva = false;
   selectedScenari: any[] = [];
+  widgets: any;
 
   constructor(
     private scenarioService: ScenarioService,
@@ -56,7 +57,24 @@ export class ScenariComponent {
       this.selectedScenari = this.selectedScenari.filter(s => s.id !== scenario.id);
     }
   }
-
+  getDiffDescription(scenario: any): string {
+    if (!scenario.index_diffs) return '';
+  
+    const diffs = Object.entries(scenario.index_diffs).map(([key, value]) => {
+      const name = this.getIndexNameFromKey(key);
+      return `<div width="300px"><strong>${name}</strong>: ${value}</div>`;
+    });
+  
+    return diffs.join('');
+  }
+  
+  getIndexNameFromKey(key: string): string {
+    for (const group of Object.keys(this.widgets)) {
+      const widget = this.widgets[group].find((w: { index_id: string; }) => w.index_id === key);
+      if (widget) return widget.index_name;
+    }
+    return key; // fallback se non trovato
+  }
   confrontaScenari() {
     const [s1, s2] = this.selectedScenari;
     this.router.navigate([
@@ -72,8 +90,32 @@ export class ScenariComponent {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
 
     this.loadScenarios(this.problemId);
-  }
+    this.loadWidgets();
 
+  }
+  loadWidgets() {
+    this.scenarioService.getWidgets().subscribe({
+      next: (data) => {
+        const initialized = this.initializeWidgetBounds(data);
+        this.widgets = initialized;
+      },
+      error: (err) => {
+        console.error('Errore caricamento widget', err);
+      }
+    });
+  }
+    private initializeWidgetBounds(widgets: Record<string, Widget[]>): Record<string, Widget[]> {
+      const clone = JSON.parse(JSON.stringify(widgets));
+      for (const key of Object.keys(clone)) {
+        for (const widget of clone[key]) {
+          if (widget.scale && widget.index_category !== '%') {
+            widget.vMin ??= widget.loc;
+            widget.vMax ??= widget.loc + widget.scale;
+          }
+        }
+      }
+      return clone;
+    }
   loadScenarios(problemId: any): void {
     // this.loading = true;
     // this.scenari=this.mockScenarios;

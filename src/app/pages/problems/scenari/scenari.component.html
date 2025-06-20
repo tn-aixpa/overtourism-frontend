@@ -31,8 +31,20 @@
         <td class="text-start align-middle">{{ scenario.name }}</td>
         <td class="text-start align-middle">{{ scenario.description }}</td>
         <td class="text-start align-middle">
-          <span *ngIf="hasParams(scenario)" class="material-icons" title="Parametri presenti">description</span>
-          <!-- <span *ngIf="!hasParams(scenario)" class="text-muted material-icons" title="Nessun parametro">remove_circle_outline</span> -->
+          <button
+            *ngIf="hasParams(scenario)"
+            class="btn btn-sm btn-icon text-primary  "
+            [itPopover]="getDiffDescription(scenario)"
+            [popoverTitle]="'scenari.parametersChanged' | translate"
+            [popoverPlacement]="'left'"
+            [popoverContainer]="'body'"
+            popoverHtml="true"
+            (click)="$event.stopPropagation()"
+            
+            aria-label="Visualizza parametri"
+          >
+            <span class="material-icons align-middle">description</span>
+          </button>
         </td>
         <td class="text-start align-middle">
           <div class="d-flex flex-wrap justify-content-start gap-2">

@@ -47,7 +47,8 @@
     "compare_selected": "Compare selected",
     "enable_compare": "Enable comparison",
     "disable_compare": "Disable comparison",
-    "parameters": "Parameters"
+    "parameters": "Parameters",
+    "parametersChanged": "PARAMETERS CHANGED"
   },
   "save": {
     "title": "Scenario Name",
