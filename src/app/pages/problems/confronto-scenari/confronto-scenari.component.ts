@@ -321,150 +321,101 @@ export class ConfrontoScenariComponent {
     }
     this.loadScenario(slot);
   }
-  renderMonoDimensionale(container: HTMLElement, input: PlotInput): void {
-    const sampleT = input.sample_t;
-    const sampleE = input.sample_e;
-  
-    if (!sampleT || !sampleE) return;
-  
-    const usage = this.sottosistemaSelezionato === 'default'
-      ? input.usage
-      : input.usage_by_constraint?.[this.sottosistemaSelezionato];
-  
-    const capacityMean = this.sottosistemaSelezionato === 'default'
-      ? input.capacity_mean
-      : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
-  
-    // const capacity = this.sottosistemaSelezionato === 'default'
-    //   ? input.capacity
-    //   : input.capacity_by_constraint?.[this.sottosistemaSelezionato];
-  
-    // if (!usage || !capacity) return;
-    if (!usage ) return;
-
-    const sortedIndices = usage
-      .map((val, idx) => ({ val, idx }))
-      .sort((a, b) => a.val - b.val)
-      .map(obj => obj.idx);
-  
-    const x = sortedIndices.map((_, i) => i);
-  
-    // const capacityFlat = Array.isArray(capacity)
-    //   ? capacity.map(row => Array.isArray(row) ? row[0] : 0)
-    //   : [];
-  
-    // const traceSampleT: Partial<Plotly.PlotData> = {
-    //   x,
-    //   y: sortedIndices.map(i => sampleT[i] * 1.2),
-    //   name: 'Turisti',
-    //   marker: { color: PLOT_COLORS.sampleT },
-    //   type: 'bar',
-    //   yaxis: 'y2',
-    // };
-  
-    // const traceSampleE: Partial<Plotly.PlotData> = {
-    //   x,
-    //   y: sortedIndices.map(i => sampleE[i] * 1.2),
-    //   name: 'Escursionisti',
-    //   type: 'bar',
-    //   marker: { color: PLOT_COLORS.sampleE },
-    //   yaxis: 'y2',
-    // };
-  
-    const traceCapacityMean: Partial<Plotly.PlotData> = {
-      x,
-      y: Array(x.length).fill(capacityMean),
-      type: 'scatter',
-      mode: 'lines',
-      name: 'Capacity Mean',
-      line: { color: PLOT_COLORS.capacityMean, dash: 'dash', width: 2 },
-      yaxis: 'y1',
-    };
-  
-    const threshold = this.sottosistemaSelezionato === 'default'
-    ? input.capacity_mean
-    : input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
-
-
-  const updatedColor = sortedIndices.map(i =>
-    usage[i] > (threshold ?? 0) ? PLOT_COLORS.overThreshold : PLOT_COLORS.underThreshold
-  );
-  
-    const traceUsagePoints: Partial<Plotly.PlotData> = {
-      x,
-      y: sortedIndices.map(i => usage[i]),
-      type: 'scatter',
-      mode: 'markers',
-      name: 'Usage',
-      marker: {
-        color: updatedColor,
-        size: 6,
-      },
-      yaxis: 'y1'
-    };
-  
-    // const heatmap: Partial<Plotly.PlotData>[] = (this.heatmapAttiva && capacityFlat.length)
-    //   ? [{
-    //     z: capacityFlat.map(val => Array(x.length).fill(val)),
-    //     x,
-    //     y: capacityFlat.map((_, i) => i),
-    //     type: 'heatmap',
-    //     zmin: 0,
-    //     zmax: 1,
-    //     colorscale: HEATMAP_COLOR_SCALE,
-    //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>',
-    //     colorbar: {
-    //       x: -0.15,
-    //       thickness: 15,
-    //       len: 0.8
-    //     }
-    //   }]
-    //   : [];
-  
-    const usageMax = Math.max(...sortedIndices.map(i => usage[i]));
-    const yAxisMax = usageMax * 1.2;
-  
-    const layout: Partial<Plotly.Layout> = {
-      // title: { text: 'Modalità Monodimensionale: Presenze vs Capacità' },
-      barmode: 'stack',
-      xaxis: { title: { text: 'Indice ordinato per usage' } },
-      yaxis: {
-        title: { text: 'Capacità' },
-        side: 'left',
-        overlaying: undefined,
-        range: [0, yAxisMax]
-
-      },
-
-      yaxis2: {
-        title: { text: 'Presenze (turisti + escursionisti)' },
-        side: 'right',
-        overlaying: 'y',
-      },
-      showlegend: true,
-      legend: {
-        orientation: 'h',
-        yanchor: 'top',
-        y: -0.2,
-        xanchor: 'center',
-        x: 0.5,
-            },
-    };
-  
-    const traces: Partial<Plotly.PlotData>[] = [
-      // ...heatmap,
-      // traceSampleE,
-      // traceSampleT,
-      traceCapacityMean
-    ];
-  
-    // if (this.mostraPunti) {
-      traces.push(traceUsagePoints);
-    // }
-  
-    Plotly.newPlot(container, traces, layout, { responsive: true });
+  async renderMonoDimensionale(container: HTMLElement, input: PlotInput): Promise<void> {
+    if (!container || !input?.kpis) return;
+      
+        let uncertaintyData: any[] = [];
+        if (this.sottosistemaSelezionato === 'default') {
+           uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];   
+           } else {
+          uncertaintyData = (input.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
+        }
+        if (!uncertaintyData.length) return;
+      
+        // Ordina per usage crescente
+        const sorted = [...uncertaintyData].sort((a, b) => a.usage - b.usage);
+      
+        const x = sorted.map((_, i) => i);                      // 0,1,2,...
+        const y = sorted.map(d => d.usage);                     // valore da plottare verticalmente
+        const colorValues = sorted.map(d => d.usage_uncertainty); // per colori
+      
+        const usageMax = Math.max(...y);
+        const yAxisMax = usageMax * 1.2;
+      
+        const trace: Partial<Plotly.PlotData> = {
+          x,
+          y,
+          type: 'scatter',
+          mode: 'markers',
+          name: 'Presenze',
+          marker: {
+            color: colorValues,
+            colorscale: [
+              [0.0, 'rgb(5, 102, 8)'],
+              [0.05, 'rgb(100, 180, 90)'],
+              [0.20, 'rgb(180, 230, 170)'],
+              [0.40, 'rgb(230, 250, 225)'],
+              [0.50, 'yellow'],
+              [0.60, 'rgb(255, 242, 242)'],
+              [0.80, 'rgb(242, 204, 204)'],
+              [0.95, 'rgb(204, 76, 76)'],
+              [1.0, 'rgb(180, 4, 38)']
+            ],
+            cmin: 0,
+            cmax: 1,
+            size: 8,
+    
+          },
+          hovertemplate: 'Giorno: %{x}<br>Usage: %{y}%<br>Incertezza: %{marker.color:.4f}<extra></extra>'
+        };
+      
+        const layout: Partial<Plotly.Layout> = {
+          ...DEFAULT_LAYOUT,
+          xaxis: {
+            title: { text: 'Giorni (ordinati per usage)' },
+            tickformat: '.0f'
+          },
+          yaxis: {
+            title: { text: 'Livello di utilizzo della destinazione' },
+            range: [0, yAxisMax],
+            tickformat: '.0f'
+          },
+          margin: { t: 50, b: 80, l: 80, r: 60 },
+          showlegend: true,
+          legend: {
+            orientation: 'h',
+            yanchor: 'top',
+            y: -0.2,
+            xanchor: 'center',
+            x: 0.5
+          },
+        };
+        
+        const capacityMean = this.sottosistemaSelezionato === 'default' ?
+        input.capacity_mean :
+        input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
+        const traceCapacityMean: Partial<Plotly.PlotData> = {
+          x,
+          y: Array(x.length).fill(capacityMean),
+          type: 'scatter',
+          mode: 'lines',
+          name: this.getCapacityLabel(this.sottosistemaSelezionato),
+          line: { color: PLOT_COLORS.capacityMean, dash: 'dash', width: 2 },
+          yaxis: 'y1',
+          showlegend: true,
+        };
+        const traces: Partial<Plotly.PlotData>[] = [
+          traceCapacityMean
+        ];
+    
+          traces.push(trace);
+        const plot = await Plotly.newPlot(container, traces, layout, { responsive: true });
+        plot.on('plotly_legendclick', () => false);
+        plot.on('plotly_legenddoubleclick', () => false);
   }
-  
+  getCapacityLabel(subsystem: string): string {
+    return subsystem === 'default' ? 'Soglia di sovraffollamento' : 'Capacità di carico';
+  }
   getYFromCurve(curve: Curve, xVal: number): number | null {
     const idx = curve.x.findIndex((xi, i) => i < curve.x.length - 1 && curve.x[i] <= xVal && xVal <= curve.x[i + 1]);
     if (idx === -1) return null;

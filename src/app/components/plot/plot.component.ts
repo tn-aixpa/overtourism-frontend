@@ -313,7 +313,7 @@ export class PlotComponent implements AfterViewInit {
         tickformat: '.0f'
       },
       margin: { t: 50, b: 80, l: 80, r: 60 },
-      showlegend: false,
+      showlegend: true,
       legend: {
         orientation: 'h',
         yanchor: 'top',
@@ -322,6 +322,7 @@ export class PlotComponent implements AfterViewInit {
         x: 0.5
       },
     };
+    
     const capacityMean = this.sottosistemaSelezionato === 'default' ?
     input.capacity_mean :
     input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
@@ -330,14 +331,13 @@ export class PlotComponent implements AfterViewInit {
       y: Array(x.length).fill(capacityMean),
       type: 'scatter',
       mode: 'lines',
-      name: 'Capacity Mean',
+      name: this.getCapacityLabel(this.sottosistemaSelezionato),
       line: { color: PLOT_COLORS.capacityMean, dash: 'dash', width: 2 },
       yaxis: 'y1',
+      showlegend: true,
+
     };
     const traces: Partial<Plotly.PlotData>[] = [
-      // ...heatmap,
-      // traceSampleE,
-      // traceSampleT,
       traceCapacityMean
     ];
 
@@ -349,7 +349,9 @@ export class PlotComponent implements AfterViewInit {
   
   
   
-
+  getCapacityLabel(subsystem: string): string {
+    return subsystem === 'default' ? 'Soglia di sovraffollamento' : 'Capacità di carico';
+  }
 
   renderPlot() {
     if (!this.chartLib || !this.inputData) return;
@@ -425,25 +427,6 @@ export class PlotComponent implements AfterViewInit {
   async renderFunctionPlot(container: HTMLElement, input: PlotInput) {
 
     const data: Partial<Plotly.PlotData>[] = [];
-
-    // if (this.heatmapAttiva && input.heatmap) {
-    //   data.push({
-    //     z: input.heatmap.z,
-    //     x: input.heatmap.x,
-    //     y: input.heatmap.y,
-    //     type: 'heatmap',
-    //     colorscale: [
-    //       [0, 'rgb(150, 0, 24)'],
-    //       [0.5, 'rgb(255,255,255)'],
-    //       [1, 'rgb(0,0,255)']
-    //     ],
-    //     zmin: 0,
-    //     zmax: 1,
-    //     showscale: true,
-    //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
-    //   });
-    // }
-
     const curvesToRender = this.sottosistemaSelezionato === 'default'
       ? input.curves
       : input.curves.filter(c => c.name === this.sottosistemaSelezionato);
