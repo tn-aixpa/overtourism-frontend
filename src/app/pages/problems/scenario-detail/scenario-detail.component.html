@@ -6,7 +6,7 @@
 
 <div class="row my-2">
   <div class="col">
-    <h4>{{ 'plot.detailsTitle' | translate }}{{ scenarioId }}</h4>
+    <h4>{{ scenario?.name || 'Loading...' }}</h4>
   </div>
 </div>
 
@@ -24,9 +24,5 @@
 
 
   <div class="my-4 d-flex flex-column w-100">
-
-  <app-plot    [scenarioId]="scenarioId"  [problemId]="problemId"
-
-  ></app-plot>
-
-</div>
+    <app-plot [scenarioId]="scenarioId" [problemId]="problemId"></app-plot>
+  </div>

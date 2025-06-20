@@ -1,6 +1,8 @@
-import { Component, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PlotService } from '../../../services/plot.service';
+import { ScenarioService } from '../../../services/scenario.service';
+import { Scenario } from '../../../models/scenario.model';
 
 @Component({
   selector: 'app-scenario-detail',
@@ -13,16 +15,25 @@ export class ScenarioDetailComponent  {
 
   scenarioId!: string;
   problemId!: string;
-  // isEditing = false;
+  scenario?: Scenario;
 
   constructor(
     private route: ActivatedRoute,
-    private plotService: PlotService
+    private plotService: PlotService,
+    private scenarioService: ScenarioService
   ) {}
 
   ngOnInit(): void {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
     this.scenarioId = this.route.snapshot.paramMap.get('scenarioId')!;
+    this.loadScenarioDetails();
   }
 
+  loadScenarioDetails(): void {
+    this.scenarioService.getScenariosByProblemId(this.problemId).subscribe({
+      next: (scenarios) => {
+        this.scenario = scenarios.find(s => s.id === this.scenarioId);
+      }
+    });
+  }
 }
