@@ -90,10 +90,15 @@ export class PlotService {
           constraint_level_alberghi: module.kpis['constraint level alberghi'] ?? 0,
           constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0,
           uncertainty: Array.isArray(module.kpis.uncertainty)
-          ? module.kpis.uncertainty.map((u: { tourists: any; excursionists: any; index: any; }) => ({
+          ? module.kpis.uncertainty.map((u: {
+            usage: number;
+            usage_uncertainty: number; tourists: any; excursionists: any; index: any; 
+}) => ({
               tourists: u.tourists ?? 0,
               excursionists: u.excursionists ?? 0,
-              index: u.index ?? 0
+              index: u.index ?? 0,
+              usage: u.usage ?? 0,
+              usage_uncertainty: u.usage_uncertainty ?? 0,
             }))
           : [],
         uncertainty_by_constraint: module.kpis.uncertainty_by_constraint && typeof module.kpis.uncertainty_by_constraint === 'object'
@@ -104,7 +109,9 @@ export class PlotService {
                   ? value.map(u => ({
                       tourists: u.tourists ?? 0,
                       excursionists: u.excursionists ?? 0,
-                      index: u.index ?? 0
+                      index: u.index ?? 0,
+                      usage: u.usage ?? 0,
+                      usage_uncertainty: u.usage_uncertainty ?? 0,
                     }))
                   : []
               ])

@@ -12,7 +12,7 @@ export const SUBSYSTEM_OPTIONS = [
     sampleE: 'rgba(64, 64, 64, 0.7)',         // Dark gray
     overThreshold: 'rgb(180,4,38)',
     underThreshold: 'rgb(5,102,8)',
-    capacityMean: 'red',
+    capacityMean: 'grey',
   };
   
   export const HEATMAP_COLOR_SCALE: [number, string][] = [
