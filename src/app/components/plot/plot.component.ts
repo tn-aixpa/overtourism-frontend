@@ -313,7 +313,7 @@ export class PlotComponent implements AfterViewInit {
         tickformat: '.0f'
       },
       margin: { t: 50, b: 80, l: 80, r: 60 },
-      showlegend: true,
+      showlegend: false,
       legend: {
         orientation: 'h',
         yanchor: 'top',
@@ -487,7 +487,8 @@ export class PlotComponent implements AfterViewInit {
         showline: true,
         linewidth: 1,
         linecolor: 'grey',
-        dtick: 1000
+        dtick: 1000,
+        
       },
       shapes: [
         {

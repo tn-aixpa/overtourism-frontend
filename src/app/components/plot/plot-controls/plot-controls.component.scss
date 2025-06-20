@@ -24,4 +24,26 @@
       font-size: 0.85rem;
       color: gray /* o un grigio a piacere */
     }
+    .risk-levels {
+        padding: 8px 0;
+        
+        .risk-item {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          font-size: 0.85rem;
+          color: #666;
+          
+          .risk-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+          }
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
   }

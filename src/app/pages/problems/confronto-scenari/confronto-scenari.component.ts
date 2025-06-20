@@ -294,7 +294,9 @@ export class ConfrontoScenariComponent {
       margin: { t: 30, l: 50, r: 30, b: 50 },
       yaxis: {
         title: { text: 'Escursionisti' },
-        range: [0, input.yMax ?? undefined]
+        range: [0, input.yMax ?? undefined],
+        scaleanchor: 'x',
+        scaleratio: 1,
       },
       xaxis: {
         title: { text: 'Turisti' },
