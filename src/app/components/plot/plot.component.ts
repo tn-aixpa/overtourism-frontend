@@ -130,23 +130,23 @@ export class PlotComponent implements AfterViewInit {
   }
   onWidgetsChanged(updatedWidgets: Record<string, Widget[]>) {
     console.log('Widgets changed:', updatedWidgets);
-    
+
     const changedValues: Record<string, number | [number, number]> = {};
-  
+
     for (const key of Object.keys(updatedWidgets)) {
       const currentGroup = this.widgets[key] || [];
       const updatedGroup = updatedWidgets[key];
-  
+
       for (let i = 0; i < updatedGroup.length; i++) {
         const updated = updatedGroup[i];
         const original = currentGroup[i];
-  
+
         if (!original) {
           // Nuovo widget (unlikely ma per sicurezza)
           changedValues[updated.index_id] = this.extractValue(updated);
           continue;
         }
-  
+
         if (
           updated.v !== original.v ||
           updated.vMin !== original.vMin ||
@@ -156,8 +156,8 @@ export class PlotComponent implements AfterViewInit {
         }
       }
     }
-  
-    if (Object.keys(changedValues).length > 0) {
+
+    if (true || Object.keys(changedValues).length > 0) {
       console.log('Sending changed widgets:', changedValues);
       this.hasChanges = true;
       this.changedWidgets = changedValues;
@@ -167,7 +167,7 @@ export class PlotComponent implements AfterViewInit {
       console.log('Widgets are equal, no update needed');
     }
   }
-  
+
    extractValue(widget: Widget): number | [number, number] {
     return widget.scale && widget.index_category !== '%'
       ? [widget.vMin ?? 0, widget.vMax ?? 0]
@@ -255,25 +255,25 @@ export class PlotComponent implements AfterViewInit {
   }
   async renderMonoDimensionale(input: PlotInput | null) {
     if (!this.chartLib || !input?.kpis) return;
-  
+
     let uncertaintyData: any[] = [];
     if (this.sottosistemaSelezionato === 'default') {
-       uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];   
+       uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];
        } else {
       uncertaintyData = (input.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
     }
     if (!uncertaintyData.length) return;
-  
+
     // Ordina per usage crescente
     const sorted = [...uncertaintyData].sort((a, b) => a.usage - b.usage);
-  
+
     const x = sorted.map((_, i) => i);                      // 0,1,2,...
     const y = sorted.map(d => d.usage);                     // valore da plottare verticalmente
     const colorValues = sorted.map(d => d.usage_uncertainty); // per colori
-  
+
     const usageMax = Math.max(...y);
     const yAxisMax = usageMax * 1.2;
-  
+
     const trace: Partial<Plotly.PlotData> = {
       x,
       y,
@@ -300,7 +300,7 @@ export class PlotComponent implements AfterViewInit {
       },
       hovertemplate: 'Giorno: %{x}<br>Usage: %{y}%<br>Incertezza: %{marker.color:.4f}<extra></extra>'
     };
-  
+
     const layout: Partial<Plotly.Layout> = {
       ...DEFAULT_LAYOUT,
       xaxis: {
@@ -322,7 +322,7 @@ export class PlotComponent implements AfterViewInit {
         x: 0.5
       },
     };
-    
+
     const capacityMean = this.sottosistemaSelezionato === 'default' ?
     input.capacity_mean :
     input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
@@ -346,9 +346,9 @@ export class PlotComponent implements AfterViewInit {
     plot.on('plotly_legendclick', () => false);
     plot.on('plotly_legenddoubleclick', () => false);
   }
-  
-  
-  
+
+
+
   getCapacityLabel(subsystem: string): string {
     return subsystem === 'default' ? 'Soglia di sovraffollamento' : 'Capacità di carico';
   }
@@ -360,15 +360,15 @@ export class PlotComponent implements AfterViewInit {
       return;
     }
     const input = JSON.parse(JSON.stringify(this.inputData)) as PlotInput;
-  
+
     // Scegli la sorgente dei punti in base al sottosistema selezionato
     let uncertaintyData: any[] = [];
     if (this.sottosistemaSelezionato === 'default') {
-       uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];   
+       uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];
        } else {
       uncertaintyData = (input.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
     }
-  
+
     // Ricostruisci i punti per il grafico
     input.points = [{
       name: 'Presenze',
@@ -411,7 +411,7 @@ export class PlotComponent implements AfterViewInit {
         '<extra></extra>',
       showlegend: false
     }];
-  
+
     this.renderFunctionPlot(this.chartLib.nativeElement, input);
   }
 
@@ -488,7 +488,7 @@ export class PlotComponent implements AfterViewInit {
         linewidth: 1,
         linecolor: 'grey',
         dtick: 1000,
-        
+
       },
       shapes: [
         {
@@ -520,6 +520,6 @@ export class PlotComponent implements AfterViewInit {
     plot.on('plotly_legendclick', () => false);
     plot.on('plotly_legenddoubleclick', () => false);
 
-  
+
   }
 }
