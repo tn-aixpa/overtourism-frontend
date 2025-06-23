@@ -16,7 +16,7 @@ export class PlotService {
     return dashes[groupName] ?? 'solid';
   }
 
- 
+
     preparePlotInput(module: any): PlotInput {
 
     // Curves
@@ -39,7 +39,7 @@ export class PlotService {
         name: 'Incertezza',
         x: module.kpis.uncertainty.map((p: any) => p.tourists),
         y: module.kpis.uncertainty.map((p: any) => p.excursionists),
-        customdata: module.kpis.uncertainty.map((p: any) => p.index),
+        customdata: module.kpis.uncertainty.map((p: any) => 100 * (1-p.index)),
         marker: {
           color: module.kpis.uncertainty.map((p: any) => p.index),
           colorscale: [
@@ -69,7 +69,7 @@ export class PlotService {
         mode: 'markers',
         type: 'scatter',
         hovertemplate:
-          '<b>Contesto:</b> %{customdata}<br>' +
+          '<b>Livello di rischio:</b> %{customdata:.4f}\%<br>' +
           '<b>Turisti:</b> %{x}<br>' +
           '<b>Escursionisti:</b> %{y}<br>' +
           '<extra></extra>',
@@ -92,7 +92,7 @@ export class PlotService {
           uncertainty: Array.isArray(module.kpis.uncertainty)
           ? module.kpis.uncertainty.map((u: {
             usage: number;
-            usage_uncertainty: number; tourists: any; excursionists: any; index: any; 
+            usage_uncertainty: number; tourists: any; excursionists: any; index: any;
 }) => ({
               tourists: u.tourists ?? 0,
               excursionists: u.excursionists ?? 0,

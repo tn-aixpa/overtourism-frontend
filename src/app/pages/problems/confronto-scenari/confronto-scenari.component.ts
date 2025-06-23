@@ -58,7 +58,7 @@ export class ConfrontoScenariComponent {
   getScenarioName(id: string | undefined): string | undefined {
     return this.scenari.find(s => s.id === id)?.name;
   }
-  
+
   selectScenario(slot: 1 | 2, id: string): void {
     if (slot === 1) {
       this.selectedScenario1Id = id;
@@ -68,7 +68,7 @@ export class ConfrontoScenariComponent {
       this.loadScenario(2);
     }
   }
-  
+
   onPlotControlChange(value: string) {
     this.selectedControlOption = value;
     this.renderBoth()
@@ -130,13 +130,13 @@ export class ConfrontoScenariComponent {
 
   renderChart(container: HTMLElement, input: PlotInput) {
     const cloned = JSON.parse(JSON.stringify(input)) as PlotInput;
-  
+
     // === MONODIMENSIONALE ===
     if (this.monoDimensionale) {
       this.renderMonoDimensionale(container, cloned);
       return;
     }
-  
+
     // // === Heatmap custom ===
     // if (this.sottosistemaSelezionato !== 'default' && cloned.heatmapsByFunction) {
     //   const specific = cloned.heatmapsByFunction[this.sottosistemaSelezionato];
@@ -155,12 +155,12 @@ export class ConfrontoScenariComponent {
       } else {
         uncertaintyData = (cloned.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
       }
-    
+
       cloned.points = [{
         name: 'Presenze',
         x: uncertaintyData.map((p: any) => p.tourists),
         y: uncertaintyData.map((p: any) => p.excursionists),
-        customdata: uncertaintyData.map((p: any) => p.index),
+        customdata: uncertaintyData.map((p: any) => 100 * (1-p.index)),
         marker: {
           color: uncertaintyData.map((p: any) => p.index),
           colorscale: [
@@ -187,7 +187,7 @@ export class ConfrontoScenariComponent {
         mode: 'markers',
         type: 'scatter',
         hovertemplate:
-          '<b>Contesto:</b> %{customdata}<br>' +
+          '<b>Livello di rischio:</b> %{customdata:.4f}\%<br>' +
           '<b>Turisti:</b> %{x}<br>' +
           '<b>Escursionisti:</b> %{y}<br>' +
           '<extra></extra>',
@@ -200,11 +200,11 @@ export class ConfrontoScenariComponent {
         const updatedColor = pt.y.map((_y, i) => {
           const xVal = pt.x[i];
           let violates = false;
-  
+
           const curvesToCheck = this.showAllSubsystems
             ? cloned.curves
             : cloned.curves.filter(c => c.name === this.sottosistemaSelezionato);
-  
+
           for (const c of curvesToCheck) {
             const yExpected = this.getYFromCurve(c, xVal);
             if (yExpected !== null && pt.y[i] > yExpected) {
@@ -212,23 +212,23 @@ export class ConfrontoScenariComponent {
               break;
             }
           }
-  
+
           return violates ? '#BA0C2F' : '#32CD32';
         });
-  
+
         return { ...pt, color: updatedColor };
       });
     } else {
       cloned.points = [];
     }
-  
+
     const data: Partial<Plotly.PlotData>[] = [];
-  
+
     // // === Heatmap ===
     // if (this.heatmapAttiva && cloned.heatmap) {
     //   const y = cloned.heatmap.y;
     //   const yRange = y.length > 0 ? [Math.min(...y), Math.max(...y)] : undefined;
-  
+
     //   data.push({
     //     z: cloned.heatmap.z,
     //     x: cloned.heatmap.x,
@@ -244,18 +244,18 @@ export class ConfrontoScenariComponent {
     //     showscale: true,
     //     hovertemplate: 'x: %{x}<br>y: %{y}<br>z: %{z}<extra></extra>'
     //   });
-  
+
     //   // Forziamo il range y se definito
     //   if (yRange) {
     //     data.push({}); // dummy per forzare layout più compatto
     //   }
     // }
-  
+
     // === Curve ===
     const curvesToRender = this.sottosistemaSelezionato === 'default'
       ? cloned.curves
       : cloned.curves.filter(c => c.name === this.sottosistemaSelezionato);
-  
+
     for (const curve of curvesToRender) {
       data.push({
         x: curve.x,
@@ -270,7 +270,7 @@ export class ConfrontoScenariComponent {
         type: 'scatter'
       });
     }
-  
+
     // === Punti ===
     if (cloned.points?.length) {
       for (const pt of cloned.points) {
@@ -289,7 +289,7 @@ export class ConfrontoScenariComponent {
         });
       }
     }
-  
+
     const layout: Partial<Plotly.Layout> = {
       margin: { t: 30, l: 50, r: 30, b: 50 },
       yaxis: {
@@ -312,7 +312,7 @@ export class ConfrontoScenariComponent {
         yanchor: 'top',
       }
     };
-  
+
     Plotly.newPlot(container, data, layout, { responsive: true });
   }
   onScenarioSelect(slot: 1 | 2, selectedId: string) {
@@ -325,28 +325,30 @@ export class ConfrontoScenariComponent {
   }
   async renderMonoDimensionale(container: HTMLElement, input: PlotInput): Promise<void> {
     if (!container || !input?.kpis) return;
-      
+
         let uncertaintyData: any[] = [];
         if (this.sottosistemaSelezionato === 'default') {
-           uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];   
+           uncertaintyData = Array.isArray(input.kpis?.['uncertainty']) ? input.kpis['uncertainty'] : [];
            } else {
           uncertaintyData = (input.kpis?.['uncertainty_by_constraint'] as Record<string, any>)?.[this.sottosistemaSelezionato] ?? [];
         }
         if (!uncertaintyData.length) return;
-      
+
         // Ordina per usage crescente
         const sorted = [...uncertaintyData].sort((a, b) => a.usage - b.usage);
-      
+
         const x = sorted.map((_, i) => i);                      // 0,1,2,...
         const y = sorted.map(d => d.usage);                     // valore da plottare verticalmente
         const colorValues = sorted.map(d => d.usage_uncertainty); // per colori
-      
+        const risk = sorted.map(d => 100 * d.usage_uncertainty);
+
         const usageMax = Math.max(...y);
         const yAxisMax = usageMax * 1.2;
-      
+
         const trace: Partial<Plotly.PlotData> = {
           x,
           y,
+          customdata: risk,
           type: 'scatter',
           mode: 'markers',
           name: 'Presenze',
@@ -366,11 +368,11 @@ export class ConfrontoScenariComponent {
             cmin: 0,
             cmax: 1,
             size: 8,
-    
+
           },
-          hovertemplate: 'Giorno: %{x}<br>Usage: %{y}%<br>Incertezza: %{marker.color:.4f}<extra></extra>'
+          hovertemplate: 'Giorno: %{x}<br>Utilizzo: %{y}%<br>Livello di rischio: %{customdata:.4f}%<extra></extra>'
         };
-      
+
         const layout: Partial<Plotly.Layout> = {
           ...DEFAULT_LAYOUT,
           xaxis: {
@@ -378,7 +380,10 @@ export class ConfrontoScenariComponent {
             tickformat: '.0f'
           },
           yaxis: {
-            title: { text: 'Livello di utilizzo della destinazione' },
+            title: { text:
+                this.sottosistemaSelezionato === 'default' ?
+                'Livello di utilizzo della destinazione' :
+                'Livello di utilizzo della risorsa ' + this.sottosistemaSelezionato },
             range: [0, yAxisMax],
             tickformat: '.0f'
           },
@@ -392,7 +397,7 @@ export class ConfrontoScenariComponent {
             x: 0.5
           },
         };
-        
+
         const capacityMean = this.sottosistemaSelezionato === 'default' ?
         input.capacity_mean :
         input.capacity_mean_by_constraint?.[this.sottosistemaSelezionato];
@@ -409,7 +414,7 @@ export class ConfrontoScenariComponent {
         const traces: Partial<Plotly.PlotData>[] = [
           traceCapacityMean
         ];
-    
+
           traces.push(trace);
         const plot = await Plotly.newPlot(container, traces, layout, { responsive: true });
         plot.on('plotly_legendclick', () => false);

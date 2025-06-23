@@ -270,6 +270,7 @@ export class PlotComponent implements AfterViewInit {
     const x = sorted.map((_, i) => i);                      // 0,1,2,...
     const y = sorted.map(d => d.usage);                     // valore da plottare verticalmente
     const colorValues = sorted.map(d => d.usage_uncertainty); // per colori
+    const risk = sorted.map(d => 100 * d.usage_uncertainty);
 
     const usageMax = Math.max(...y);
     const yAxisMax = usageMax * 1.2;
@@ -277,6 +278,7 @@ export class PlotComponent implements AfterViewInit {
     const trace: Partial<Plotly.PlotData> = {
       x,
       y,
+      customdata: risk,
       type: 'scatter',
       mode: 'markers',
       name: 'Presenze',
@@ -298,7 +300,7 @@ export class PlotComponent implements AfterViewInit {
         size: 8,
 
       },
-      hovertemplate: 'Giorno: %{x}<br>Usage: %{y}%<br>Incertezza: %{marker.color:.4f}<extra></extra>'
+      hovertemplate: 'Giorno: %{x}<br>Utilizzo: %{y}%<br>Livello di rischio: %{customdata:.4f}\%<extra></extra>'
     };
 
     const layout: Partial<Plotly.Layout> = {
@@ -308,7 +310,10 @@ export class PlotComponent implements AfterViewInit {
         tickformat: '.0f'
       },
       yaxis: {
-        title: { text: 'Livello di utilizzo della destinazione' },
+        title: { text:
+          this.sottosistemaSelezionato === 'default' ?
+          'Livello di utilizzo della destinazione' :
+          'Livello di utilizzo della risorsa ' + this.sottosistemaSelezionato },
         range: [0, yAxisMax],
         tickformat: '.0f'
       },
@@ -374,7 +379,7 @@ export class PlotComponent implements AfterViewInit {
       name: 'Presenze',
       x: uncertaintyData.map((p: any) => p.tourists),
       y: uncertaintyData.map((p: any) => p.excursionists),
-      customdata: uncertaintyData.map((p: any) => p.index),
+      customdata: uncertaintyData.map((p: any) => 100 * (1-p.index)),
       marker: {
         color: uncertaintyData.map((p: any) => p.index),
         colorscale: [
@@ -405,7 +410,7 @@ export class PlotComponent implements AfterViewInit {
       mode: 'markers',
       type: 'scatter',
       hovertemplate:
-        '<b>Contesto:</b> %{customdata}<br>' +
+        '<b>Livello di rischio:</b> %{customdata:.4f}\%<br>' +
         '<b>Turisti:</b> %{x}<br>' +
         '<b>Escursionisti:</b> %{y}<br>' +
         '<extra></extra>',
