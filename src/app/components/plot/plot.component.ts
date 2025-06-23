@@ -306,7 +306,7 @@ export class PlotComponent implements AfterViewInit {
     const layout: Partial<Plotly.Layout> = {
       ...DEFAULT_LAYOUT,
       xaxis: {
-        title: { text: 'Giorni (ordinati per usage)' },
+        title: { text: 'Giorni (ordinati per utilizzo)' },
         tickformat: '.0f'
       },
       yaxis: {
@@ -477,7 +477,7 @@ export class PlotComponent implements AfterViewInit {
       // title: { text: 'Scenario con Heatmap' },
       margin: { t: 50, b: 130, l: 80, r: 20 },
       xaxis: {
-        title: { text: 'TURISTI' },
+        title: { text: 'Turisti' },
         range: [0, 10000],
         tickformat: '.0f',
         showline: true,
@@ -486,7 +486,7 @@ export class PlotComponent implements AfterViewInit {
         dtick: 1000
       },
       yaxis: {
-        title: { text: 'ESCURSIONISTI' },
+        title: { text: 'Escursionisti' },
         range: [0, 10000],
         tickformat: '.0f',
         showline: true,
@@ -518,7 +518,7 @@ export class PlotComponent implements AfterViewInit {
         y: -0.2,
         xanchor: 'center',
         x: 0.5,
-            },
+      },
     };
 
     const plot= await Plotly.newPlot(container, data, layout, { responsive: true });

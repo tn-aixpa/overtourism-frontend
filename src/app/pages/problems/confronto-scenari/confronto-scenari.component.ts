@@ -376,7 +376,7 @@ export class ConfrontoScenariComponent {
         const layout: Partial<Plotly.Layout> = {
           ...DEFAULT_LAYOUT,
           xaxis: {
-            title: { text: 'Giorni (ordinati per usage)' },
+            title: { text: 'Giorni (ordinati per utilizzo)' },
             tickformat: '.0f'
           },
           yaxis: {
