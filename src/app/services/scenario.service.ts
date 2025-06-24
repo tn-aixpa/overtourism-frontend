@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Scenario } from '../models/scenario.model';
-import { Observable, of, BehaviorSubject, map } from 'rxjs';
+import { Observable, BehaviorSubject, map } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
 import { ConfigService } from './config.service';
-import { values } from 'video.js/dist/types/utils/obj';
 import { environment } from '../../environments/environment';
 interface ScenarioResponse {
   scenarios: Array<{

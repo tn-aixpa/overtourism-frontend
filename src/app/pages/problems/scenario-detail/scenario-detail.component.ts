@@ -19,7 +19,6 @@ export class ScenarioDetailComponent  {
 
   constructor(
     private route: ActivatedRoute,
-    private plotService: PlotService,
     private scenarioService: ScenarioService
   ) {}
 

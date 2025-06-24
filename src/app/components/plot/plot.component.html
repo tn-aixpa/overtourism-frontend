@@ -21,7 +21,7 @@
         [sottosistemaSelezionato]="sottosistemaSelezionato" 
          (monoDimensionaleChange)="monoDimensionale = $event"
         (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
-        (heatmapToggle)="onHeatmapToggle()"></app-plot-controls>
+        ></app-plot-controls>
 
       <div #chartLib style="max-width: 600px;height: 600px; position: relative;">
         <div *ngIf="loading" class="loading-spinner">Loading...</div>
