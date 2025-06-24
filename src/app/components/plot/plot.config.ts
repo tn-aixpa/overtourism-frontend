@@ -15,11 +15,7 @@ export const SUBSYSTEM_OPTIONS = [
     capacityMean: 'grey',
   };
   
-  export const HEATMAP_COLOR_SCALE: [number, string][] = [
-    [0, 'rgb(0,0,255)'],
-    [0.5, 'rgb(255,255,255)'],
-    [1, 'rgb(150, 0, 24)']
-  ];
+ 
   
   export const DEFAULT_LAYOUT: Partial<Plotly.Layout> = {
     showlegend: true,
@@ -32,4 +28,16 @@ export const SUBSYSTEM_OPTIONS = [
     },
     margin: { l: 60, r: 60, t: 40, b: 50 }
   };
+  export const  RISK_COLOR_SCALE: Plotly.ColorScale = [
+      [0.0, 'rgb(5, 102, 8)'],
+      [0.05, 'rgb(100, 180, 90)'],
+      [0.20, 'rgb(180, 230, 170)'],
+      [0.40, 'rgb(230, 250, 225)'],
+      [0.50, 'yellow'],
+      [0.60, 'rgb(255, 242, 242)'],
+      [0.80, 'rgb(242, 204, 204)'],
+      [0.95, 'rgb(204, 76, 76)'],
+      [1.0, 'rgb(180, 4, 38)']
+    ];
+    export const  DEFAULT_MARGIN_LAYOUT = { t: 50, b: 80, l: 80, r: 60 };
   
