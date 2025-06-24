@@ -23,11 +23,12 @@ export class KpiComparisonComponent {
 
 
   getDeltaPerc(left?: number, right?: number): string {
-    if (left === undefined || left === 0 || right === undefined) return '—';
+    if (left === undefined || left === 0 || right === undefined  || right === 0 || left === right) return '—';
     const delta = right - left;
     const percent = Math.round(delta);
   
     if (delta < 1 && delta > 0) return '<1%';
+    if (delta > -1 && delta < 0) return '<-1%';
     if (percent > 0) return `+${percent}%`;
     return `${percent}%`;
   }  

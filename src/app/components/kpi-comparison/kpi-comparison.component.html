@@ -17,7 +17,7 @@
             <div class="col-6 ">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="h5 mb-0">{{ formatNumber(kpisRight[key]) }}</div>
-                    <ng-container *ngIf=" kpisRight[key] != kpisLeft[key]">
+                    <ng-container >
                         <span class="btn" [ngClass]="getDeltaClass(kpisLeft[key], kpisRight[key])">
 
                       {{ getDeltaPerc(kpisLeft[key], kpisRight[key]) }}
