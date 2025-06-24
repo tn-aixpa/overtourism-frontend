@@ -4,8 +4,9 @@ import Plotly from 'plotly.js-dist-min';
 import { KPIs, PlotInput, Curve } from '../../../models/plot.model';
 import { PlotService } from '../../../services/plot.service';
 import { ScenarioService } from '../../../services/scenario.service';
-import { SUBSYSTEM_OPTIONS
-   } from '../../../components/plot/plot.config';
+import {
+  SUBSYSTEM_OPTIONS
+} from '../../../components/plot/plot.config';
 
 @Component({
   selector: 'app-confronto-scenari',
@@ -37,7 +38,7 @@ export class ConfrontoScenariComponent {
     private scenarioService: ScenarioService,
     private plotService: PlotService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
@@ -88,11 +89,6 @@ export class ConfrontoScenariComponent {
     this.renderBoth();
   }
 
-  // onHeatmapAttivaChange(value: boolean) {
-  //   this.heatmapAttiva = value;
-  //   this.renderBoth();
-  // }
-
   onSottosistemaSelezionatoChange(value: string) {
     this.sottosistemaSelezionato = value;
     this.renderBoth();
@@ -102,9 +98,7 @@ export class ConfrontoScenariComponent {
     this.renderBoth();
   }
 
-  // onHeatmapToggle() {
-  //   this.renderBoth();
-  // }
+
   toggleControls(): void {
     this.showControls = !this.showControls;
   }
@@ -139,12 +133,12 @@ export class ConfrontoScenariComponent {
       );
       return;
     }
-this.plotService.renderBidimensionale(
+    this.plotService.renderBidimensionale(
       this.sottosistemaSelezionato,
       container,
       cloned
     );
-   
+
   }
   onScenarioSelect(slot: 1 | 2, selectedId: string) {
     if (slot === 1) {
@@ -154,7 +148,7 @@ this.plotService.renderBidimensionale(
     }
     this.loadScenario(slot);
   }
-  
+
   getCapacityLabel(subsystem: string): string {
     return subsystem === 'default' ? 'Soglia di sovraffollamento' : 'Capacità di carico';
   }

@@ -4,7 +4,8 @@ import Plotly from 'plotly.js-dist-min';
 import { PlotService } from '../../services/plot.service';
 import { Curve, KPIs, PlotInput } from '../../models/plot.model';
 import {
-  SUBSYSTEM_OPTIONS} from './plot.config';
+  SUBSYSTEM_OPTIONS
+} from './plot.config';
 import { ScenarioService, Widget } from '../../services/scenario.service';
 import { firstValueFrom } from 'rxjs';
 import { NotificationService } from '../../services/notifications.service';
@@ -37,23 +38,23 @@ export class PlotComponent implements AfterViewInit {
   noteUtente: string = '';
   widgets: Record<string, Widget[]> = {};
   sottosistemi = SUBSYSTEM_OPTIONS;
-  editableIndexes : string[] = [];
+  editableIndexes: string[] = [];
   objectKeys = Object.keys;
 
   // editSidebarVisible = false;
   selectedScenario: any = null;
   isEditing: boolean = false;
   showControls: boolean = false; // per 'settings'
-  hasChanges: boolean=false;
+  hasChanges: boolean = false;
   changedWidgets!: Record<string, number | [number, number]>;
   indexDiffs: Record<string, number> = {};
   titolo: string = '';
   descrizione: string = '';
 
   constructor(private plotService: PlotService,
-     private scenarioService: ScenarioService,
-      private notificationService: NotificationService,
-      private router: Router
+    private scenarioService: ScenarioService,
+    private notificationService: NotificationService,
+    private router: Router
   ) { }
 
   ngAfterViewInit() {
@@ -69,11 +70,11 @@ export class PlotComponent implements AfterViewInit {
     if (!this.titolo?.trim() || !this.descrizione?.trim()) {
       this.formInvalid = true;
       return;
-    }     this.formInvalid = false;
+    } this.formInvalid = false;
     this.saveAsNewScenario();
   }
   saveAsNewScenario(): void {
-    this.scenarioService.saveNewScenario(this.scenarioId, this.problemId,this.changedWidgets,this.titolo,this.descrizione).subscribe({
+    this.scenarioService.saveNewScenario(this.scenarioId, this.problemId, this.changedWidgets, this.titolo, this.descrizione).subscribe({
       next: (res) => {
         // this.notificationService.showError('Scenario salvato con successo!');
         this.hasChanges = false;
@@ -99,7 +100,7 @@ export class PlotComponent implements AfterViewInit {
   }
   closeModal() {
     this.saveModal.toggle();
-    }
+  }
   loadWidgets() {
     this.scenarioService.getWidgets().subscribe({
       next: (data) => {
@@ -152,7 +153,7 @@ export class PlotComponent implements AfterViewInit {
         }
       }
     }
-
+    //TODO fix always true
     if (true || Object.keys(changedValues).length > 0) {
       console.log('Sending changed widgets:', changedValues);
       this.hasChanges = true;
@@ -164,26 +165,29 @@ export class PlotComponent implements AfterViewInit {
     }
   }
 
-   extractValue(widget: Widget): number | [number, number] {
+  extractValue(widget: Widget): number | [number, number] {
     return widget.scale && widget.index_category !== '%'
       ? [widget.vMin ?? 0, widget.vMax ?? 0]
       : widget.v ?? 0;
   }
   updateData(values: Record<string, number | [number, number]>) {
+    this.loading = true;
     this.scenarioService.getUpdatedPlotInput(this.scenarioId, this.problemId, values).subscribe({
       next: (newInput) => {
         this.inputData = this.plotService.preparePlotInput(newInput.data);
         this.indexDiffs = newInput.index_diffs || {};
         this.kpisData = this.inputData.kpis;
-
         this.renderPlot();
+        this.loading = false;
       },
       error: (err) => {
         console.error('Errore aggiornamento dati:', err);
         this.notificationService.showError('Errore durante l\'aggiornamento del grafico.');
+        this.loading = false;
       }
     });
   }
+  
   toggleEditing(): void {
     this.isEditing = !this.isEditing;
   }
@@ -210,14 +214,10 @@ export class PlotComponent implements AfterViewInit {
       return;
     }
     try {
-      // const rawData = await this.scenarioService.fetchScenarioData();
-      //todo
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
-
       this.inputData = this.plotService.preparePlotInput(rawData.data);
       this.editableIndexes = rawData.editable_indexes || [];
       this.indexDiffs = rawData.index_diffs || {};
-
       this.kpisData = this.inputData.kpis;
       this.setupSelectOptions();
 
@@ -246,13 +246,6 @@ export class PlotComponent implements AfterViewInit {
   onFunzioneChange() {
     this.renderPlot();
   }
-  onHeatmapToggle() {
-    this.renderPlot(); // Ricalcola il grafico quando lo switch cambia
-  }
-
-
-
-
 
   renderPlot() {
     if (!this.chartLib || !this.inputData) return;
@@ -270,5 +263,5 @@ export class PlotComponent implements AfterViewInit {
   }
 
 
-  
+
 }
