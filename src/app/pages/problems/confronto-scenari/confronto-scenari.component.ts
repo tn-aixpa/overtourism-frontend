@@ -23,8 +23,6 @@ export class ConfrontoScenariComponent {
 
   kpisLeft?: KPIs;
   kpisRight?: KPIs;
-  // heatmapAttiva = true;
-  // mostraPunti = true;
   monoDimensionale = false;
   showAllSubsystems = true;
   sottosistemi = SUBSYSTEM_OPTIONS;
@@ -79,10 +77,7 @@ export class ConfrontoScenariComponent {
     this.renderBoth();
   }
 
-  // onMostraPuntiChange(value: boolean) {
-  //   this.mostraPunti = value;
-  //   this.renderBoth();
-  // }
+
 
   onMonoDimensionaleChange(value: boolean) {
     this.monoDimensionale = value;
@@ -152,14 +147,7 @@ export class ConfrontoScenariComponent {
   getCapacityLabel(subsystem: string): string {
     return subsystem === 'default' ? 'Soglia di sovraffollamento' : 'Capacità di carico';
   }
-  // getYFromCurve(curve: Curve, xVal: number): number | null {
-  //   const idx = curve.x.findIndex((xi, i) => i < curve.x.length - 1 && curve.x[i] <= xVal && xVal <= curve.x[i + 1]);
-  //   if (idx === -1) return null;
-  //   const x0 = curve.x[idx], x1 = curve.x[idx + 1];
-  //   const y0 = curve.y[idx], y1 = curve.y[idx + 1];
-  //   const t = (xVal - x0) / (x1 - x0);
-  //   return y0 + t * (y1 - y0);
-  // }
+
 
   formatNumber(value: number): string {
     return value.toFixed(2);

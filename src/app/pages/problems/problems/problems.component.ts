@@ -38,18 +38,6 @@ export class ProblemsComponent {
     })));
   };
 
-  // searchProblems$ = (search?: string): Observable<Array<SearchItem>> => {
-  //   if (!search) {
-  //     return of([]);
-  //   }
-
-  //   // API request for retrieve data, use `search` to filter data
-  //   return of(this.problems.map(problem => ({
-  //     value: problem.id, // Assuming 'id' is a unique identifier in Problem
-  //     label: problem.name // Assuming 'name' is a property in Problem for display
-  //   })));
-  // };
-
   onSearchSelected(item: SearchItem): void {
     this.router.navigate(['/problems', item.value, 'scenari']);
     
