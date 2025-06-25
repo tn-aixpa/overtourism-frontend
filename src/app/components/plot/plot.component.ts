@@ -50,6 +50,7 @@ export class PlotComponent implements AfterViewInit {
   indexDiffs: Record<string, number> = {};
   titolo: string = '';
   descrizione: string = '';
+  originalIndexDiffs: Record<string, string> = {};
 
   constructor(private plotService: PlotService,
     private scenarioService: ScenarioService,
@@ -58,8 +59,9 @@ export class PlotComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.loadData();
     this.loadWidgets();
+
+    this.loadData();
   }
   openSaveModal(): void {
     this.saveModal.toggle();
@@ -166,9 +168,12 @@ export class PlotComponent implements AfterViewInit {
   }
 
   extractValue(widget: Widget): number | [number, number] {
-    return widget.scale && widget.index_category !== '%'
-      ? [widget.vMin ?? 0, widget.vMax ?? 0]
-      : widget.v ?? 0;
+    if (widget.scale && widget.index_category !== '%') {
+      const vMin = widget.vMin ?? widget.loc;
+      const vMax = widget.vMax ?? (widget.loc + widget.scale);
+      return [vMin ?? 1, vMax ?? 1];
+    }
+    return widget.v ?? widget.loc ?? 0;
   }
   updateData(values: Record<string, number | [number, number]>) {
     this.loading = true;
@@ -206,6 +211,34 @@ export class PlotComponent implements AfterViewInit {
     ]);
     console.log('Vai alla pagina di confronto');
   }
+  private applyIndexDiffsToWidgets(
+    widgets: Record<string, Widget[]>,
+    indexDiffs: Record<string, string>
+  ): Record<string, Widget[]> {
+    const clone = JSON.parse(JSON.stringify(widgets));
+    for (const key of Object.keys(clone)) {
+      for (const widget of clone[key]) {
+        const diff = indexDiffs[widget.index_id];
+        if (diff) {
+          // Esempi di diff: "1.05 -> 1.75" oppure "350-450 -> 350-630"
+          const [, newValue] = diff.split('->').map(s => s.trim());
+          if (newValue.includes('-')) {
+            // Caso range: "350-450 -> 350-630"
+            const [minStr, maxStr] = newValue.split('-').map(s => s.replace(/[^\d.]/g, '').trim());
+            const min = Number(minStr);
+            const max = Number(maxStr);
+            if (!isNaN(min)) widget.vMin = min;
+            if (!isNaN(max)) widget.vMax = max;
+          } else {
+            // Caso singolo valore: "1.05 -> 1.75"
+            const num = Number(newValue.replace(/[^\d.]/g, ''));
+            if (!isNaN(num)) widget.v = num;
+          }
+        }
+      }
+    }
+    return clone;
+  }
   async loadData() {
     this.loading = true;
     if (!this.scenarioId || !this.problemId) {
@@ -215,6 +248,8 @@ export class PlotComponent implements AfterViewInit {
     }
     try {
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
+      this.originalIndexDiffs = { ...(rawData.index_diffs || {}) }; 
+      this.widgets = this.applyIndexDiffsToWidgets(rawData.widgets, rawData.index_diffs || {});
       this.inputData = this.plotService.preparePlotInput(rawData.data);
       this.editableIndexes = rawData.editable_indexes || [];
       this.indexDiffs = rawData.index_diffs || {};
@@ -246,7 +281,17 @@ export class PlotComponent implements AfterViewInit {
   onFunzioneChange() {
     this.renderPlot();
   }
+  resetIndexDiffs(): void {
+    this.widgets = this.applyIndexDiffsToWidgets(this.widgets, this.originalIndexDiffs);
+    this.indexDiffs = Object.fromEntries(
+      Object.entries(this.originalIndexDiffs).map(([key, value]) => [key, Number(value)])
+    );
+        this.changedWidgets = {};
+    this.hasChanges = false;
+    this.notificationService.showError('Modifiche ripristinate.');
+    this.updateData({});
 
+  }
   renderPlot() {
     if (!this.chartLib || !this.inputData) return;
     if (this.monoDimensionale) {

@@ -99,11 +99,27 @@
 
   </div>
 </div>
-<div class="d-flex justify-content-end mt-4" *ngIf="indexDiffs && objectKeys(indexDiffs).length">
-  <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center" (click)="openSaveModal()"> <span
-  class="material-icons me-2">save</span>
-    Salva come nuovo scenario
+<div class="d-flex justify-content-end gap-2 mt-4" *ngIf="indexDiffs && objectKeys(indexDiffs).length">
+  <!-- <button itButton="outline-primary"
+  class="m-4 d-flex justify-content-between align-items-center"
+  (click)="resetIndexDiffs()"> 
+    <span class="material-icons me-2">restart_alt</span>
+    Ripristina modifiche
+  </button> -->
+  <button itButton="outline-primary"
+    class="m-4 d-flex justify-content-between align-items-center"
+    (click)="resetIndexDiffs()"> 
+    <span class="material-icons me-2">replay</span>
+    Ripristina modifiche
   </button>
+  <button itButton="primary"
+  class="m-4 d-flex justify-content-between align-items-center"
+  (click)="openSaveModal()"> 
+  <span class="material-icons me-2">save</span>
+  Salva come nuovo scenario
+</button>
+
+  
 </div>
 
 <it-modal #saveModal id="saveModal" closeButton="false">
