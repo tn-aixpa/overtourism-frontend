@@ -161,7 +161,8 @@ export class PlotComponent implements AfterViewInit {
       }
     }
     //TODO fix always true
-    if (true || Object.keys(changedValues).length > 0) {
+    // if (true || Object.keys(changedValues).length > 0) {
+      if (true || Object.keys(changedValues).length > 0) {
       console.log('Sending changed widgets:', changedValues);
       this.hasChanges = true;
       this.changedWidgets = changedValues;
@@ -261,8 +262,6 @@ export class PlotComponent implements AfterViewInit {
       this.indexDiffs = rawData.index_diffs || {};
       this.kpisData = this.inputData.kpis;
       this.setupSelectOptions();
-
-
       this.renderPlot();
     } catch (error) {
       console.error('Errore nel caricamento dati scenario', error);
@@ -284,19 +283,36 @@ export class PlotComponent implements AfterViewInit {
       ];
     }
   }
+  hasLocalDiffs(): boolean {
+    // Confronta indexDiffs correnti con quelli originali caricati
+    const current = this.indexDiffs || {};
+    const original = this.originalIndexDiffs || {};
+    const keys = new Set([...Object.keys(current), ...Object.keys(original)]);
+    for (const key of keys) {
+      if (String(current[key] ?? null) !== String(original[key] ?? null)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  getLocallyChangedKeys(): string[] {
+    const current = this.indexDiffs || {};
+    const original = this.originalIndexDiffs || {};
+    return Object.keys(current).filter(
+      key => String(current[key] ?? null) !== String(original[key] ?? null)
+    );
+  }
   onFunzioneChange() {
     this.renderPlot();
   }
   resetIndexDiffs(): void {
-    this.widgets = this.applyIndexDiffsToWidgets(this.widgets, this.originalIndexDiffs);
-    this.indexDiffs = Object.fromEntries(
-      Object.entries(this.originalIndexDiffs).map(([key, value]) => [key, Number(value)])
-    );
-        this.changedWidgets = {};
+    // Ripristina widgets e indexDiffs allo stato originale
+    this.widgets = JSON.parse(JSON.stringify(this.originalWidgets));
+    this.indexDiffs = JSON.parse(JSON.stringify(this.originalIndexDiffs));
     this.hasChanges = false;
+    this.changedWidgets = {};
+    this.renderPlot();
     this.notificationService.showError('Modifiche ripristinate.');
-    this.updateData({});
-
   }
   renderPlot() {
     if (!this.chartLib || !this.inputData) return;
