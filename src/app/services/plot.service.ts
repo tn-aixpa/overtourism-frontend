@@ -124,8 +124,8 @@ export class PlotService {
         constraint_level_spiaggia: module.kpis['constraint level spiaggia'] ?? 0,
         constraint_level_alberghi: module.kpis['constraint level alberghi'] ?? 0,
         constraint_level_ristoranti: module.kpis['constraint level ristoranti'] ?? 0,
-        uncertainty: Array.isArray(module.kpis.uncertainty)
-          ? module.kpis.uncertainty.map((u: {
+        uncertainty: Array.isArray(module.points.uncertainty)
+          ? module.points.uncertainty.map((u: {
             usage: number;
             usage_uncertainty: number; tourists: any; excursionists: any; index: any;
           }) => ({
@@ -136,9 +136,9 @@ export class PlotService {
             usage_uncertainty: u.usage_uncertainty ?? 0,
           }))
           : [],
-        uncertainty_by_constraint: module.kpis.uncertainty_by_constraint && typeof module.kpis.uncertainty_by_constraint === 'object'
+        uncertainty_by_constraint: module.points.uncertainty_by_constraint && typeof module.points.uncertainty_by_constraint === 'object'
           ? Object.fromEntries(
-            Object.entries(module.kpis.uncertainty_by_constraint).map(([key, value]) => [
+            Object.entries(module.points.uncertainty_by_constraint).map(([key, value]) => [
               key,
               Array.isArray(value)
                 ? value.map(u => ({
@@ -289,11 +289,11 @@ export class PlotService {
       '<b>Escursionisti:</b> %{y}<br>' +
       '<extra></extra>';
   }
-  private getUncertaintyData(sottosistema: string, kpis: any): any[] {
-    if (!kpis) return [];
+  private getUncertaintyData(sottosistema: string, points: any): any[] {
+    if (!points) return [];
     return sottosistema === 'default'
-      ? (Array.isArray(kpis['uncertainty']) ? kpis['uncertainty'] : [])
-      : (kpis['uncertainty_by_constraint']?.[sottosistema] ?? []);
+      ? (Array.isArray(points['uncertainty']) ? points['uncertainty'] : [])
+      : (points['uncertainty_by_constraint']?.[sottosistema] ?? []);
   }
   private createUncertaintyPoint(
     name: string,

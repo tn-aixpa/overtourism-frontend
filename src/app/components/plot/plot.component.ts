@@ -36,6 +36,7 @@ export class PlotComponent implements AfterViewInit {
   monoDimensionale = false;
   kpisData: KPIs | undefined;
   noteUtente: string = '';
+  originalWidgets: Record<string, Widget[]> = {};
   widgets: Record<string, Widget[]> = {};
   sottosistemi = SUBSYSTEM_OPTIONS;
   editableIndexes: string[] = [];
@@ -50,6 +51,7 @@ export class PlotComponent implements AfterViewInit {
   indexDiffs: Record<string, number> = {};
   titolo: string = '';
   descrizione: string = '';
+  //widget diversi ma non locali, usati per il reset locale
   originalIndexDiffs: Record<string, string> = {};
 
   constructor(private plotService: PlotService,
@@ -107,6 +109,7 @@ export class PlotComponent implements AfterViewInit {
     this.scenarioService.getWidgets().subscribe({
       next: (data) => {
         const initialized = this.initializeWidgetBounds(data);
+        this.originalWidgets = JSON.parse(JSON.stringify(initialized)); // copia profonda per reset
         this.widgets = initialized;
       },
       error: (err) => {
@@ -133,7 +136,9 @@ export class PlotComponent implements AfterViewInit {
     const changedValues: Record<string, number | [number, number]> = {};
 
     for (const key of Object.keys(updatedWidgets)) {
-      const currentGroup = this.widgets[key] || [];
+      const currentGroup = this.originalWidgets[key] || [];
+            // const currentGroup = this.widgets[key] || [];
+
       const updatedGroup = updatedWidgets[key];
 
       for (let i = 0; i < updatedGroup.length; i++) {
@@ -249,7 +254,8 @@ export class PlotComponent implements AfterViewInit {
     try {
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
       this.originalIndexDiffs = { ...(rawData.index_diffs || {}) }; 
-      this.widgets = this.applyIndexDiffsToWidgets(rawData.widgets, rawData.index_diffs || {});
+      // occhio che qui resetti widget e non hai piu' o valori inizialli
+      this.widgets = this.applyIndexDiffsToWidgets(this.initializeWidgetBounds(rawData.widgets), rawData.index_diffs || {});
       this.inputData = this.plotService.preparePlotInput(rawData.data);
       this.editableIndexes = rawData.editable_indexes || [];
       this.indexDiffs = rawData.index_diffs || {};

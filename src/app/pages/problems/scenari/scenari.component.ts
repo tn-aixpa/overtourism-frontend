@@ -69,12 +69,17 @@ export class ScenariComponent {
   }
   
   getIndexNameFromKey(key: string): string {
+    if (!this.widgets) {
+      return key; // fallback
+    }
+  
     for (const group of Object.keys(this.widgets)) {
       const widget = this.widgets[group].find((w: { index_id: string; }) => w.index_id === key);
       if (widget) return widget.index_name;
     }
-    return key; // fallback se non trovato
+    return key;
   }
+  
   confrontaScenari() {
     const [s1, s2] = this.selectedScenari;
     this.router.navigate([
