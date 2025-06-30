@@ -21,6 +21,7 @@ export class PlotComponent implements AfterViewInit {
 
   @ViewChild('chartLib', { static: false }) chartLib!: ElementRef<HTMLElement>;
   @ViewChild('saveModal') saveModal!: ItModalComponent;
+  @ViewChild('unsavedModal') unsavedModal!: ItModalComponent;
 
   @Input() editing: boolean = false;
   @Input() scenarioId!: string;
@@ -53,6 +54,7 @@ export class PlotComponent implements AfterViewInit {
   descrizione: string = '';
   //widget diversi ma non locali, usati per il reset locale
   originalIndexDiffs: Record<string, string> = {};
+  pendingNavigationResolve: ((result: boolean) => void) | null = null;
 
   constructor(private plotService: PlotService,
     private scenarioService: ScenarioService,
@@ -329,6 +331,32 @@ export class PlotComponent implements AfterViewInit {
 
   }
 
-
+  canDeactivate(): Promise<boolean> | boolean {
+    if (this.hasLocalDiffs()) {
+      this.unsavedModal.show();
+      return new Promise(resolve => {
+        this.pendingNavigationResolve = resolve;
+      });
+    }
+    return true;
+  }
+  
+  // Da chiamare quando l’utente conferma di voler abbandonare senza salvare
+  onConfirmLeaveWithoutSaving() {
+    if (this.pendingNavigationResolve) {
+      this.pendingNavigationResolve(true);
+      this.pendingNavigationResolve = null;
+      this.unsavedModal.hide();
+    }
+  }
+  
+  // Da chiamare se l’utente vuole restare
+  onCancelLeave() {
+    if (this.pendingNavigationResolve) {
+      this.pendingNavigationResolve(false);
+      this.pendingNavigationResolve = null;
+      this.unsavedModal.hide();
+    }
+  }
 
 }

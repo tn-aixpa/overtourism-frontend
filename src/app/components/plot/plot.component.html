@@ -167,5 +167,12 @@
     </button>
         </ng-container>
   </it-modal>
-
+  <it-modal #unsavedModal>
+    <ng-container modalTitle>Modifiche non salvate</ng-container>
+    <p>Hai modifiche non salvate. Vuoi davvero uscire senza salvare?</p>
+    <ng-container footer>
+      <button itButton="outline-primary" (click)="onCancelLeave()">Annulla</button>
+      <button itButton="danger" (click)="onConfirmLeaveWithoutSaving()">Esci senza salvare</button>
+    </ng-container>
+  </it-modal>
 <app-back-button></app-back-button>
