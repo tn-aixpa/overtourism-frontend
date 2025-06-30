@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { PlotService } from '../../../services/plot.service';
 import { ScenarioService } from '../../../services/scenario.service';
 import { Scenario } from '../../../models/scenario.model';
+import { PlotComponent } from '../../../components/plot/plot.component';
 
 @Component({
   selector: 'app-scenario-detail',
@@ -12,6 +13,7 @@ import { Scenario } from '../../../models/scenario.model';
 })
 export class ScenarioDetailComponent  {
   @ViewChild('plotContainer') plotContainer!: ElementRef<HTMLDivElement>;
+  @ViewChild(PlotComponent) plotComponent!: PlotComponent;
 
   scenarioId!: string;
   problemId!: string;
@@ -27,7 +29,10 @@ export class ScenarioDetailComponent  {
     this.scenarioId = this.route.snapshot.paramMap.get('scenarioId')!;
     this.loadScenarioDetails();
   }
-
+  canDeactivate(): Promise<boolean> | boolean {
+    // Se il plotComponent esiste, delega a lui
+    return this.plotComponent?.canDeactivate() ?? true;
+  }
   loadScenarioDetails(): void {
     this.scenarioService.getScenariosByProblemId(this.problemId).subscribe({
       next: (scenarios) => {

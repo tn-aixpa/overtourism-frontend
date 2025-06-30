@@ -68,11 +68,24 @@
                 <div *ngIf="indexDiffs && objectKeys(indexDiffs).length; else noDifferences">
                   <ul class="list-unstyled small">
                     <li *ngFor="let key of objectKeys(indexDiffs)">
-                      <span class="fw-bold">{{ getIndexNameFromKey(key) }}</span>: {{ indexDiffs[key] }}
+                      <span class="fw-bold">{{ getIndexNameFromKey(key) }}</span>:
+                      <span 
+                        [ngClass]="{
+                          'text-danger fw-bold': getLocallyChangedKeys().includes(key),
+                          'text-body': !getLocallyChangedKeys().includes(key)
+                        }"
+                      >
+                        {{ indexDiffs[key] }}
+                      </span>
+                      <span 
+                        class="text-muted ms-2" 
+                        *ngIf="getLocallyChangedKeys().includes(key) && originalIndexDiffs[key] !== undefined"
+                      >
+                        (originale: {{ originalIndexDiffs[key] }})
+                      </span>
                     </li>
                   </ul>
                 </div>
-                
                 <ng-template #noDifferences>
                   <span class="fw-bold">Nessuna</span>
                 </ng-template>
@@ -99,9 +112,17 @@
 
   </div>
 </div>
-<div class="d-flex justify-content-end mt-4" *ngIf="indexDiffs && objectKeys(indexDiffs).length">
-  <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center" (click)="openSaveModal()"> <span
-  class="material-icons me-2">save</span>
+<div class="d-flex justify-content-end gap-2 mt-4" *ngIf="hasLocalDiffs()">
+  <button itButton="outline-primary"
+    class="m-4 d-flex justify-content-between align-items-center"
+    (click)="resetIndexDiffs()"> 
+    <span class="material-icons me-2">replay</span>
+    Ripristina modifiche
+  </button>
+  <button itButton="primary"
+    class="m-4 d-flex justify-content-between align-items-center"
+    (click)="openSaveModal()"> 
+    <span class="material-icons me-2">save</span>
     Salva come nuovo scenario
   </button>
 </div>
@@ -146,5 +167,12 @@
     </button>
         </ng-container>
   </it-modal>
-
+  <it-modal #unsavedModal>
+    <ng-container modalTitle>Modifiche non salvate</ng-container>
+    <p>Hai modifiche non salvate. Vuoi davvero uscire senza salvare?</p>
+    <ng-container footer>
+      <button itButton="outline-primary" (click)="onCancelLeave()">Annulla</button>
+      <button itButton="danger" (click)="onConfirmLeaveWithoutSaving()">Esci senza salvare</button>
+    </ng-container>
+  </it-modal>
 <app-back-button></app-back-button>

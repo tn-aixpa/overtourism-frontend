@@ -10,6 +10,7 @@ import { TermsComponent } from './pages/terms/terms.component';
 import { ScenarioDetailComponent } from './pages/problems/scenario-detail/scenario-detail.component';
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
 import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
+import { UnsavedChangesGuard } from './guards/plot-unsaved-changes.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'problems', pathMatch: 'full' },
@@ -39,6 +40,7 @@ const routes: Routes = [
           {
             path: ':scenarioId',
             component: ScenarioDetailComponent,
+            canDeactivate: [UnsavedChangesGuard],
             data: { breadcrumb: 'Dettaglio scenario' }
           }
         ]

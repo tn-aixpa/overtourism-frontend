@@ -21,6 +21,7 @@ export class PlotComponent implements AfterViewInit {
 
   @ViewChild('chartLib', { static: false }) chartLib!: ElementRef<HTMLElement>;
   @ViewChild('saveModal') saveModal!: ItModalComponent;
+  @ViewChild('unsavedModal') unsavedModal!: ItModalComponent;
 
   @Input() editing: boolean = false;
   @Input() scenarioId!: string;
@@ -36,6 +37,7 @@ export class PlotComponent implements AfterViewInit {
   monoDimensionale = false;
   kpisData: KPIs | undefined;
   noteUtente: string = '';
+  originalWidgets: Record<string, Widget[]> = {};
   widgets: Record<string, Widget[]> = {};
   sottosistemi = SUBSYSTEM_OPTIONS;
   editableIndexes: string[] = [];
@@ -50,6 +52,9 @@ export class PlotComponent implements AfterViewInit {
   indexDiffs: Record<string, number> = {};
   titolo: string = '';
   descrizione: string = '';
+  //widget diversi ma non locali, usati per il reset locale
+  originalIndexDiffs: Record<string, string> = {};
+  pendingNavigationResolve: ((result: boolean) => void) | null = null;
 
   constructor(private plotService: PlotService,
     private scenarioService: ScenarioService,
@@ -58,8 +63,9 @@ export class PlotComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.loadData();
     this.loadWidgets();
+
+    this.loadData();
   }
   openSaveModal(): void {
     this.saveModal.toggle();
@@ -105,6 +111,7 @@ export class PlotComponent implements AfterViewInit {
     this.scenarioService.getWidgets().subscribe({
       next: (data) => {
         const initialized = this.initializeWidgetBounds(data);
+        this.originalWidgets = JSON.parse(JSON.stringify(initialized)); // copia profonda per reset
         this.widgets = initialized;
       },
       error: (err) => {
@@ -131,7 +138,9 @@ export class PlotComponent implements AfterViewInit {
     const changedValues: Record<string, number | [number, number]> = {};
 
     for (const key of Object.keys(updatedWidgets)) {
-      const currentGroup = this.widgets[key] || [];
+      const currentGroup = this.originalWidgets[key] || [];
+            // const currentGroup = this.widgets[key] || [];
+
       const updatedGroup = updatedWidgets[key];
 
       for (let i = 0; i < updatedGroup.length; i++) {
@@ -154,7 +163,8 @@ export class PlotComponent implements AfterViewInit {
       }
     }
     //TODO fix always true
-    if (true || Object.keys(changedValues).length > 0) {
+    // if (true || Object.keys(changedValues).length > 0) {
+      if (true || Object.keys(changedValues).length > 0) {
       console.log('Sending changed widgets:', changedValues);
       this.hasChanges = true;
       this.changedWidgets = changedValues;
@@ -166,9 +176,12 @@ export class PlotComponent implements AfterViewInit {
   }
 
   extractValue(widget: Widget): number | [number, number] {
-    return widget.scale && widget.index_category !== '%'
-      ? [widget.vMin ?? 0, widget.vMax ?? 0]
-      : widget.v ?? 0;
+    if (widget.scale && widget.index_category !== '%') {
+      const vMin = widget.vMin ?? widget.loc;
+      const vMax = widget.vMax ?? (widget.loc + widget.scale);
+      return [vMin ?? 1, vMax ?? 1];
+    }
+    return widget.v ?? widget.loc ?? 0;
   }
   updateData(values: Record<string, number | [number, number]>) {
     this.loading = true;
@@ -206,6 +219,34 @@ export class PlotComponent implements AfterViewInit {
     ]);
     console.log('Vai alla pagina di confronto');
   }
+  private applyIndexDiffsToWidgets(
+    widgets: Record<string, Widget[]>,
+    indexDiffs: Record<string, string>
+  ): Record<string, Widget[]> {
+    const clone = JSON.parse(JSON.stringify(widgets));
+    for (const key of Object.keys(clone)) {
+      for (const widget of clone[key]) {
+        const diff = indexDiffs[widget.index_id];
+        if (diff) {
+          // Esempi di diff: "1.05 -> 1.75" oppure "350-450 -> 350-630"
+          const [, newValue] = diff.split('->').map(s => s.trim());
+          if (newValue.includes('-')) {
+            // Caso range: "350-450 -> 350-630"
+            const [minStr, maxStr] = newValue.split('-').map(s => s.replace(/[^\d.]/g, '').trim());
+            const min = Number(minStr);
+            const max = Number(maxStr);
+            if (!isNaN(min)) widget.vMin = min;
+            if (!isNaN(max)) widget.vMax = max;
+          } else {
+            // Caso singolo valore: "1.05 -> 1.75"
+            const num = Number(newValue.replace(/[^\d.]/g, ''));
+            if (!isNaN(num)) widget.v = num;
+          }
+        }
+      }
+    }
+    return clone;
+  }
   async loadData() {
     this.loading = true;
     if (!this.scenarioId || !this.problemId) {
@@ -215,13 +256,14 @@ export class PlotComponent implements AfterViewInit {
     }
     try {
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
+      this.originalIndexDiffs = { ...(rawData.index_diffs || {}) }; 
+      // occhio che qui resetti widget e non hai piu' o valori inizialli
+      this.widgets = this.applyIndexDiffsToWidgets(this.initializeWidgetBounds(rawData.widgets), rawData.index_diffs || {});
       this.inputData = this.plotService.preparePlotInput(rawData.data);
       this.editableIndexes = rawData.editable_indexes || [];
       this.indexDiffs = rawData.index_diffs || {};
       this.kpisData = this.inputData.kpis;
       this.setupSelectOptions();
-
-
       this.renderPlot();
     } catch (error) {
       console.error('Errore nel caricamento dati scenario', error);
@@ -243,10 +285,37 @@ export class PlotComponent implements AfterViewInit {
       ];
     }
   }
+  hasLocalDiffs(): boolean {
+    // Confronta indexDiffs correnti con quelli originali caricati
+    const current = this.indexDiffs || {};
+    const original = this.originalIndexDiffs || {};
+    const keys = new Set([...Object.keys(current), ...Object.keys(original)]);
+    for (const key of keys) {
+      if (String(current[key] ?? null) !== String(original[key] ?? null)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  getLocallyChangedKeys(): string[] {
+    const current = this.indexDiffs || {};
+    const original = this.originalIndexDiffs || {};
+    return Object.keys(current).filter(
+      key => String(current[key] ?? null) !== String(original[key] ?? null)
+    );
+  }
   onFunzioneChange() {
     this.renderPlot();
   }
-
+  resetIndexDiffs(): void {
+    // Ripristina widgets e indexDiffs allo stato originale
+    this.widgets = JSON.parse(JSON.stringify(this.originalWidgets));
+    this.indexDiffs = JSON.parse(JSON.stringify(this.originalIndexDiffs));
+    this.hasChanges = false;
+    this.changedWidgets = {};
+    this.renderPlot();
+    this.notificationService.showError('Modifiche ripristinate.');
+  }
   renderPlot() {
     if (!this.chartLib || !this.inputData) return;
     if (this.monoDimensionale) {
@@ -262,6 +331,32 @@ export class PlotComponent implements AfterViewInit {
 
   }
 
-
+  canDeactivate(): Promise<boolean> | boolean {
+    if (this.hasLocalDiffs()) {
+      this.unsavedModal.show();
+      return new Promise(resolve => {
+        this.pendingNavigationResolve = resolve;
+      });
+    }
+    return true;
+  }
+  
+  // Da chiamare quando l’utente conferma di voler abbandonare senza salvare
+  onConfirmLeaveWithoutSaving() {
+    if (this.pendingNavigationResolve) {
+      this.pendingNavigationResolve(true);
+      this.pendingNavigationResolve = null;
+      this.unsavedModal.hide();
+    }
+  }
+  
+  // Da chiamare se l’utente vuole restare
+  onCancelLeave() {
+    if (this.pendingNavigationResolve) {
+      this.pendingNavigationResolve(false);
+      this.pendingNavigationResolve = null;
+      this.unsavedModal.hide();
+    }
+  }
 
 }
