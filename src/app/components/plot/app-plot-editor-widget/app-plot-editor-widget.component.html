@@ -27,7 +27,7 @@
                       <label class="form-label mb-0" [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' :  undefined ">
                         {{ widget.index_name }}
                       </label>
-                      <span
+                      <span  *ngIf="widget.description"
                         class="material-icons text-muted ms-2"
                         style="font-size: 16px; cursor: pointer;"
                         [itTooltip]="widget.description"
