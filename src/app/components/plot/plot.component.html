@@ -131,29 +131,29 @@
     <ng-container modalTitle>Salvataggio scenario modificato</ng-container>
 
     <p>    Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
+      
     </p>
     <it-input
-    label="{{ 'save.title' | translate }}"
+    label="{{ 'save.title' | translate }} *"
     name="titolo"
     required
     [(ngModel)]="titolo"
     #titoloInput="ngModel">
   </it-input>
-  <div *ngIf="titoloInput.invalid && titoloInput.touched" class="text-danger small">
-    Il titolo è obbligatorio.
-  </div>
+  <small *ngIf="formInvalid && !titolo?.trim()" class="text-danger">Il titolo è obbligatorio</small>
+
   
   <it-textarea
     class="w-100"
-    label="{{ 'save.description' | translate }}"
+    label="{{ 'save.description' | translate }} *"
     name="descrizione"
     required
     [(ngModel)]="descrizione"
+    
     #descrizioneInput="ngModel">
   </it-textarea>
-  <div *ngIf="descrizioneInput.invalid && descrizioneInput.touched" class="text-danger small">
-    La descrizione è obbligatoria.
-  </div>
+  <small *ngIf="formInvalid && !descrizione?.trim()" class="text-danger">La descrizione è obbligatoria</small>
+
   
     <ng-container footer>
       <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button> 
