@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import Plotly from 'plotly.js-dist-min';
 import { KPIs, PlotInput, Curve } from '../../../models/plot.model';
 import { PlotService } from '../../../services/plot.service';
-import { ScenarioService } from '../../../services/scenario.service';
+import { ScenarioService, Widget } from '../../../services/scenario.service';
 import {
   SUBSYSTEM_OPTIONS
 } from '../../../components/plot/plot.config';
@@ -27,7 +27,8 @@ export class ConfrontoScenariComponent {
   showAllSubsystems = true;
   sottosistemi = SUBSYSTEM_OPTIONS;
   sottosistemaSelezionato = 'default';
-
+  widgetsLeft: Record<string, Widget[]> = {};
+  widgetsRight: Record<string, Widget[]> = {};
   @ViewChild('chartLeft', { static: true }) chartLeft!: ElementRef<HTMLElement>;
   @ViewChild('chartRight', { static: true }) chartRight!: ElementRef<HTMLElement>;
   showControls: boolean = false; // per 'settings'
@@ -56,7 +57,15 @@ export class ConfrontoScenariComponent {
   getScenarioName(id: string | undefined): string | undefined {
     return this.scenari.find(s => s.id === id)?.name;
   }
-
+  getDiffKeys(kpisA: KPIs | undefined, kpisB: KPIs | undefined): string[] {
+    if (!kpisA || !kpisB) return [];
+    const keys = new Set([...Object.keys(kpisA), ...Object.keys(kpisB)]);
+    return Array.from(keys).filter(key => String(kpisA[key]) !== String(kpisB[key]));
+  }
+  getDiffsFor(kpisA: KPIs | undefined, kpisB: KPIs | undefined): { key: string, value: any }[] {
+    const diffKeys = this.getDiffKeys(kpisA, kpisB);
+    return diffKeys.map(key => ({ key, value: kpisA ? kpisA[key] : undefined }));
+  }
   selectScenario(slot: 1 | 2, id: string): void {
     if (slot === 1) {
       this.selectedScenario1Id = id;
@@ -110,12 +119,61 @@ export class ConfrontoScenariComponent {
     const input = this.plotService.preparePlotInput(res.data);
 
     const container = slot === 1 ? this.chartLeft.nativeElement : this.chartRight.nativeElement;
-    if (slot === 1) this.kpisLeft = input.kpis;
-    else this.kpisRight = input.kpis;
+    if (slot === 1) {
+      this.kpisLeft = input.kpis;
+      this.widgetsLeft = res.widgets || {};
+    } else {
+      this.kpisRight = input.kpis;
+      this.widgetsRight = res.widgets || {};
+    }
 
     this.renderChart(container, input);
   }
-
+  getWidgetDiffs(
+    widgetsA: Record<string, Widget[]>,
+    widgetsB: Record<string, Widget[]>
+  ): { index_id: string, index_name: string, value: any, otherValue: any }[] {
+    const diffs: { index_id: string, index_name: string, value: any, otherValue: any }[] = [];
+    const allIds = new Set<string>();
+    Object.values(widgetsA).forEach(group => group.forEach(w => allIds.add(w.index_id)));
+    Object.values(widgetsB).forEach(group => group.forEach(w => allIds.add(w.index_id)));
+  
+    for (const id of allIds) {
+      const widgetA = Object.values(widgetsA).flat().find(w => w.index_id === id);
+      const widgetB = Object.values(widgetsB).flat().find(w => w.index_id === id);
+  
+      if (widgetA && widgetB) {
+        // Se è un range (ha scale e non è percentuale)
+        if (widgetA.scale && widgetA.index_category !== '%') {
+          const aMin = widgetA.vMin ?? widgetA.loc;
+          const aMax = widgetA.vMax ?? (widgetA.loc + widgetA.scale);
+          const bMin = widgetB.vMin ?? widgetB.loc;
+          const bMax = widgetB.vMax ?? (widgetB.loc + widgetB.scale);
+          if (aMin !== bMin || aMax !== bMax) {
+            diffs.push({
+              index_id: id,
+              index_name: widgetA.index_name,
+              value: `${aMin} - ${aMax}`,
+              otherValue: `${bMin} - ${bMax}`
+            });
+          }
+        } else {
+          // Valore singolo
+          const valueA = widgetA.v ?? widgetA.loc ?? '';
+          const valueB = widgetB.v ?? widgetB.loc ?? '';
+          if (String(valueA) !== String(valueB)) {
+            diffs.push({
+              index_id: id,
+              index_name: widgetA.index_name,
+              value: valueA,
+              otherValue: valueB
+            });
+          }
+        }
+      }
+    }
+    return diffs;
+  }
   renderChart(container: HTMLElement, input: PlotInput) {
     const cloned = JSON.parse(JSON.stringify(input)) as PlotInput;
 

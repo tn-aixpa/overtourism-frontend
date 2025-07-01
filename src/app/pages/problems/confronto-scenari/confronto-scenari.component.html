@@ -66,12 +66,34 @@
   <div class="row">
     <div class="col-md-6">
       <div #chartLeft style="max-width: 600px;height: 600px; position: relative;"></div>
-      <!-- <app-kpi-box [kpisData]="kpisLeft" ></app-kpi-box> -->
-    </div>
+      <div class="mt-3">
+        <div class="callout callout-highlight note">
+          <h6 class="text-primary mb-2">Parametri diversi rispetto all'altro scenario:</h6>
+          <ul class="list-unstyled small">
+            <li *ngFor="let diff of getWidgetDiffs(widgetsLeft, widgetsRight)">
+              <span class="fw-bold">{{ diff.index_name }}</span>:
+              <span class="text-danger">{{ diff.value }}</span>
+              <!-- <span class="text-muted ms-2">(altro: {{ diff.otherValue }})</span> -->
+            </li>
+          </ul>
+          <span *ngIf="getWidgetDiffs(widgetsLeft, widgetsRight).length === 0" class="text-muted">Nessuna differenza</span>
+        </div>
+      </div>    </div>
     <div class="col-md-6">
       <div #chartRight style="max-width: 600px;height: 600px; position: relative;"></div>
-      <!-- <app-kpi-box [kpisData]="kpisRight" ></app-kpi-box> -->
-    </div>
+      <div class="mt-3">
+        <div class="callout callout-highlight note">
+          <h6 class="text-primary mb-2">Parametri diversi rispetto all'altro scenario:</h6>
+          <ul class="list-unstyled small">
+            <li *ngFor="let diff of getWidgetDiffs(widgetsRight, widgetsLeft)">
+              <span class="fw-bold">{{ diff.index_name }}</span>:
+              <span class="text-danger">{{ diff.value }}</span>
+              <!-- <span class="text-muted ms-2">(altro: {{ diff.otherValue }})</span> -->
+            </li>
+          </ul>
+          <span *ngIf="getWidgetDiffs(widgetsRight, widgetsLeft).length === 0" class="text-muted">Nessuna differenza</span>
+        </div>
+      </div>    </div>
   </div>
   <div class="row">
     <app-kpi-comparison [kpisLeft]="kpisLeft ?? {}" [kpisRight]="kpisRight ?? {}"></app-kpi-comparison>
