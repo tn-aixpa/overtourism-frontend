@@ -26,8 +26,8 @@ export class PlotComponent implements AfterViewInit {
   @Input() editing: boolean = false;
   @Input() scenarioId!: string;
   @Input() problemId!: string;
-
-
+  private navigationAfterSave = false;
+  isSaving = false;
   inputData: PlotInput | null = null;
   sottosistemaSelezionato = 'default';
   loading = true;
@@ -76,7 +76,9 @@ export class PlotComponent implements AfterViewInit {
     if (!this.titolo?.trim() || !this.descrizione?.trim()) {
       this.formInvalid = true;
       return;
-    } this.formInvalid = false;
+    }
+    this.formInvalid = false;
+    this.isSaving = true; 
     this.saveAsNewScenario();
   }
   saveAsNewScenario(): void {
@@ -85,15 +87,13 @@ export class PlotComponent implements AfterViewInit {
         // this.notificationService.showError('Scenario salvato con successo!');
         this.hasChanges = false;
         this.closeModal();
+        this.navigationAfterSave = true;
         this.router.navigate(['/problems', this.problemId, 'scenari']);
-
 
       },
       error: (err) => {
         this.notificationService.showError('Errore durante il salvataggio del nuovo scenario.');
-        console.error('Errore salvataggio:', err);
         this.closeModal();
-
       }
     });
   }
@@ -332,6 +332,10 @@ export class PlotComponent implements AfterViewInit {
   }
 
   canDeactivate(): Promise<boolean> | boolean {
+    if (this.navigationAfterSave) {
+      this.navigationAfterSave = false; // resetta per le prossime volte
+      return true;
+    }
     if (this.hasLocalDiffs()) {
       this.unsavedModal.show();
       return new Promise(resolve => {
