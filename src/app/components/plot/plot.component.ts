@@ -78,7 +78,7 @@ export class PlotComponent implements AfterViewInit {
       return;
     }
     this.formInvalid = false;
-    this.isSaving = true; 
+    this.isSaving = true;
     this.saveAsNewScenario();
   }
   saveAsNewScenario(): void {
@@ -200,7 +200,7 @@ export class PlotComponent implements AfterViewInit {
       }
     });
   }
-  
+
   toggleEditing(): void {
     this.isEditing = !this.isEditing;
   }
@@ -256,7 +256,7 @@ export class PlotComponent implements AfterViewInit {
     }
     try {
       const rawData = await firstValueFrom(this.scenarioService.getScenarioData(this.scenarioId, this.problemId));
-      this.originalIndexDiffs = { ...(rawData.index_diffs || {}) }; 
+      this.originalIndexDiffs = { ...(rawData.index_diffs || {}) };
       // occhio che qui resetti widget e non hai piu' o valori inizialli
       this.widgets = this.applyIndexDiffsToWidgets(this.initializeWidgetBounds(rawData.widgets), rawData.index_diffs || {});
       this.inputData = this.plotService.preparePlotInput(rawData.data);
@@ -313,7 +313,7 @@ export class PlotComponent implements AfterViewInit {
     this.indexDiffs = JSON.parse(JSON.stringify(this.originalIndexDiffs));
     this.hasChanges = false;
     this.changedWidgets = {};
-    this.renderPlot();
+    this.loadData();
     this.notificationService.showError('Modifiche ripristinate.');
   }
   renderPlot() {
@@ -344,7 +344,7 @@ export class PlotComponent implements AfterViewInit {
     }
     return true;
   }
-  
+
   // Da chiamare quando l’utente conferma di voler abbandonare senza salvare
   onConfirmLeaveWithoutSaving() {
     if (this.pendingNavigationResolve) {
@@ -353,7 +353,7 @@ export class PlotComponent implements AfterViewInit {
       this.unsavedModal.hide();
     }
   }
-  
+
   // Da chiamare se l’utente vuole restare
   onCancelLeave() {
     if (this.pendingNavigationResolve) {
