@@ -33,13 +33,14 @@ export class ProblemsComponent {
     }
 
     return of(this.problems.map(problem => ({
-      value: problem.id, // Assuming 'id' is a unique identifier in Problem
-      label: problem.name // Assuming 'name' is a property in Problem for display
+      id: problem.id,
+      value: problem.name, 
+      label: problem.name 
     })));
   };
 
-  onSearchSelected(item: SearchItem): void {
-    this.router.navigate(['/problems', item.value, 'scenari']);
+  onSearchSelected(item: any): void {
+    this.router.navigate(['/problems', item.id, 'scenari']);
     
   }
 

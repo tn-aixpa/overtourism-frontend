@@ -48,7 +48,9 @@
     "enable_compare": "Enable comparison",
     "disable_compare": "Disable comparison",
     "parameters": "Parameters",
-    "parametersChanged": "PARAMETERS CHANGED"
+    "parametersChanged": "PARAMETERS CHANGED",
+    "confirm_delete_title": "Confirm Deletion",
+    "confirm_delete_message": "Are you sure you want to delete the scenario {{name}}? This action cannot be undone."
   },
   "save": {
     "title": "Scenario Name",
@@ -86,6 +88,7 @@
     "back": "Back",
     "selectScenario": "Select a scenario",
     "cancel": "Cancel",
-    "save": "Save"    
+    "save": "Save"    ,
+    "delete": "Delete"
   }
 }

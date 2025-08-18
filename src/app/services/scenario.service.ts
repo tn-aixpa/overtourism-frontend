@@ -66,8 +66,11 @@ export class ScenarioService {
       { params: { problem_id: problemId } } // query
     );
   }
-  deleteScenario(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/scenarios/${id}`);
+  deleteScenario(scenarioId: string, problemId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/scenarios/${scenarioId}`,
+      { params: { problem_id: problemId } }
+    );
   }
   getScenariosByProblemId(problemId: string): Observable<Scenario[]> {
     return this.http

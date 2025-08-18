@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ScenarioService, Widget } from '../../../services/scenario.service';
 import { Scenario } from '../../../models/scenario.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ItModalComponent } from 'design-angular-kit';
+import { NotificationService } from '../../../services/notifications.service';
+
 
 @Component({
   selector: 'app-scenari',
@@ -10,6 +13,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrl: './scenari.component.scss'
 })
 export class ScenariComponent {
+  @ViewChild('deleteModal') deleteModal!: ItModalComponent;
+  scenarioToDelete: Scenario | null = null;
+
   scenari: Scenario[] = [];
   loading = true;
   problemId: any;
@@ -20,6 +26,7 @@ export class ScenariComponent {
   constructor(
     private scenarioService: ScenarioService,
     private router: Router,
+    private notificationService: NotificationService, 
     private route: ActivatedRoute) { }
   toggleComparazione() {
     this.comparazioneAttiva = !this.comparazioneAttiva;
@@ -137,17 +144,44 @@ export class ScenariComponent {
       }
     });
   }
-  deleteScenario(scenario: Scenario): void {
-    if (confirm(`Vuoi davvero eliminare lo scenario "${scenario.name}"?`)) {
-      this.scenarioService.deleteScenario(scenario.id).subscribe({
-        next: () => {
-          this.scenari = this.scenari.filter(s => s.id !== scenario.id);
-        },
-        error: err => {
-          console.error('Errore durante l\'eliminazione dello scenario', err);
-          // eventualmente mostrare un messaggio all'utente
-        }
-      });
-    }
+  // deleteScenario(scenario: Scenario): void {
+  //   if (confirm(`Vuoi davvero eliminare lo scenario "${scenario.name}"?`)) {
+  //     this.scenarioService.deleteScenario(scenario.id).subscribe({
+  //       next: () => {
+  //         this.scenari = this.scenari.filter(s => s.id !== scenario.id);
+  //       },
+  //       error: err => {
+  //         console.error('Errore durante l\'eliminazione dello scenario', err);
+  //         // eventualmente mostrare un messaggio all'utente
+  //       }
+  //     });
+  //   }
+  // }
+  openDeleteModal(scenario: Scenario): void {
+    this.scenarioToDelete = scenario;
+    this.deleteModal.toggle();
   }
+
+  onCancelDelete(): void {
+    this.deleteModal.toggle();
+    this.scenarioToDelete = null;
+  }
+
+  onConfirmDelete(): void {
+    if (!this.scenarioToDelete) return;
+
+    this.scenarioService.deleteScenario(this.scenarioToDelete.id, this.problemId).subscribe({
+      next: () => {
+        this.scenari = this.scenari.filter(s => s.id !== this.scenarioToDelete!.id);
+        this.deleteModal.toggle();
+        this.notificationService.showError('Scenario eliminato con successo');
+        this.scenarioToDelete = null;
+      },
+      error: (err) => {
+        this.notificationService.showError('Errore durante l\'eliminazione dello scenario');
+        console.error('Errore durante l\'eliminazione dello scenario', err);
+      }
+    });
+  }
+
 }

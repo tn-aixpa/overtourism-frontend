@@ -58,12 +58,13 @@
             <!-- <button class="btn btn-sm btn-icon text-primary" (click)="openEdit(scenario); $event.stopPropagation()"
               [disabled]="comparazioneAttiva" aria-label="Modifica scenario">
               <span class="material-icons">edit</span>
-            </button>
+            </button> -->
             <button class="btn btn-sm btn-icon text-primary"
-              (click)="deleteScenario(scenario); $event.stopPropagation()" [disabled]="comparazioneAttiva"
+            (click)="openDeleteModal(scenario); $event.stopPropagation()" 
+            [disabled]="comparazioneAttiva"
               aria-label="Elimina scenario">
               <span class="material-icons">delete</span>
-            </button> -->
+            </button>
           </div>
         </td>
 
@@ -82,3 +83,21 @@
 </div>
 <app-back-button></app-back-button>
 <!-- <button itButton="outline-secondary" class="me-2" backButton>{{ 'common.back' | translate }}</button> -->
+<it-modal #deleteModal>
+  <ng-container modalTitle>
+    {{ 'scenari.confirm_delete_title' | translate }}
+  </ng-container>
+
+  <p>
+    {{ 'scenari.confirm_delete_message' | translate:{name: scenarioToDelete?.name} }}
+  </p>
+
+  <ng-container footer>
+    <button itButton="outline-primary" (click)="onCancelDelete()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button itButton="danger" (click)="onConfirmDelete()">
+      {{ 'common.delete' | translate }}
+    </button>
+  </ng-container>
+</it-modal>

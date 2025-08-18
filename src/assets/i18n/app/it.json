@@ -20,11 +20,11 @@
     "constraint_level_ristoranti": "Giorni di criticità Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
-  "problems":{
-    "title":"Domande progettuali",
+  "problems": {
+    "title": "Domande progettuali",
     "descriptionTitle": "In questa sezione è possibile inserire le informazioni principali relative al problema e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
-    "loading":"Caricamento domande progettuali...",
-    "create":"Aggiungi o modifica domanda",
+    "loading": "Caricamento domande progettuali...",
+    "create": "Aggiungi o modifica domanda",
     "createTitle": "Definizione del problema",
     "fields": {
       "title": "Titolo",
@@ -32,7 +32,6 @@
       "description": "Descrizione generale",
       "descriptionPlaceholder": "Inserisci la descrizione",
       "descriptionProblem": "Descrizione del problema",
-
       "deadline": "Scadenza",
       "owner": "Responsabile",
       "priority": "Priorità"
@@ -50,10 +49,11 @@
     "enable_compare": "Abilita confronto",
     "disable_compare": "Disabilita confronto",
     "parameters": "Parametri",
-    "parametersChanged":"PARAMETRI MODIFICATI"
-
+    "parametersChanged": "PARAMETRI MODIFICATI",
+    "confirm_delete_title": "Conferma eliminazione",
+    "confirm_delete_message": "Sei sicuro di voler eliminare lo scenario {{name}}? Questa azione non può essere annullata."
   },
-  "save":{
+  "save": {
     "title": "Nome scenario",
     "name": "Nome dello scenario",
     "description": "Descrizione dello scenario",
@@ -84,10 +84,11 @@
       "toggleLabel": "Attiva opzione avanzata"
     }
   },
-  "common":{
+  "common": {
     "back": "Indietro",
     "selectScenario": "Seleziona uno scenario",
-        "cancel": "Annulla",
-    "save": "Salva"
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina"
   }
 }
