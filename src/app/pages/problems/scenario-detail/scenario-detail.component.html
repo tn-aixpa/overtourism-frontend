@@ -3,6 +3,14 @@
     <h4>{{ scenario?.name || 'Loading...' }}</h4>
   </div>
   <div class="col-auto">
+    <button itButton="primary" (click)="downloadPdf()">
+      Scarica PDF
+    </button>
+
+     
+  </div>
+  <div class="col-auto">
+
     <button itButton="danger" (click)="openDeleteModal()">
       {{ 'common.delete' | translate }}
     </button>
@@ -12,7 +20,7 @@
 </div>
 
 <div class="my-4 d-flex flex-column w-100">
-  <app-plot [scenarioId]="scenarioId" [problemId]="problemId"></app-plot>
+  <app-plot [scenarioId]="scenarioId" [problemId]="problemId" id="pdfContent"></app-plot>
 </div>
 <it-modal #deleteModal id="deleteModal">
   <ng-container modalTitle>Elimina scenario</ng-container>

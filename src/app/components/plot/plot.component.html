@@ -10,7 +10,8 @@
     <div class="flex-grow-1">
       <div class="d-flex justify-content">
         <button [itButton]="!showControls ? 'outline-primary' : 'outline-secondary'"
-          class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()"> 
+          class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
+          (click)="toggleControls()"> 
           <span class="material-icons me-2">
         visibility
           </span> {{('plot.visualizza' | translate) }}
@@ -29,13 +30,15 @@
       </div>
       <div class="d-flex flex-row gap-4">
       <button [itButton]="!isEditing ? 'primary' : 'secondary'"
-        class="m-4 d-flex justify-content-between align-items-center" (click)="toggleEditing()"> <span
+        class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
+        (click)="toggleEditing()"> <span
           class="material-icons me-2">
           settings
         </span> {{('plot.edit' | translate) }}
       </button>
       <button itButton="primary"
-      class="m-4 d-flex justify-content-between align-items-center"
+      class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
+
       (click)="goToCompare()">
       <span class="material-icons me-2">library_books</span>
       {{ 'plot.compare' | translate }}

@@ -5,6 +5,7 @@ import { ScenarioService } from '../../../services/scenario.service';
 import { Scenario } from '../../../models/scenario.model';
 import { PlotComponent } from '../../../components/plot/plot.component';
 import { ItModalComponent } from 'design-angular-kit';
+import { PdfService } from '../../../services/pdf.service';
 
 @Component({
   selector: 'app-scenario-detail',
@@ -24,7 +25,9 @@ export class ScenarioDetailComponent  {
   constructor(
     private route: ActivatedRoute,
     private scenarioService: ScenarioService,
-    private router: Router
+    private router: Router,
+    private pdfService: PdfService
+
 
   ) {}
 
@@ -51,7 +54,9 @@ export class ScenarioDetailComponent  {
   onCancelDelete(): void {
     this.deleteModal.hide();
   }
-
+  downloadPdf(): void {
+    this.pdfService.downloadPdfFromElement('pdfContent', `${this.scenario?.name || 'scenario'}.pdf`);
+  }
   confirmDelete(): void {
     this.scenarioService.deleteScenario(this.scenarioId, this.problemId).subscribe({
       next: () => {
