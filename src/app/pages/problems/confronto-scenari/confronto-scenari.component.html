@@ -62,7 +62,10 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <app-kpi-comparison [kpisLeft]="kpisLeft ?? {}" [kpisRight]="kpisRight ?? {}"></app-kpi-comparison>
 
+  </div>
   <div class="row">
     <div class="col-md-6">
       <div #chartLeft style="max-width: 600px;height: 600px; position: relative;"></div>
@@ -76,9 +79,11 @@
               <!-- <span class="text-muted ms-2">(altro: {{ diff.otherValue }})</span> -->
             </li>
           </ul>
-          <span *ngIf="getWidgetDiffs(widgetsLeft, widgetsRight).length === 0" class="text-muted">Nessuna differenza</span>
+          <span *ngIf="getWidgetDiffs(widgetsLeft, widgetsRight).length === 0" class="text-muted">Nessuna
+            differenza</span>
         </div>
-      </div>    </div>
+      </div>
+    </div>
     <div class="col-md-6">
       <div #chartRight style="max-width: 600px;height: 600px; position: relative;"></div>
       <div class="mt-3">
@@ -91,13 +96,12 @@
               <!-- <span class="text-muted ms-2">(altro: {{ diff.otherValue }})</span> -->
             </li>
           </ul>
-          <span *ngIf="getWidgetDiffs(widgetsRight, widgetsLeft).length === 0" class="text-muted">Nessuna differenza</span>
+          <span *ngIf="getWidgetDiffs(widgetsRight, widgetsLeft).length === 0" class="text-muted">Nessuna
+            differenza</span>
         </div>
-      </div>    </div>
+      </div>
+    </div>
   </div>
-  <div class="row">
-    <app-kpi-comparison [kpisLeft]="kpisLeft ?? {}" [kpisRight]="kpisRight ?? {}"></app-kpi-comparison>
 
-  </div>
   <app-back-button></app-back-button>
 </div>
