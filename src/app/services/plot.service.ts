@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { PlotInput, Curve, Point } from '../models/plot.model';
 import Plotly from 'plotly.js-dist-min';
 import { DEFAULT_LAYOUT, PLOT_COLORS, RISK_COLOR_SCALE } from '../components/plot/plot.config';
+import { DataFact } from '../models/data-fact.model';
 
 @Injectable({ providedIn: 'root' })
 export class PlotService {
@@ -91,7 +92,41 @@ export class PlotService {
 
 
   }
-
+  private createDataFactsFromKpis(kpis: any): DataFact[] {
+    const dataFacts: DataFact[] = [];
+    
+    // Global overtourism level
+    if (kpis.overtourism_level !== undefined) {
+      dataFacts.push({
+        category: 'all',
+        violations_percentage: kpis.overtourism_level,
+        uncertainty: 2, // default uncertainty value
+        violations_numerosity: kpis.overtourism_level > 0 ? 1 : 0
+      });
+    }
+  
+    // Individual constraints
+    const constraints = [
+      'parcheggi',
+      'spiaggia',
+      'alberghi',
+      'ristoranti'
+    ];
+  
+    for (const constraint of constraints) {
+      const level = kpis[`constraint level ${constraint}`];
+      if (level !== undefined) {
+        dataFacts.push({
+          category: constraint,
+          violations_percentage: level,
+          uncertainty: 2, // default uncertainty value
+          violations_numerosity: level > 0 ? 1 : 0
+        });
+      }
+    }
+  
+    return dataFacts;
+  }
   preparePlotInput(module: any): PlotInput {
 
     // Curves
@@ -154,6 +189,7 @@ export class PlotService {
           : {}
       }
       : undefined;
+      const dataFacts = module.kpis ? this.createDataFactsFromKpis(module.kpis) : [];
 
     // Main return
     return {
@@ -177,7 +213,8 @@ export class PlotService {
       kpis,
       usage_by_constraint: module.usage_by_constraint ?? {},
       capacity_by_constraint: module.capacity_by_constraint ?? {},
-      capacity_mean_by_constraint: module.capacity_mean_by_constraint ?? {}
+      capacity_mean_by_constraint: module.capacity_mean_by_constraint ?? {},
+      dataFacts
     };
   }
   renderBidimensionale(sottosistemaSelezionato: string, container: HTMLElement, cloned: PlotInput) {

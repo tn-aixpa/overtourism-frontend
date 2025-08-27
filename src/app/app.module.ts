@@ -37,6 +37,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { KpiComparisonComponent } from './components/kpi-comparison/kpi-comparison.component';
 import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
 import { HistogramComparisonComponent } from './components/histogram-comparison/histogram-comparison.component';
+import { ReadingComponent } from './components/plot/reading/reading.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -50,7 +51,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
 //   return () => configService.loadConfig();
 // }
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent, HistogramComparisonComponent],
+  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent, HistogramComparisonComponent, ReadingComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

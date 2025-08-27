@@ -64,9 +64,9 @@
                   <span class="material-icons">error_outline</span>
                   {{ 'plot.infoTitle' | translate }}
                 </h6>
-                <p class="small text-muted mb-2">
-                  Differenze rispetto allo scenario originale:
-                </p>
+                <h6 class=" text-muted mb-2">
+                  Differenze rispetto allo scenario originale
+                </h6>
         
                 <div *ngIf="indexDiffs && objectKeys(indexDiffs).length; else noDifferences">
                   <ul class="list-unstyled small">
@@ -92,22 +92,22 @@
                 <ng-template #noDifferences>
                   <span class="fw-bold">Nessuna</span>
                 </ng-template>
+                <hr />
+
+                <h6 class="text-primary mb-3 mt-3 d-flex align-items-center gap-2">
+                  Informazioni di lettura 
+                </h6>
+              <app-reading
+              [widgets]="widgets"
+              [indexDiffs]="indexDiffs"
+              [dataFacts]="inputData?.dataFacts || []"
+              [originalIndexDiffs]="originalIndexDiffs">
+            </app-reading>
               </div>
             </div>
           </div>
         </div>
-        
 
-        <div class="row mt-4">
-          <div class="col">
-            <div class="p-3  h-100">
-              <!-- <h6 class="mb-2">{{ 'plot.notesTitle' | translate }}</h6> -->
-              <!-- <it-textarea class="w-100" label="{{ 'plot.notesLabel' | translate }}"
-              [(ngModel)]="titolo"></it-textarea> -->
-
-            </div>
-          </div>
-        </div>
       </ng-container>
     </div>
 

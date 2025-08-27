@@ -73,7 +73,7 @@
     "compare": "Compare",
     "viewMode": "Viewing graph",
     "editMode": "Editing graph",
-    "infoTitle": "Information",
+    "infoTitle": "INFORMATION",
     "infoText": "This box shows read-only information related to the graph or selected data.",
     "notesTitle": "Notes",
     "notesLabel": "Add your notes here...",
