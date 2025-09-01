@@ -28,14 +28,48 @@
     "createTitle": "Definizione del problema",
     "fields": {
       "title": "Titolo",
-      "titlePlaceholder": "Inserisci il titolo",
-      "description": "Descrizione generale",
-      "descriptionPlaceholder": "Inserisci la descrizione",
+      "titlePlaceholder": "Inserisci il titolo del problema",
+      "objective": "Obiettivo",
+      "objectivePlaceholder": "Descrivi l'obiettivo che vuoi raggiungere",
       "descriptionProblem": "Descrizione del problema",
-      "deadline": "Scadenza",
-      "owner": "Responsabile",
-      "priority": "Priorità"
+      "descriptionProblemPlaceholder": "Inserisci una descrizione dettagliata del problema",
+      "category": "Categoria",
+      "resources": "Dati e tecnologie rilevanti",
+      "resourcePlaceholder": "Inserisci un URL a una risorsa esterna",
+      "addResource": "Aggiungi risorsa",
+      "group":"Gruppi disponibile" ,
+      "categories": {
+        "parking": "Parcheggi",
+        "beach": "Spiaggia",
+        "restaurants": "Ristoranti",
+        "hotels": "Alberghi"
+      }
+    },
+    "proposals": {
+      "createTitle": "Crea nuova proposta",
+      "fields": {
+        "title": "Titolo",
+        "titlePlaceholder": "Inserisci un titolo per la proposta",
+        "description": "Descrizione",
+        "descriptionPlaceholder": "Scrivi una descrizione dettagliata",
+        "resources": "Dati e tecnologie rilevanti",
+        "resourcePlaceholder": "Aggiungi un dato, una tecnologia o un link",
+        "contextConditions": "Condizioni di contesto",
+        "contextConditionsPlaceholder": "Specifica eventuali condizioni di contesto",
+        "potentialImpact": "Potenziale impatto",
+        "potentialImpactPlaceholder": "Descrivi l’impatto potenziale della proposta",
+        "status": "Stato",
+        "scenarios": "Scenari collegati",
+        "scenarioPlaceholder": "Cerca o seleziona uno scenario"
+      }
+    },
+    "common": {
+      "save": "Salva"
     }
+  },
+  "common": {
+    "save": "Salva",
+    "remove": "Rimuovi"
   },
   "scenari": {
     "loading": "Caricamento scenari...",

@@ -1,0 +1,136 @@
+<it-card background="true" class="p-4">
+    <h4 class="mb-4">{{ 'problems.proposals.createTitle' | translate }}</h4>
+  
+    <form (ngSubmit)="onSubmit()" #form="ngForm">
+      <div class="table-responsive mb-4">
+        <table class="table table-borderless">
+          <tbody>
+            <!-- Titolo -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.title' | translate }}</label>
+              </td>
+              <td>
+                <it-input [(ngModel)]="model.title" name="title"
+                          placeholder="{{ 'problems.proposals.fields.titlePlaceholder' | translate }}" required>
+                </it-input>
+              </td>
+            </tr>
+  
+            <!-- Descrizione -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.description' | translate }}</label>
+              </td>
+              <td>
+                <it-textarea [(ngModel)]="model.description" name="description" [rows]="4"
+                             placeholder="{{ 'problems.proposals.fields.descriptionPlaceholder' | translate }}"></it-textarea>
+              </td>
+            </tr>
+  
+            <!-- Dati e tecnologie rilevanti -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.resources' | translate }}</label>
+              </td>
+              <td>
+                <div class="d-flex align-items-center mb-3">
+                  <it-input [(ngModel)]="newResource" name="newResource"
+                            placeholder="{{ 'problems.proposals.fields.resourcePlaceholder' | translate }}"
+                            style="flex: 1; min-width: 0;"></it-input>
+                  <button type="button" class="btn btn-outline-primary ms-2 rounded-circle p-0"
+                          style="width:36px; height:36px; display:flex; align-items:center; justify-content:center;"
+                          (click)="addResource()">
+                    <span class="material-icons" style="font-size:22px;">add</span>
+                  </button>
+                </div>
+  
+                <div class="d-flex flex-column gap-2">
+                  <div *ngFor="let res of model.resources; let i = index"
+                       class="border rounded p-2 d-flex justify-content-between align-items-start"
+                       style="background-color: #f8f9fa;">
+                    <div style="word-break: break-word; flex: 1;">
+                      <a *ngIf="isUrl(res)" [href]="res" target="_blank" class="text-decoration-none">{{ res }}</a>
+                      <span *ngIf="!isUrl(res)">{{ res }}</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-sm ms-2 mt-1"
+                            aria-label="Remove" (click)="removeResource(i)"></button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+  
+            <!-- Potenziali condizioni di contesto -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.contextConditions' | translate }}</label>
+              </td>
+              <td>
+                <it-textarea [(ngModel)]="model.contextConditions" name="contextConditions" [rows]="3"
+                             placeholder="{{ 'problems.proposals.fields.contextConditionsPlaceholder' | translate }}"></it-textarea>
+              </td>
+            </tr>
+  
+            <!-- Potenziale impatto -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.potentialImpact' | translate }}</label>
+              </td>
+              <td>
+                <it-textarea [(ngModel)]="model.potentialImpact" name="potentialImpact" [rows]="3"
+                             placeholder="{{ 'problems.proposals.fields.potentialImpactPlaceholder' | translate }}"></it-textarea>
+              </td>
+            </tr>
+  
+            <!-- Stato (readonly chips) -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.status' | translate }}</label>
+              </td>
+              <td>
+                <div class="d-flex flex-wrap gap-2">
+                  <span *ngFor="let s of model.status" class="badge" [ngStyle]="{'background-color': s.color}">
+                    {{ s.label }}
+                  </span>
+                </div>
+              </td>
+            </tr>
+  
+            <!-- Scenari collegati (chips autocomplete) -->
+            <tr>
+              <td class="fw-bold w-25">
+                <label>{{ 'problems.proposals.fields.scenarios' | translate }}</label>
+              </td>
+              <td>
+                <it-autocomplete
+                id="scenario"
+                [source]="scenarioSource"
+                label="{{ 'problems.proposals.fields.scenarioPlaceholder' | translate }}"
+                (selected)="addScenario($event)"
+              >
+              </it-autocomplete>
+              
+              <div class="chips d-flex flex-wrap gap-2 mt-2">
+                <it-chip *ngFor="let scenario of model.scenarios">
+                  {{ scenario }}
+                  <button type="button" class="btn btn-icon btn-sm ms-2" (click)="removeScenario(scenario)">
+                    <it-icon name="close"></it-icon>
+                  </button>
+                </it-chip>
+              </div>
+              
+              </td>
+            </tr>
+  
+          </tbody>
+        </table>
+      </div>
+  
+      <div class="border-top pt-3 mt-4 d-flex justify-content-end">
+        <button itButton="primary" type="submit" [disabled]="form.invalid ?? false">
+          {{ 'common.save' | translate }}
+        </button>
+      </div>
+    </form>
+  </it-card>
+  
