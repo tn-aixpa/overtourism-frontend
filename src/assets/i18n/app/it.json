@@ -42,7 +42,8 @@
         "parking": "Parcheggi",
         "beach": "Spiaggia",
         "restaurants": "Ristoranti",
-        "hotels": "Alberghi"
+        "hotels": "Alberghi",
+        "flows": "Flussi"
       }
     },
     "proposals": {

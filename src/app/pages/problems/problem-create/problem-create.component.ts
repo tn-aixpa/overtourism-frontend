@@ -39,7 +39,8 @@ export class ProblemCreateComponent {
       { key: 'parcheggio', label: this.translate.instant('problems.fields.categories.parking') },
       { key: 'spiaggia',   label: this.translate.instant('problems.fields.categories.beach') },
       { key: 'ristoranti', label: this.translate.instant('problems.fields.categories.restaurants') },
-      { key: 'alberghi',   label: this.translate.instant('problems.fields.categories.hotels') }
+      { key: 'alberghi',   label: this.translate.instant('problems.fields.categories.hotels') },
+      { key: 'flussi',   label: this.translate.instant('problems.fields.categories.flows') }
     ];
   }
   addResource() {

@@ -74,7 +74,7 @@ export class ScenarioService {
   }
   getScenariosByProblemId(problemId: string): Observable<Scenario[]> {
     return this.http
-      .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}`)
+      .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}/scenarios`)
       .pipe(
         map(response => response.scenarios.map(scenario => ({
           id: scenario.scenario_id,

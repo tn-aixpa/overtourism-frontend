@@ -6,7 +6,7 @@ import { ConfigService } from './config.service';
 import { environment } from '../../environments/environment';
 
 interface ProblemResponse {
-  problems: Array<{
+    data: Array<{
     problem_id: string;
     problem_name: string;
     problem_description: string;
@@ -26,13 +26,15 @@ export class ProblemService {
     return this.http
       .get<ProblemResponse>(`${this.baseUrl}/problems`)
       .pipe(
-        map(response => response.problems.map(problem => ({
+        map(response => {
+          console.log(response);
+          return response.data?.map(problem => ({
           id: problem.problem_id,
           name: problem.problem_name,
           description: problem.problem_description,
           updated: problem.updated ? new Date(problem.updated) : undefined,
           created: problem.created ? new Date(problem.created) : undefined
-        })))
+        }))})
       );
   }
 
