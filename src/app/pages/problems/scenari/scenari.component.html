@@ -1,7 +1,16 @@
-<h3>{{ 'scenari.title' | translate }}</h3>
-<!-- <p>{{ 'scenari.description' | translate }}</p> -->
+<!-- Titolo problema -->
+<h2 class="mb-2">{{ problemName }}</h2>
 
-<button itButton="primary" class="mb-4" (click)="toggleComparazione()">
+<!-- Pulsante Visualizza scheda del problema -->
+<button itButton="primary" size="sm" class="mb-4" (click)="goToProblemDetail()">
+  {{ 'scenari.view_problem_detail' | translate }}
+</button>
+
+<!-- Titolo scenari -->
+<h3 class="mb-2 mt-4" style="font-size: 1.25rem;">{{ 'scenari.title' | translate }}</h3>
+
+<!-- Pulsante comparazione (più piccolo) -->
+<button itButton="primary" size="sm" class="mb-4" (click)="toggleComparazione()">
   {{ comparazioneAttiva ? ('scenari.disable_compare' | translate) : ('scenari.enable_compare' | translate) }}
 </button>
 <div class="table-responsive">

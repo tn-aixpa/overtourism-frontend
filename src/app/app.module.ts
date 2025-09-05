@@ -39,6 +39,8 @@ import { ProblemCreateComponent } from './pages/problems/problem-create/problem-
 import { HistogramComparisonComponent } from './components/histogram-comparison/histogram-comparison.component';
 import { ReadingComponent } from './components/plot/reading/reading.component';
 import { ProposalCreateComponent } from "./components/app-proposal-create/app-proposal-create.component";
+import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
+import { ProposalDetailComponent } from './components/proposal-detail/proposal-detail.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -56,7 +58,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
      KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
       ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
-       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent],
+       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

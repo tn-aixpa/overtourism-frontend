@@ -37,6 +37,7 @@
       "resources": "Dati e tecnologie rilevanti",
       "resourcePlaceholder": "Inserisci un URL a una risorsa esterna",
       "addResource": "Aggiungi risorsa",
+      "addProposal": "Aggiungi proposta",
       "group":"Gruppi disponibile" ,
       "categories": {
         "parking": "Parcheggi",
@@ -73,6 +74,7 @@
     "remove": "Rimuovi"
   },
   "scenari": {
+    "view_problem_detail": "Visualizza dettagli problema",
     "loading": "Caricamento scenari...",
     "title": "Scenari",
     "open": "Apri scenario {{name}}",

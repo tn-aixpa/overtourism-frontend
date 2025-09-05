@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlotService } from '../../../services/plot.service';
 import { ScenarioService } from '../../../services/scenario.service';
-import { Scenario } from '../../../models/scenario.model';
+import { ProblemScenario } from '../../../models/scenario.model';
 import { PlotComponent } from '../../../components/plot/plot.component';
 import { ItModalComponent } from 'design-angular-kit';
 import { PdfService } from '../../../services/pdf.service';
@@ -20,7 +20,7 @@ export class ScenarioDetailComponent  {
 
   scenarioId!: string;
   problemId!: string;
-  scenario?: Scenario;
+  scenario?: ProblemScenario;
 
   constructor(
     private route: ActivatedRoute,

@@ -1,0 +1,44 @@
+<it-accordion [title]="proposal.proposal_description || 'Senza titolo'">
+    <div class="p-3">
+  
+      <!-- Pulsanti di azione -->
+      <div class="d-flex justify-content-end gap-2 mb-3">
+        <button itButton="primary" size="sm" (click)="editProposal.emit(proposal.proposal_id)">
+          <span class="material-icons align-middle">edit</span> Modifica
+        </button>
+        <button itButton="danger" size="sm" (click)="deleteProposal.emit(proposal.proposal_id)">
+          <span class="material-icons align-middle">delete</span> Elimina
+        </button>
+      </div>
+  
+      <!-- Dettagli della proposta -->
+      <div class="border rounded p-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">{{ proposal.proposal_description || 'Senza descrizione' }}</h5>
+          <span class="badge" [ngClass]="statusClass(proposal.status)">
+            {{ proposal.status || '—' }}
+          </span>
+        </div>
+  
+        <p><strong>Risorse:</strong> {{ proposal.resources.length ? proposal.resources.join(', ') : 'Nessuna' }}</p>
+        <p><strong>Contesto:</strong> {{ proposal.contextConditions || 'Nessuno' }}</p>
+        <p><strong>Impatto:</strong> {{ proposal.potentialImpact || 'Nessuno' }}</p>
+  
+        <p>
+          <strong>Scenari correlati:</strong>
+          <ng-container *ngIf="proposal.related_scenarios.length; else noScenarios">
+            <span *ngFor="let s of proposal.related_scenarios; let last = last">
+              {{ s.scenario_name }}<span *ngIf="!last">, </span>
+            </span>
+          </ng-container>
+          <ng-template #noScenarios> Nessuno </ng-template>
+        </p>
+  
+        <small class="text-muted">
+          Creato: {{ proposal.created | date:'short' }},
+          Aggiornato: {{ proposal.updated | date:'short' }}
+        </small>
+      </div>
+    </div>
+  </it-accordion>
+  

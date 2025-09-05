@@ -23,7 +23,7 @@
                 <label>{{ 'problems.proposals.fields.description' | translate }}</label>
               </td>
               <td>
-                <it-textarea [(ngModel)]="model.description" name="description" [rows]="4"
+                <it-textarea [(ngModel)]="model.description" name="proposal_description" [rows]="4"
                              placeholder="{{ 'problems.proposals.fields.descriptionPlaceholder' | translate }}"></it-textarea>
               </td>
             </tr>
@@ -82,19 +82,7 @@
               </td>
             </tr>
   
-            <!-- Stato (readonly chips) -->
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.status' | translate }}</label>
-              </td>
-              <td>
-                <div class="d-flex flex-wrap gap-2">
-                  <span *ngFor="let s of model.status" class="badge" [ngStyle]="{'background-color': s.color}">
-                    {{ s.label }}
-                  </span>
-                </div>
-              </td>
-            </tr>
+
   
             <!-- Scenari collegati (chips autocomplete) -->
             <tr>
@@ -103,21 +91,21 @@
               </td>
               <td>
                 <it-autocomplete
-                id="scenario"
+                id="scenarios"
                 [source]="scenarioSource"
-                label="{{ 'problems.proposals.fields.scenarioPlaceholder' | translate }}"
-                (selected)="addScenario($event)"
-              >
+                label="Scenari"
+                (selected)="addScenario($event)">
               </it-autocomplete>
               
               <div class="chips d-flex flex-wrap gap-2 mt-2">
-                <it-chip *ngFor="let scenario of model.scenarios">
-                  {{ scenario }}
-                  <button type="button" class="btn btn-icon btn-sm ms-2" (click)="removeScenario(scenario)">
-                    <it-icon name="close"></it-icon>
-                  </button>
-                </it-chip>
-              </div>
+                <it-chip
+                *ngFor="let scenario of model.related_scenarios"
+                [label]="scenario.scenario_name"
+                [showCloseButton]="true"
+                (closeEvent)="removeScenario(scenario, $event)">
+              </it-chip>
+              
+                               </div>
               
               </td>
             </tr>

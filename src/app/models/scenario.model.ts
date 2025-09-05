@@ -1,4 +1,4 @@
-export interface Scenario {
+export interface ProblemScenario {
     id: string;
     name: string;
     description?: string;

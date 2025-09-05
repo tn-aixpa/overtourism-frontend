@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AppProposalCreateComponent } from './app-proposal-create.component';
+import { ProposalCreateComponent } from './app-proposal-create.component';
 
 describe('AppProposalCreateComponent', () => {
-  let component: AppProposalCreateComponent;
-  let fixture: ComponentFixture<AppProposalCreateComponent>;
+  let component: ProposalCreateComponent;
+  let fixture: ComponentFixture<ProposalCreateComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AppProposalCreateComponent]
+      declarations: [ProposalCreateComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AppProposalCreateComponent);
+    fixture = TestBed.createComponent(ProposalCreateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

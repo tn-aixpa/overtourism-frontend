@@ -1,0 +1,53 @@
+<it-card background="true" class="p-4">
+    <h3 class="mb-4">{{ problem?.name }}</h3>
+  
+    <table class="table table-borderless mb-4">
+      <tbody>
+        <tr>
+            <td class="fw-bold w-25">{{ 'problems.fields.title' | translate }}</td>
+            <td>{{ problem?.problem_name }}</td>
+          </tr>
+          <tr>
+          <td class="fw-bold w-25">{{ 'problems.fields.objective' | translate }}</td>
+          <td>{{ problem?.objective }}</td>
+        </tr>
+        <tr>
+          <td class="fw-bold w-25">{{ 'problems.fields.descriptionProblem' | translate }}</td>
+          <td>{{ problem?.problem_description }}</td>
+        </tr>
+        <tr>
+          <td class="fw-bold w-25">{{ 'problems.fields.category' | translate }}</td>
+          <td>
+            <span *ngFor="let cat of problem?.category; let last=last">
+              {{ cat | translate }}<span *ngIf="!last">, </span>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td class="fw-bold w-25">{{ 'problems.fields.resources' | translate }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let link of problem?.links">
+                <a [href]="link" target="_blank">{{ link }}</a>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <div class="mb-3">
+      <button itButton="primary" (click)="toggleProposalForm()" *ngIf="!showProposalForm">
+        {{ 'problems.fields.addProposal' | translate }}
+      </button>
+    </div>
+  
+    <app-proposal-create *ngIf="showProposalForm" [problemId]="problemId" (proposalCreated)="onProposalCreated()"></app-proposal-create>
+    <div class="mt-4" *ngIf="proposals?.length">
+        <h4>Proposte attuali</h4>
+        <app-proposal-detail *ngFor="let proposal of proposals" [proposal]="proposal" ></app-proposal-detail>
+      </div>
+  </it-card>
+  
+  <app-back-button (click)="back()"></app-back-button>
+  

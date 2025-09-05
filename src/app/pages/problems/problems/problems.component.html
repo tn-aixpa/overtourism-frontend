@@ -17,7 +17,8 @@
       />
   <div class="row">
     <div class="col-12 col-lg-4 mb-4" *ngFor="let problem of problems">
-      <div class="card-wrapper" [routerLink]="['/problems', problem.id, 'scenari']">
+      <div class="card-wrapper" [routerLink]="['/problems', problem.problem_id, 'scenari']"
+      [queryParams]="{ problemName: problem.problem_name }">
         <it-card background="true">
           <div class="categoryicon-top">
             <it-icon name="file"></it-icon>
@@ -25,11 +26,11 @@
           </div>
 
           <a >
-            <h3 class="card-title h5">{{ problem.name }}</h3>
+            <h3 class="card-title h5">{{ problem.problem_name }}</h3>
           </a>
 
           <p class="card-text font-serif">
-            {{ problem.description }}
+            {{ problem.problem_description }}
           </p>
         </it-card>
       </div>

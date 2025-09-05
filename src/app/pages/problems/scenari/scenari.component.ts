@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ScenarioService, Widget } from '../../../services/scenario.service';
-import { Scenario } from '../../../models/scenario.model';
+import { ProblemScenario } from '../../../models/scenario.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ItModalComponent } from 'design-angular-kit';
 import { NotificationService } from '../../../services/notifications.service';
@@ -14,11 +14,12 @@ import { NotificationService } from '../../../services/notifications.service';
 })
 export class ScenariComponent {
   @ViewChild('deleteModal') deleteModal!: ItModalComponent;
-  scenarioToDelete: Scenario | null = null;
+  scenarioToDelete: ProblemScenario | null = null;
 
-  scenari: Scenario[] = [];
+  scenari: ProblemScenario[] = [];
   loading = true;
-  problemId: any;
+  problemId:any;
+  problemName: any;
   comparazioneAttiva = false;
   selectedScenari: any[] = [];
   widgets: any;
@@ -44,7 +45,7 @@ export class ScenariComponent {
   }
 
   checkboxStates: { [id: string]: boolean } = {};
-  goToScenario(scenario: Scenario): void {
+  goToScenario(scenario: ProblemScenario): void {
     if (this.comparazioneAttiva) return; // Se la comparazione è attiva, non navigare
     this.router.navigate(['/problems', this.problemId, 'scenari', scenario.id]);
   }
@@ -100,7 +101,8 @@ export class ScenariComponent {
   }
   ngOnInit(): void {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
-
+    this.problemName = this.route.snapshot.queryParamMap.get('problemName');
+    
     this.loadScenarios(this.problemId);
     this.loadWidgets();
 
@@ -157,7 +159,7 @@ export class ScenariComponent {
   //     });
   //   }
   // }
-  openDeleteModal(scenario: Scenario): void {
+  openDeleteModal(scenario: ProblemScenario): void {
     this.scenarioToDelete = scenario;
     this.deleteModal.toggle();
   }
@@ -182,6 +184,11 @@ export class ScenariComponent {
         console.error('Errore durante l\'eliminazione dello scenario', err);
       }
     });
+  }
+  goToProblemDetail() {
+    if (this.problemId) {
+      this.router.navigate(['/problems', this.problemId]);
+    }
   }
 
 }

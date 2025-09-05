@@ -33,9 +33,9 @@ export class ProblemsComponent {
     }
 
     return of(this.problems.map(problem => ({
-      id: problem.id,
-      value: problem.name, 
-      label: problem.name 
+      id: problem.problem_id,
+      value: problem.problem_name, 
+      label: problem.problem_name 
     })));
   };
 

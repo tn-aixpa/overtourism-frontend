@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Scenario } from '../models/scenario.model';
+import { ProblemScenario } from '../models/scenario.model';
 import { Observable, BehaviorSubject, map } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
 import { ConfigService } from './config.service';
@@ -72,7 +72,7 @@ export class ScenarioService {
       { params: { problem_id: problemId } }
     );
   }
-  getScenariosByProblemId(problemId: string): Observable<Scenario[]> {
+  getScenariosByProblemId(problemId: string): Observable<ProblemScenario[]> {
     return this.http
       .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}/scenarios`)
       .pipe(

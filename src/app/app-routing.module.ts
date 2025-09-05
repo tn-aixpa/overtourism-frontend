@@ -11,6 +11,7 @@ import { ScenarioDetailComponent } from './pages/problems/scenario-detail/scenar
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
 import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
 import { UnsavedChangesGuard } from './guards/plot-unsaved-changes.guard';
+import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'problems', pathMatch: 'full' },
@@ -24,6 +25,7 @@ const routes: Routes = [
         component: ProblemsComponent
       },
       { path: 'create', component: ProblemCreateComponent }, 
+      { path: ':problemId', component: ProblemDetailComponent },
       {
         path: ':problemId/scenari',
         data: { breadcrumb: 'Scenari' },
