@@ -42,10 +42,11 @@
       </button>
     </div>
   
-    <app-proposal-create *ngIf="showProposalForm" [problemId]="problemId" (proposalCreated)="onProposalCreated()"></app-proposal-create>
+    <app-proposal-create *ngIf="showProposalForm" [problemId]="problemId" (proposalCreated)="onProposalCreated()"   ></app-proposal-create>
     <div class="mt-4" *ngIf="proposals?.length">
         <h4>Proposte attuali</h4>
-        <app-proposal-detail *ngFor="let proposal of proposals" [proposal]="proposal" ></app-proposal-detail>
+        <app-proposal-detail *ngFor="let proposal of proposals" [proposal]="proposal"    (editProposal)="editProposal($event)"
+        (deleteProposal)="removeProposal($event)"></app-proposal-detail>
       </div>
   </it-card>
   

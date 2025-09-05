@@ -15,7 +15,8 @@ import { ProblemScenario } from '../../models/scenario.model';
 export class ProposalCreateComponent {
   @Input() problemId!: string;
   @Output() proposalCreated = new EventEmitter<void>();
-  
+  @Input() proposalToEdit?: Proposal;
+
   model = {
     title: '',
     description: '',
@@ -68,6 +69,18 @@ export class ProposalCreateComponent {
     if (changes['problemId'] && this.problemId) {
       this.loadScenarios();
     }
+  
+    if (changes['proposalToEdit'] && this.proposalToEdit) {
+      this.model = {
+        title: this.proposalToEdit.proposal_title,
+        description: this.proposalToEdit.proposal_description,
+        resources: [...this.proposalToEdit.resources],
+        contextConditions: this.proposalToEdit.contextConditions,
+        potentialImpact: this.proposalToEdit.potentialImpact,
+        status: this.proposalToEdit.status,
+        related_scenarios: [...this.proposalToEdit.related_scenarios]
+      };
+    }
   }
   loadScenarios() {
     this.scenarioSvc.getScenariosByProblemId(this.problemId).subscribe({
@@ -118,15 +131,18 @@ export class ProposalCreateComponent {
       updated: new Date().toISOString()
     };
   
-    this.proposalSvc.createProposal(this.problemId, payload).subscribe({
-      next: () => {
-        this.notif.showSuccess('Proposta creata con successo');
-        this.proposalCreated.emit(); 
-      },
-      error: (err) => {
-        this.notif.showError(err?.message || 'Errore durante la creazione della proposta');
-      }
-    });
+    if (this.proposalToEdit) {
+      this.proposalSvc.updateProposal(this.proposalToEdit.proposal_id, payload).subscribe({
+        next: () => this.proposalCreated.emit(),
+        error: (err) => this.notif.showError(err?.message || 'Errore durante l\'aggiornamento')
+      });
+    } else {
+      this.proposalSvc.createProposal(this.problemId, payload).subscribe({
+        next: () => this.proposalCreated.emit(),
+        error: (err) => this.notif.showError(err?.message || 'Errore durante la creazione')
+      });
+    }
+    
   }
   private generateId(): string {
     return Math.random().toString(36).substring(2, 12);

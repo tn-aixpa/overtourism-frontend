@@ -4,6 +4,7 @@ import { ProblemService } from '../../../services/problem.service';
 import { NotificationService } from '../../../services/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Proposal } from '../../../models/proposal.model';
+import { ProposalService } from '../../../services/proposal.service';
 
 @Component({
   selector: 'app-problem-detail',
@@ -22,7 +23,8 @@ export class ProblemDetailComponent implements OnInit {
     private router: Router,
     private problemService: ProblemService,
     private notif: NotificationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private proposalService: ProposalService
   ) {}
 
   ngOnInit() {
@@ -33,6 +35,30 @@ export class ProblemDetailComponent implements OnInit {
     this.showProposalForm = false;   
     this.loadProblem();             
   }
+  // elimina proposta
+  removeProposal(proposalId: string) {
+    if (!this.problemId) return;
+  
+    this.proposalService.deleteProposal(proposalId, this.problemId).subscribe({
+      next: () => {
+        this.notif.showSuccess('Proposta eliminata con successo');
+        // Aggiorna la lista senza ricaricare tutta la pagina
+        this.proposals = this.proposals.filter(p => p.proposal_id !== proposalId);
+      },
+      error: (err) => {
+        this.notif.showError(err?.message || 'Errore durante l\'eliminazione della proposta');
+      }
+    });
+  }
+// modifica proposta 
+editProposal(proposalId: string) {
+  const proposalToEdit = this.proposals.find(p => p.proposal_id === proposalId);
+  if (proposalToEdit) {
+    this.showProposalForm = true;
+    // Passa i dati al form di creazione/modifica
+    // es: this.proposalForm.model = {...proposalToEdit};
+  }
+}
   loadProblem() {
     this.problemService.getProblemById(this.problemId).subscribe({
       next: (res) => {
