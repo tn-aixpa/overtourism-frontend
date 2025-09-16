@@ -1,5 +1,4 @@
 <it-card background="true" class="p-4">
-  <h3 class="mb-4">{{ 'problems.createTitle' | translate }}</h3>
 
   <form (ngSubmit)="onSubmit()" #form="ngForm">
     <div class="table-responsive mb-4">
@@ -109,8 +108,8 @@
 
 
   <!-- Componente proposta -->
-  <app-proposal-create *ngIf="showProposalForm"
-></app-proposal-create>
+  <!-- <app-proposal-create *ngIf="showProposalForm"
+></app-proposal-create> -->
    <!-- <div *ngIf="showProposalForm">
     proposta
    </div>    [problemId]="savedProblemId -->

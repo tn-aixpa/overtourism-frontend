@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Proposal } from '../../../models/proposal.model';
 import { ProposalService } from '../../../services/proposal.service';
 import { ItModalComponent } from 'design-angular-kit';
+import { Problem } from '../../../models/problem.model';
 
 @Component({
   selector: 'app-problem-detail',
@@ -21,6 +22,12 @@ export class ProblemDetailComponent implements OnInit {
 
   @ViewChild('deleteProblemModal') deleteProblemModal!: ItModalComponent;
   @ViewChild('proposalModal') proposalModal!: ItModalComponent;
+  @ViewChild('editProblemModal') editProblemModal!: ItModalComponent;
+
+onProblemEdited(problem: Problem) {
+  this.editProblemModal.hide();
+  this.loadProblem(); // ricarica il dettaglio
+}
   proposalToEdit?: Proposal;
 
   constructor(

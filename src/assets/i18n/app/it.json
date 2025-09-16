@@ -26,6 +26,7 @@
     "loading": "Caricamento domande progettuali...",
     "create": "Aggiungi o modifica domanda",
     "createTitle": "Definizione del problema",
+    "editTitle": "Modifica del problema",
     "create_success": "Problema creato con successo",
     "update_success": "Problema aggiornato con successo",
     "delete_success": "Problema eliminato con successo",

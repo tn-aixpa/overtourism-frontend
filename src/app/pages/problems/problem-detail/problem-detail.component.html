@@ -1,7 +1,18 @@
 <it-card background="true" class="p-4 position-relative">
   <!-- Pulsanti in alto a destra -->
   <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
-    <button itButton="primary" size="sm" (click)="editProblem()">
+    <it-modal #editProblemModal size="lg">
+      <ng-container modalTitle>
+        {{ 'problems.editTitle' | translate }}
+      </ng-container>
+    
+      <app-problem-create 
+        [editProblemId]="problem?.problem_id"
+        (problemSaved)="onProblemEdited($event)">
+      </app-problem-create>
+    </it-modal>
+    
+    <button itButton="primary" (click)="editProblemModal.show()">
       <span class="material-icons align-middle">edit</span> Modifica
     </button>
     <button itButton="danger" size="sm" (click)="openDeleteModal($event)">

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Problem } from '../../../models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
 import { of, delay, Observable } from 'rxjs';
 import { NotificationService } from '../../../services/notifications.service';
-import { SearchItem } from 'design-angular-kit';
+import { ItModalComponent, SearchItem } from 'design-angular-kit';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +16,16 @@ export class ProblemsComponent {
   problems: Problem[] = [];
   loading = true;
   errorMessage = '';
+  @ViewChild('problemModal') problemModal!: ItModalComponent;
 
+  openCreateProblemModal() {
+    this.problemModal.show();
+  }
+  
+  onProblemSaved(problem: Problem) {
+    this.problemModal.hide();
+    this.loadProblems(); // ricarica la lista
+  }
   constructor(private problemService: ProblemService,
     private notificationService: NotificationService,
     private router: Router

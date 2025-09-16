@@ -4,10 +4,18 @@
 <div *ngIf="!loading" class="bd-example">
   <h3>{{ 'problems.title' | translate }}  </h3>
 
-  <button itButton="primary" routerLink="/problems/create" class="mb-5 d-flex align-items-center gap-2">
+  <button itButton="primary" (click)="openCreateProblemModal()" class="mb-5 d-flex align-items-center gap-2">
     <span class="material-icons">add_circle_outline</span>
     <span>{{ 'problems.create' | translate }}</span>
   </button>
+
+  <it-modal #problemModal size="lg">
+    <ng-container modalTitle>
+      {{ 'problems.createTitle' | translate }}
+    </ng-container>
+  
+    <app-problem-create (problemSaved)="onProblemSaved($event)"></app-problem-create>
+  </it-modal>
     <it-search
       label="Cerca nel sito"
       placeholder="Testo da cercare"
