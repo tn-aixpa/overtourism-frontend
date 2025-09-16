@@ -11,11 +11,8 @@
               <label for="title">{{ 'problems.fields.title' | translate }}</label>
             </td>
             <td>
-              <ng-container *ngIf="!saved; else titleLabel">
                 <it-input id="title" name="name" [(ngModel)]="model.name" required
                           placeholder="{{ 'problems.fields.titlePlaceholder' | translate }}"></it-input>
-              </ng-container>
-              <ng-template #titleLabel>{{ model.name }}</ng-template>
             </td>
           </tr>
 
@@ -25,11 +22,9 @@
               <label for="objective">{{ 'problems.fields.objective' | translate }}</label>
             </td>
             <td>
-              <ng-container *ngIf="!saved; else objectiveLabel">
-                <it-textarea id="objective" name="objective" [(ngModel)]="model.objective" [rows]="4"
+                <it-textarea id="objective" name="objective" [(ngModel)]="model.objective" [rows]="4" required
                              placeholder="{{ 'problems.fields.objectivePlaceholder' | translate }}"></it-textarea>
-              </ng-container>
-              <ng-template #objectiveLabel>{{ model.objective }}</ng-template>
+              
             </td>
           </tr>
 
@@ -39,12 +34,10 @@
               <label for="descriptionProblem">{{ 'problems.fields.descriptionProblem' | translate }}</label>
             </td>
             <td>
-              <ng-container *ngIf="!saved; else descriptionLabel">
-                <it-textarea id="descriptionProblem" name="descriptionProblem" [(ngModel)]="model.descriptionProblem"
+                <it-textarea id="descriptionProblem" name="descriptionProblem" [(ngModel)]="model.descriptionProblem" required
                              [rows]="4"
                              placeholder="{{ 'problems.fields.descriptionProblemPlaceholder' | translate }}"></it-textarea>
-              </ng-container>
-              <ng-template #descriptionLabel>{{ model.descriptionProblem }}</ng-template>
+             
             </td>
           </tr>
 
@@ -54,23 +47,16 @@
               <label>{{ 'problems.fields.category' | translate }}</label>
             </td>
             <td>
-              <ng-container *ngIf="!saved; else categoryLabel">
                 <fieldset>
                   <legend>{{ 'problems.fields.group' | translate }}</legend>
-                  <it-checkbox *ngFor="let cat of availableCategories"
-                               [(ngModel)]="model.categories[cat.key]"
+                  <it-checkbox *ngFor="let cat of availableGroups" 
+                               [(ngModel)]="model.groups[cat.key]"
                                name="category_{{cat.key}}"
                                label="{{ cat.label | translate }}"
-                               inline="true">
+                               inline="true"> 
                   </it-checkbox>
                 </fieldset>
-              </ng-container>
-              <ng-template #categoryLabel>
-                <span *ngFor="let cat of availableCategories; let last=last">
-                  <span *ngIf="model.categories[cat.key]">{{ cat.label | translate }}</span>
-                  <span *ngIf="!last">, </span>
-                </span>
-              </ng-template>
+              
             </td>
           </tr>
 
@@ -80,7 +66,6 @@
               <label>{{ 'problems.fields.resources' | translate }}</label>
             </td>
             <td>
-              <ng-container *ngIf="!saved">
                 <!-- Aggiungi nuova risorsa -->
                 <div class="d-flex align-items-center mb-3">
                   <it-input [(ngModel)]="newResource" name="newResource"
@@ -93,7 +78,6 @@
                     <span class="material-icons" style="font-size:22px;">add</span>
                   </button>
                 </div>
-              </ng-container>
 
               <!-- Lista risorse -->
               <div class="d-flex flex-column gap-2">
@@ -104,7 +88,7 @@
                     <a *ngIf="isUrl(res)" [href]="res" target="_blank" class="text-decoration-none">{{ res }}</a>
                     <span *ngIf="!isUrl(res)">{{ res }}</span>
                   </div>
-                  <button *ngIf="!saved" type="button" class="btn-close btn-close-sm ms-2 mt-1"
+                  <button  type="button" class="btn-close btn-close-sm ms-2 mt-1"
                           aria-label="Remove" (click)="removeResource(i)"></button>
                 </div>
               </div>
@@ -116,18 +100,13 @@
 
     <!-- footer grigio con pulsante salva -->
     <div class="border-top pt-3 mt-4 d-flex justify-content-end">
-      <button *ngIf="!saved" itButton="primary" type="submit" [disabled]="form.invalid ?? false">
+      <button itButton="primary" type="submit" [disabled]="form.invalid ?? false">
         {{ 'common.save' | translate }}
       </button>
     </div>
   </form>
 
-  <!-- Pulsante aggiungi proposta -->
-  <div *ngIf="saved && !showProposalForm" class="mt-3">
-    <button itButton="primary" (click)="showProposalForm = true">
-      {{ 'problems.fields.addProposal' | translate }}
-    </button>
-  </div>
+
 
   <!-- Componente proposta -->
   <app-proposal-create *ngIf="showProposalForm"

@@ -18,8 +18,8 @@ export class ProposalService {
   createProposal(problemId: string, payload: Proposal) {
     return this.http.post(`${this.baseUrl}/proposals/?problem_id=${problemId}`, payload);
   }
-  updateProposal(proposalId: string, payload: Proposal) {
-    return this.http.put(`${this.baseUrl}/proposals/${proposalId}`, payload);
+  updateProposal(proposalId: string, problemId: string, payload: Proposal) {
+    return this.http.put(`${this.baseUrl}/proposals/${proposalId}?problem_id=${problemId}`, payload);
   }
   deleteProposal(proposalId: string, problemId: string) {
     return this.http.delete(`${this.baseUrl}/proposals/${proposalId}`, {

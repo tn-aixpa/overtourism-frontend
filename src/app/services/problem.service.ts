@@ -26,7 +26,7 @@ export class ProblemService {
           updated: problem.updated ? new Date(problem.updated) : undefined,
           created: problem.created ? new Date(problem.created) : undefined,
           objective: problem.objective,
-          category: problem.category ?? [],
+          category: problem.groups ?? [],
           links: problem.links ?? [],
           proposals: problem.proposals ?? []
         }))
@@ -35,16 +35,7 @@ export class ProblemService {
   }
 
   /** POST create new problem */
-  createProblem(problem: {
-    problem_name: string;
-    problem_description: string;
-    created?: string;
-    updated?: string;
-    objective?: string;
-    category?: string[];
-    links?: string[];
-    proposals?: any[];
-  }): Observable<Problem> {
+  createProblem(problem: Problem): Observable<Problem> {
     return this.http.post<Problem>(`${this.baseUrl}/problems`, problem);
   }
 
@@ -62,4 +53,8 @@ export class ProblemService {
   refreshProblems(): Observable<any> {
     return this.http.put(`${this.baseUrl}/problems/refresh`, {});
   }
+  /** PUT update problem */
+updateProblem(problemId: string, payload: Problem): Observable<Problem> {
+  return this.http.put<Problem>(`${this.baseUrl}/problems/${problemId}`, payload);
+}
 }

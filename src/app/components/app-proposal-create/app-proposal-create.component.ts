@@ -132,7 +132,8 @@ export class ProposalCreateComponent {
     };
   
     if (this.proposalToEdit) {
-      this.proposalSvc.updateProposal(this.proposalToEdit.proposal_id, payload).subscribe({
+      this.proposalSvc.updateProposal(this.proposalToEdit.proposal_id, this.problemId, payload)
+      .subscribe({
         next: () => this.proposalCreated.emit(),
         error: (err) => this.notif.showError(err?.message || 'Errore durante l\'aggiornamento')
       });

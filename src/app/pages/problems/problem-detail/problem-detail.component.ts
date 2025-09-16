@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProblemService } from '../../../services/problem.service';
 import { NotificationService } from '../../../services/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Proposal } from '../../../models/proposal.model';
 import { ProposalService } from '../../../services/proposal.service';
+import { ItModalComponent } from 'design-angular-kit';
 
 @Component({
   selector: 'app-problem-detail',
@@ -17,6 +18,10 @@ export class ProblemDetailComponent implements OnInit {
   problem: any = null;
   proposals: Proposal[] = [];
   showProposalForm = false;
+
+  @ViewChild('deleteProblemModal') deleteProblemModal!: ItModalComponent;
+  @ViewChild('proposalModal') proposalModal!: ItModalComponent;
+  proposalToEdit?: Proposal;
 
   constructor(
     private route: ActivatedRoute,
@@ -50,14 +55,63 @@ export class ProblemDetailComponent implements OnInit {
       }
     });
   }
-// modifica proposta 
-editProposal(proposalId: string) {
-  const proposalToEdit = this.proposals.find(p => p.proposal_id === proposalId);
-  if (proposalToEdit) {
-    this.showProposalForm = true;
-    // Passa i dati al form di creazione/modifica
-    // es: this.proposalForm.model = {...proposalToEdit};
+  openProposalModal(): void {
+    this.proposalToEdit = undefined;
+    this.proposalModal.show();
   }
+// modifica proposta 
+editProposal(proposalId: string): void {
+  const proposal = this.proposals.find(p => p.proposal_id === proposalId);
+  if (proposal) {
+    this.proposalToEdit = { ...proposal }; 
+    this.proposalModal.show();
+  }
+}
+onProposalCreatedModal(): void {
+  this.proposalModal.hide();
+  this.loadProblem(); // ricarica dati per aggiornare lista
+}
+
+onCancelProposal(): void {
+  this.proposalModal.hide();
+}
+editProblem() {
+  this.router.navigate(['/problems/create'], {
+    queryParams: { edit: this.problemId }
+  });
+}
+
+// Apri modal
+openDeleteModal(event?: Event): void {
+  if (event) event.stopPropagation();
+  this.deleteProblemModal.toggle();
+}
+get modalTitle(): string {
+  return this.proposalToEdit 
+    ? this.translate.instant('proposals.edit_title') 
+    : this.translate.instant('proposals.add_title');
+}
+// Annulla
+onCancelDeleteProblem(): void {
+  this.deleteProblemModal.hide();
+}
+
+// Conferma
+onConfirmDeleteProblem(): void {
+  if (!this.problemId) return;
+
+  this.problemService.deleteProblem(this.problemId).subscribe({
+    next: () => {
+      this.deleteProblemModal.hide();
+
+      // vai alla lista problemi (adatta la rotta al tuo routing)
+      this.router.navigate(['/problems']);
+    },
+    error: (err) => {
+      console.error('Errore durante eliminazione problema', err);
+      this.deleteProblemModal.hide();
+    }
+  });
 }
   loadProblem() {
     this.problemService.getProblemById(this.problemId).subscribe({

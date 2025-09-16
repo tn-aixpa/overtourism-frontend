@@ -1,54 +1,96 @@
-<it-card background="true" class="p-4">
-    <h3 class="mb-4">{{ problem?.name }}</h3>
-  
-    <table class="table table-borderless mb-4">
-      <tbody>
-        <tr>
-            <td class="fw-bold w-25">{{ 'problems.fields.title' | translate }}</td>
-            <td>{{ problem?.problem_name }}</td>
-          </tr>
-          <tr>
-          <td class="fw-bold w-25">{{ 'problems.fields.objective' | translate }}</td>
-          <td>{{ problem?.objective }}</td>
-        </tr>
-        <tr>
-          <td class="fw-bold w-25">{{ 'problems.fields.descriptionProblem' | translate }}</td>
-          <td>{{ problem?.problem_description }}</td>
-        </tr>
-        <tr>
-          <td class="fw-bold w-25">{{ 'problems.fields.category' | translate }}</td>
-          <td>
-            <span *ngFor="let cat of problem?.category; let last=last">
-              {{ cat | translate }}<span *ngIf="!last">, </span>
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <td class="fw-bold w-25">{{ 'problems.fields.resources' | translate }}</td>
-          <td>
-            <ul>
-              <li *ngFor="let link of problem?.links">
-                <a [href]="link" target="_blank">{{ link }}</a>
-              </li>
-            </ul>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  
-    <div class="mb-3">
-      <button itButton="primary" (click)="toggleProposalForm()" *ngIf="!showProposalForm">
-        {{ 'problems.fields.addProposal' | translate }}
-      </button>
+<it-card background="true" class="p-4 position-relative">
+  <!-- Pulsanti in alto a destra -->
+  <div class="position-absolute top-0 end-0 m-3 d-flex gap-2">
+    <button itButton="primary" size="sm" (click)="editProblem()">
+      <span class="material-icons align-middle">edit</span> Modifica
+    </button>
+    <button itButton="danger" size="sm" (click)="openDeleteModal($event)">
+      <span class="material-icons align-middle">delete</span> Elimina
+    </button>
+  </div>
+
+  <h3 class="mb-4">{{ problem?.name }}</h3>
+
+  <!-- tabella info -->
+  <table class="table table-borderless mb-4">
+    <tbody>
+      <tr>
+        <td class="fw-bold w-25">{{ 'problems.fields.title' | translate }}</td>
+        <td>{{ problem?.problem_name }}</td>
+      </tr>
+      <tr>
+        <td class="fw-bold w-25">{{ 'problems.fields.objective' | translate }}</td>
+        <td>{{ problem?.objective }}</td>
+      </tr>
+      <tr>
+        <td class="fw-bold w-25">{{ 'problems.fields.descriptionProblem' | translate }}</td>
+        <td>{{ problem?.problem_description }}</td>
+      </tr>
+      <tr>
+        <td class="fw-bold w-25">{{ 'problems.fields.category' | translate }}</td>
+        <td>
+          <span *ngFor="let cat of problem?.groups; let last=last">
+            {{ cat | translate }}<span *ngIf="!last">, </span>
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td class="fw-bold w-25">{{ 'problems.fields.resources' | translate }}</td>
+        <td>
+          <ul>
+            <li *ngFor="let link of problem?.links">
+              <a [href]="link" target="_blank">{{ link }}</a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="mb-3">
+    <button itButton="primary" (click)="openProposalModal()" *ngIf="!showProposalForm">
+      {{ 'problems.fields.addProposal' | translate }}
+    </button>
+  </div>
+
+  <div class="mt-4" *ngIf="proposals?.length">
+      <h4>Proposte attuali</h4>
+      <app-proposal-detail *ngFor="let proposal of proposals" [proposal]="proposal"    (editProposal)="editProposal($event)"
+      (deleteProposal)="removeProposal($event)"></app-proposal-detail>
     </div>
-  
-    <app-proposal-create *ngIf="showProposalForm" [problemId]="problemId" (proposalCreated)="onProposalCreated()"   ></app-proposal-create>
-    <div class="mt-4" *ngIf="proposals?.length">
-        <h4>Proposte attuali</h4>
-        <app-proposal-detail *ngFor="let proposal of proposals" [proposal]="proposal"    (editProposal)="editProposal($event)"
-        (deleteProposal)="removeProposal($event)"></app-proposal-detail>
-      </div>
-  </it-card>
-  
+
   <app-back-button (click)="back()"></app-back-button>
-  
+</it-card>
+<it-modal #deleteProblemModal>
+  <ng-container modalTitle>
+    {{ 'problems.confirm_delete_title' | translate }}
+  </ng-container>
+
+  <p>
+    {{ 'problems.confirm_delete_message' | translate:{name: problem?.problem_name || '—'} }}
+  </p>
+
+  <ng-container footer>
+    <button itButton="outline-primary" (click)="onCancelDeleteProblem()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button itButton="danger" (click)="onConfirmDeleteProblem()">
+      {{ 'common.delete' | translate }}
+    </button>
+  </ng-container>
+</it-modal>
+<it-modal #proposalModal size="lg">
+  <ng-container modalTitle>
+    {{ proposalToEdit ? ('problems.proposals.edit_title' | translate) : ('problems.proposals.add_title' | translate) }}
+  </ng-container>
+  <app-proposal-create
+    [problemId]="problemId"
+    [proposalToEdit]="proposalToEdit"
+    (proposalCreated)="onProposalCreatedModal()">
+  </app-proposal-create>
+
+  <ng-container footer>
+    <button itButton="outline-primary" (click)="onCancelProposal()">
+      {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</it-modal>

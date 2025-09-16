@@ -5,7 +5,7 @@ export interface Problem {
   updated?: Date;
   created?: Date;
   objective?: string;
-  category?: string[];
+  groups?: string[];
   links?: string[];
   proposals?: any[];
   }
@@ -18,7 +18,7 @@ export interface Problem {
       updated?: string;
       created?: string;
       objective?: string;
-      category?: string[];
+      groups?: string[];
       links?: string[];
       proposals?: any[];
     }>;
