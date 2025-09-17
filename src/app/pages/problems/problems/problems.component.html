@@ -9,12 +9,16 @@
     <span>{{ 'problems.create' | translate }}</span>
   </button>
 
-  <it-modal #problemModal size="lg">
+  <it-modal #problemModal size="xl">
     <ng-container modalTitle>
       {{ 'problems.createTitle' | translate }}
     </ng-container>
-  
-    <app-problem-create (problemSaved)="onProblemSaved($event)"></app-problem-create>
+    <it-callout [appearance]="'highlight'" class="mb-4">
+      <p class="mb-0 small text-muted">
+        {{ 'problems.createSubtitle' | translate }}
+      </p>
+    </it-callout>
+    <app-problem-create (problemSaved)="onProblemSaved($event)" (problemCancel)="onProblemCancel()"></app-problem-create>
   </it-modal>
     <it-search
       label="Cerca nel sito"

@@ -26,6 +26,9 @@ export class ProblemsComponent {
     this.problemModal.hide();
     this.loadProblems(); // ricarica la lista
   }
+  onProblemCancel() {
+    this.problemModal.hide();
+  }
   constructor(private problemService: ProblemService,
     private notificationService: NotificationService,
     private router: Router

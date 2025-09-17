@@ -99,6 +99,10 @@
 
     <!-- footer grigio con pulsante salva -->
     <div class="border-top pt-3 mt-4 d-flex justify-content-end">
+      
+      <button itButton="secondary" type="button" class="me-2" (click)="onCancel()">
+        {{ 'common.cancel' | translate }}
+      </button>
       <button itButton="primary" type="submit" [disabled]="form.invalid ?? false">
         {{ 'common.save' | translate }}
       </button>
@@ -115,4 +119,4 @@
    </div>    [problemId]="savedProblemId -->
 </it-card>
 
-<app-back-button></app-back-button>
+<!-- <app-back-button></app-back-button> -->

@@ -22,10 +22,10 @@
   },
   "problems": {
     "title": "Domande progettuali",
-    "descriptionTitle": "In questa sezione è possibile inserire le informazioni principali relative al problema e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
     "loading": "Caricamento domande progettuali...",
     "create": "Aggiungi o modifica domanda",
     "createTitle": "Definizione del problema",
+    "createSubtitle": "In questa sezione è possibile inserire le informazioni principali relative al problema e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
     "editTitle": "Modifica del problema",
     "create_success": "Problema creato con successo",
     "update_success": "Problema aggiornato con successo",
@@ -42,7 +42,7 @@
       "resourcePlaceholder": "Inserisci un URL a una risorsa esterna",
       "addResource": "Aggiungi risorsa",
       "addProposal": "Aggiungi proposta",
-      "group":"Gruppi disponibile" ,
+      "group": "Gruppi disponibile",
       "categories": {
         "parking": "Parcheggi",
         "beach": "Spiaggia",
@@ -77,7 +77,6 @@
       "save": "Salva"
     }
   },
-
   "scenari": {
     "view_problem_detail": "Visualizza dettagli problema",
     "loading": "Caricamento scenari...",

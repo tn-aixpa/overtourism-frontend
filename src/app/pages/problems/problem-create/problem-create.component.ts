@@ -13,8 +13,10 @@ import { Problem } from "../../../models/problem.model";
   styleUrls: ['./problem-create.component.scss']
 })
 export class ProblemCreateComponent {
+
   @Input() editProblemId?: string;
   @Output() problemSaved = new EventEmitter<Problem>();
+  @Output() problemCancel = new EventEmitter<void>();
 
   availableGroups = [] as { key: string; label: string }[];
   model = {
@@ -124,5 +126,9 @@ export class ProblemCreateComponent {
 
   cancel() {
     this.router.navigate(['/problems']);
+  }
+  onCancel() {
+    this.problemCancel.emit();
+
   }
 }

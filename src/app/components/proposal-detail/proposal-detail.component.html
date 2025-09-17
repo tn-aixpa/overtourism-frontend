@@ -1,4 +1,8 @@
-<it-accordion [title]="proposal.proposal_description || 'Senza titolo'">
+<it-accordion   [title]="(proposal.proposal_title || 'Senza titolo') 
++ ' · ' 
++ (proposal.status || '—') 
++ ' · ' 
++ (proposal.updated | date:'short')">
     <div class="p-3">
   
       <!-- Pulsanti di azione -->
