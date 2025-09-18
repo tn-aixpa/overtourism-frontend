@@ -12,8 +12,8 @@ WORKDIR /app
 COPY package.json /app
 COPY package-lock.json /app
 # RUN rm .env*
-RUN npm install --legacy-peer-deps
-
+# RUN npm install --legacy-peer-deps
+RUN npm install 
 # ENV VITE_APP_URL_TOKEN=${VITE_APP_URL_TOKEN}
 # ENV VITE_APP_AXIOS_URL=${VITE_APP_AXIOS_URL}
 # ENV VITE_APP_HATEDEMICS_API_URL=${VITE_APP_HATEDEMICS_API_URL}
