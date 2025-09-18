@@ -228,7 +228,7 @@ export class PlotService {
     if (!container || !input?.kpis) return;
 
     const uncertaintyData = this.getUncertaintyData(sottosistemaSelezionato, input.kpis);
-    
+
     if (!uncertaintyData.length) return;
 
     // Ordina per usage crescente
