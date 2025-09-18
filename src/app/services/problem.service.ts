@@ -36,7 +36,7 @@ export class ProblemService {
 
   /** POST create new problem */
   createProblem(problem: Problem): Observable<Problem> {
-    return this.http.post<Problem>(`${this.baseUrl}/problems`, problem);
+    return this.http.post<Problem>(`${this.baseUrl}/problems/`, problem);
   }
 
   /** GET single problem by ID */
@@ -51,7 +51,7 @@ export class ProblemService {
 
   /** PUT refresh problems */
   refreshProblems(): Observable<any> {
-    return this.http.put(`${this.baseUrl}/problems/refresh`, {});
+    return this.http.put(`${this.baseUrl}/problems/refresh/`, {});
   }
   /** PUT update problem */
 updateProblem(problemId: string, payload: Problem): Observable<Problem> {

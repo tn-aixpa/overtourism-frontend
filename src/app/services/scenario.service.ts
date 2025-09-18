@@ -43,7 +43,7 @@ export class ScenarioService {
   saveNewScenario(scenarioId: string, problemId: string, values: Record<string, number | [number, number]>, titolo: string, descrizione: string)
     : Observable<any> {
     return this.http.post<any>(
-      `${this.baseUrl}/scenarios/${scenarioId}`,
+      `${this.baseUrl}/scenarios/${scenarioId}/`,
       { values,
         scenario_name: titolo, scenario_description: descrizione
        }, // body
@@ -51,7 +51,7 @@ export class ScenarioService {
     );
   }
   getScenarioData(scenarioId: string, problemId: string): Observable<any> {
-    return this.http.get<any>(`${this.baseUrl}/scenarios/${scenarioId}`,{
+    return this.http.get<any>(`${this.baseUrl}/scenarios/${scenarioId}/`,{
       params: { problem_id: problemId }
     });
   }
@@ -68,13 +68,13 @@ export class ScenarioService {
   }
   deleteScenario(scenarioId: string, problemId: string): Observable<void> {
     return this.http.delete<void>(
-      `${this.baseUrl}/scenarios/${scenarioId}`,
+      `${this.baseUrl}/scenarios/${scenarioId}/`,
       { params: { problem_id: problemId } }
     );
   }
   getScenariosByProblemId(problemId: string): Observable<ProblemScenario[]> {
     return this.http
-      .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}/scenarios`)
+      .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}/scenarios/`)
       .pipe(
         map(response => response.scenarios.map(scenario => ({
           id: scenario.scenario_id,
@@ -88,7 +88,7 @@ export class ScenarioService {
   
   getWidgets(): Observable<Record<string, Widget[]>> {
     return this.http.get<{ widgets: Record<string, Widget[]> }>(
-      `${this.baseUrl}/widgets`
+      `${this.baseUrl}/widgets/`
     ).pipe(map(res => res.widgets));
   }
 
