@@ -19,7 +19,7 @@
       </div>
       <app-plot-controls *ngIf="showControls"
         [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
-        [sottosistemaSelezionato]="sottosistemaSelezionato" 
+        [sottosistemaSelezionato]="sottosistemaSelezionato"
          (monoDimensionaleChange)="monoDimensionale = $event"
         (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
         ></app-plot-controls>
@@ -44,7 +44,7 @@
       {{ 'plot.compare' | translate }}
     </button>
       </div>
-     
+
       <ng-container *ngIf="isEditing">
         <div class="row mt-4">
           <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
@@ -64,15 +64,15 @@
                   <span class="material-icons">error_outline</span>
                   {{ 'plot.infoTitle' | translate }}
                 </h6>
-                <h6 class=" text-muted mb-2">
-                  Differenze rispetto allo scenario originale
-                </h6>
-        
+                <p class="small text-muted mb-2">
+                  Differenze rispetto allo scenario base:
+                </p>
+
                 <div *ngIf="indexDiffs && objectKeys(indexDiffs).length; else noDifferences">
                   <ul class="list-unstyled small">
                     <li *ngFor="let key of objectKeys(indexDiffs)">
                       <span class="fw-bold">{{ getIndexNameFromKey(key) }}</span>:
-                      <span 
+                      <span
                         [ngClass]="{
                           'text-danger fw-bold': getLocallyChangedKeys().includes(key),
                           'text-body': !getLocallyChangedKeys().includes(key)
@@ -80,8 +80,8 @@
                       >
                         {{ indexDiffs[key] }}
                       </span>
-                      <span 
-                        class="text-muted ms-2" 
+                      <span
+                        class="text-muted ms-2"
                         *ngIf="getLocallyChangedKeys().includes(key) && originalIndexDiffs[key] !== undefined"
                       >
                         (originale: {{ originalIndexDiffs[key] }})
@@ -118,13 +118,13 @@
 <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="hasLocalDiffs()">
   <button itButton="outline-primary"
     class="m-4 d-flex justify-content-between align-items-center"
-    (click)="resetIndexDiffs()"> 
+    (click)="resetIndexDiffs()">
     <span class="material-icons me-2">replay</span>
     Ripristina modifiche
   </button>
   <button itButton="primary"
     class="m-4 d-flex justify-content-between align-items-center"
-    (click)="openSaveModal()"> 
+    (click)="openSaveModal()">
     <span class="material-icons me-2">save</span>
     Salva come nuovo scenario
   </button>
@@ -134,7 +134,7 @@
     <ng-container modalTitle>Salvataggio scenario modificato</ng-container>
 
     <p>    Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
-      
+
     </p>
     <it-input
     label="{{ 'save.title' | translate }} *"
@@ -145,21 +145,21 @@
   </it-input>
   <small *ngIf="formInvalid && !titolo?.trim()" class="text-danger">Il titolo è obbligatorio</small>
 
-  
+
   <it-textarea
     class="w-100"
     label="{{ 'save.description' | translate }} *"
     name="descrizione"
     required
     [(ngModel)]="descrizione"
-    
+
     #descrizioneInput="ngModel">
   </it-textarea>
   <small *ngIf="formInvalid && !descrizione?.trim()" class="text-danger">La descrizione è obbligatoria</small>
 
-  
+
     <ng-container footer>
-      <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button> 
+      <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button>
       <button
       itButton="primary"
       size="sm"

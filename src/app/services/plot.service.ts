@@ -92,41 +92,43 @@ export class PlotService {
 
 
   }
-  private createDataFactsFromKpis(kpis: any): DataFact[] {
+  private createDataFactsFromKpis(kpis: Record<string, { level: number; confidence: number }>): DataFact[] {
     const dataFacts: DataFact[] = [];
-    
+  
     // Global overtourism level
-    if (kpis.overtourism_level !== undefined) {
+    if (kpis['overtourism_level']) {
       dataFacts.push({
         category: 'all',
-        violations_percentage: kpis.overtourism_level,
-        uncertainty: 2, // default uncertainty value
-        violations_numerosity: kpis.overtourism_level > 0 ? 1 : 0
+        violations_percentage: +kpis['overtourism_level'].level.toFixed(1),
+        uncertainty: +kpis['overtourism_level'].confidence.toFixed(1),
+        violations_numerosity: kpis['overtourism_level'].level > 0 ? 1 : 0
       });
     }
   
     // Individual constraints
-    const constraints = [
-      'parcheggi',
-      'spiaggia',
-      'alberghi',
-      'ristoranti'
-    ];
+    const constraints = ['parcheggi', 'spiaggia', 'alberghi', 'ristoranti'];
   
     for (const constraint of constraints) {
-      const level = kpis[`constraint level ${constraint}`];
-      if (level !== undefined) {
+      const keyUnderscore = `constraint_level_${constraint}`;
+      const keySpace = `constraint level ${constraint}`;
+      
+      // scegli quella che esiste
+      const kpi = kpis[keyUnderscore] ?? kpis[keySpace];
+      
+      if (kpi) {
         dataFacts.push({
           category: constraint,
-          violations_percentage: level,
-          uncertainty: 2, // default uncertainty value
-          violations_numerosity: level > 0 ? 1 : 0
+          violations_percentage: +kpi.level.toFixed(1),
+          uncertainty: +kpi.confidence.toFixed(1),
+          violations_numerosity: kpi.level > 0 ? 1 : 0
         });
       }
     }
   
     return dataFacts;
   }
+  
+  
   preparePlotInput(module: any): PlotInput {
 
     // Curves
@@ -226,7 +228,7 @@ export class PlotService {
     if (!container || !input?.kpis) return;
 
     const uncertaintyData = this.getUncertaintyData(sottosistemaSelezionato, input.kpis);
-    
+
     if (!uncertaintyData.length) return;
 
     // Ordina per usage crescente

@@ -136,17 +136,22 @@ export class ConfrontoScenariComponent {
     }
     this.renderChart(container, input);
   }
-  filterKpis(rawData: Record<string, any>): Record<string, number> {
+  filterKpis(rawData: Record<string, any>): Record<string, { level: number, confidence: number }> {
     return Object.keys(rawData)
       .filter(key => key.includes('_level_') || key === 'overtourism_level')
       .reduce((obj, key) => {
-        const translatedKey = this.translate.instant(
-          'kpi.'+ key
-        );
-        obj[translatedKey] = rawData[key] as number;
+        const translatedKey = this.translate.instant('kpi.' + key);
+  
+        const value = rawData[key];
+        // se rawData[key] è un numero singolo, lo trasformiamo in oggetto level/confidence
+        obj[translatedKey] = typeof value === 'number'
+          ? { level: value, confidence: 0 }
+          : { level: value.level ?? 0, confidence: value.confidence ?? 0 };
+  
         return obj;
-      }, {} as Record<string, number>);
+      }, {} as Record<string, { level: number, confidence: number }>);
   }
+  
   getWidgetDiffs(
     widgetsA: Record<string, Widget[]>,
     widgetsB: Record<string, Widget[]>
