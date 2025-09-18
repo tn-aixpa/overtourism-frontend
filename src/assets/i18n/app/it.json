@@ -20,25 +20,65 @@
     "constraint_level_ristoranti": "Giorni di criticità Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
-  "problems":{
-    "title":"Domande progettuali",
-    "descriptionTitle": "In questa sezione è possibile inserire le informazioni principali relative al problema e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
-    "loading":"Caricamento domande progettuali...",
-    "create":"Aggiungi o modifica domanda",
+  "problems": {
+    "title": "Domande progettuali",
+    "loading": "Caricamento domande progettuali...",
+    "create": "Aggiungi o modifica domanda",
     "createTitle": "Definizione del problema",
+    "createSubtitle": "In questa sezione è possibile inserire le informazioni principali relative al problema e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
+    "editTitle": "Modifica del problema",
+    "create_success": "Problema creato con successo",
+    "update_success": "Problema aggiornato con successo",
+    "delete_success": "Problema eliminato con successo",
     "fields": {
       "title": "Titolo",
-      "titlePlaceholder": "Inserisci il titolo",
-      "description": "Descrizione generale",
-      "descriptionPlaceholder": "Inserisci la descrizione",
+      "titlePlaceholder": "Inserisci il titolo del problema",
+      "objective": "Obiettivo",
+      "objectivePlaceholder": "Descrivi l'obiettivo che vuoi raggiungere",
       "descriptionProblem": "Descrizione del problema",
-
-      "deadline": "Scadenza",
-      "owner": "Responsabile",
-      "priority": "Priorità"
+      "descriptionProblemPlaceholder": "Inserisci una descrizione dettagliata del problema",
+      "category": "Categoria",
+      "resources": "Dati e tecnologie rilevanti",
+      "resourcePlaceholder": "Inserisci un URL a una risorsa esterna",
+      "addResource": "Aggiungi risorsa",
+      "addProposal": "Aggiungi proposta",
+      "group": "Gruppi disponibile",
+      "categories": {
+        "parking": "Parcheggi",
+        "beach": "Spiaggia",
+        "restaurants": "Ristoranti",
+        "hotels": "Alberghi",
+        "flows": "Flussi"
+      }
+    },
+    "confirm_delete_title": "Conferma eliminazione",
+    "confirm_delete_message": "Sei sicuro di voler eliminare questo problema?",
+    "proposals": {
+      "createTitle": "Crea nuova proposta",
+      "edit_title": "Modifica proposta",
+      "add_title": "Aggiungi proposta",
+      "fields": {
+        "title": "Titolo",
+        "titlePlaceholder": "Inserisci un titolo per la proposta",
+        "description": "Descrizione",
+        "descriptionPlaceholder": "Scrivi una descrizione dettagliata",
+        "resources": "Dati e tecnologie rilevanti",
+        "resourcePlaceholder": "Aggiungi un dato, una tecnologia o un link",
+        "contextConditions": "Condizioni di contesto",
+        "contextConditionsPlaceholder": "Specifica eventuali condizioni di contesto",
+        "potentialImpact": "Potenziale impatto",
+        "potentialImpactPlaceholder": "Descrivi l’impatto potenziale della proposta",
+        "status": "Stato",
+        "scenarios": "Scenari collegati",
+        "scenarioPlaceholder": "Cerca o seleziona uno scenario"
+      }
+    },
+    "common": {
+      "save": "Salva"
     }
   },
   "scenari": {
+    "view_problem_detail": "Visualizza dettagli problema",
     "loading": "Caricamento scenari...",
     "title": "Scenari",
     "open": "Apri scenario {{name}}",
@@ -50,10 +90,11 @@
     "enable_compare": "Abilita confronto",
     "disable_compare": "Disabilita confronto",
     "parameters": "Parametri",
-    "parametersChanged":"PARAMETRI MODIFICATI"
-
+    "parametersChanged": "PARAMETRI MODIFICATI",
+    "confirm_delete_title": "Conferma eliminazione",
+    "confirm_delete_message": "Sei sicuro di voler eliminare lo scenario {{name}}? Questa azione non può essere annullata."
   },
-  "save":{
+  "save": {
     "title": "Nome scenario",
     "name": "Nome dello scenario",
     "description": "Descrizione dello scenario",
@@ -74,7 +115,7 @@
     "save": "Salva",
     "viewMode": "Visualizzazione grafico",
     "editMode": "Modifica grafico",
-    "infoTitle": "Informazioni",
+    "infoTitle": "INFORMAZIONI",
     "infoText": "Questa casella mostra informazioni in sola lettura relative al grafico o ai dati selezionati.",
     "notesTitle": "Note",
     "notesLabel": "Aggiungi le tue note qui...",
@@ -84,10 +125,12 @@
       "toggleLabel": "Attiva opzione avanzata"
     }
   },
-  "common":{
+  "common": {
     "back": "Indietro",
     "selectScenario": "Seleziona uno scenario",
-        "cancel": "Annulla",
-    "save": "Salva"
+    "cancel": "Annulla",
+    "save": "Salva",
+    "delete": "Elimina",
+    "remove": "Rimuovi"
   }
 }

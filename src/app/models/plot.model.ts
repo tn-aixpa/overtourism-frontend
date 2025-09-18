@@ -1,6 +1,7 @@
 // src/app/plot.model.ts
 
 import { ScatterMarker, ColorScale, PlotType } from "plotly.js-dist-min";
+import { DataFact } from "./data-fact.model";
 
 
 export type Curve = {
@@ -57,6 +58,7 @@ export interface PlotInput {
   capacity_by_constraint?: Record<string, number[][]>;
   capacity_mean_by_constraint?: Record<string, number>;
   editable_indexes?: string[];
+  dataFacts?: DataFact[];
 }
 
 

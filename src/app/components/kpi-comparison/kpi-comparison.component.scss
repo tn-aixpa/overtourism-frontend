@@ -1,0 +1,12 @@
+.kpi-value-left {
+    padding-right: 96px; /* distanza dalla linea centrale */
+  }
+  
+  .kpi-value-right {
+    padding-left: 96px; /* distanza dalla linea centrale */
+  }
+  .kpi-label {
+    min-height: 1.5rem; /* o uguale alla line-height dell’h6 */
+    display: flex;
+    align-items: flex-end; /* così il testo sta allineato in basso */
+  }

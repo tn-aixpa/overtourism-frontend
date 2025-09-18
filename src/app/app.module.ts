@@ -36,6 +36,11 @@ import { BackButtonComponent } from './components/back-button/back-button.compon
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { KpiComparisonComponent } from './components/kpi-comparison/kpi-comparison.component';
 import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
+import { HistogramComparisonComponent } from './components/histogram-comparison/histogram-comparison.component';
+import { ReadingComponent } from './components/plot/reading/reading.component';
+import { ProposalCreateComponent } from "./components/app-proposal-create/app-proposal-create.component";
+import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
+import { ProposalDetailComponent } from './components/proposal-detail/proposal-detail.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -49,7 +54,11 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
 //   return () => configService.loadConfig();
 // }
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent, KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent, ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent],
+  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, 
+    FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
+     KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
+      ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
+       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -70,14 +79,13 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     DesignAngularKitModule.forRoot({
       translateLoader: (itPrefix: string, itSuffix: string) => ({
         provide: TranslateLoader,
-        useFactory: (http: HttpBackend) =>
-          new MultiTranslateHttpLoader(http, [
-            { prefix: itPrefix, suffix: itSuffix }, 
-            { prefix: './assets/i18n/app/', suffix: '.json' }, 
-          ]),
+        useFactory: (http: HttpBackend) => new MultiTranslateHttpLoader(http, [
+          { prefix: itPrefix, suffix: itSuffix },
+          { prefix: './assets/i18n/app/', suffix: '.json' },
+        ]),
         deps: [HttpBackend],
       }),
-    }),
+    })
   ],
   providers: [
     // {

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Problem } from '../../../models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
 import { of, delay, Observable } from 'rxjs';
 import { NotificationService } from '../../../services/notifications.service';
-import { SearchItem } from 'design-angular-kit';
+import { ItModalComponent, SearchItem } from 'design-angular-kit';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +16,19 @@ export class ProblemsComponent {
   problems: Problem[] = [];
   loading = true;
   errorMessage = '';
+  @ViewChild('problemModal') problemModal!: ItModalComponent;
 
+  openCreateProblemModal() {
+    this.problemModal.show();
+  }
+  
+  onProblemSaved(problem: Problem) {
+    this.problemModal.hide();
+    this.loadProblems(); // ricarica la lista
+  }
+  onProblemCancel() {
+    this.problemModal.hide();
+  }
   constructor(private problemService: ProblemService,
     private notificationService: NotificationService,
     private router: Router
@@ -33,13 +45,14 @@ export class ProblemsComponent {
     }
 
     return of(this.problems.map(problem => ({
-      value: problem.id, // Assuming 'id' is a unique identifier in Problem
-      label: problem.name // Assuming 'name' is a property in Problem for display
+      id: problem.problem_id,
+      value: problem.problem_name, 
+      label: problem.problem_name 
     })));
   };
 
-  onSearchSelected(item: SearchItem): void {
-    this.router.navigate(['/problems', item.value, 'scenari']);
+  onSearchSelected(item: any): void {
+    this.router.navigate(['/problems', item.id, 'scenari']);
     
   }
 

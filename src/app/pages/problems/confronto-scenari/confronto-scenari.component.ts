@@ -7,6 +7,8 @@ import { ScenarioService, Widget } from '../../../services/scenario.service';
 import {
   SUBSYSTEM_OPTIONS
 } from '../../../components/plot/plot.config';
+import { PdfService } from '../../../services/pdf.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-confronto-scenari',
@@ -14,13 +16,16 @@ import {
   styleUrls: ['./confronto-scenari.component.scss'],
   standalone: false
 })
+
+
 export class ConfrontoScenariComponent {
   scenari: any[] = [];
   selectedScenario1Id!: string;
   selectedScenario2Id!: string;
   problemId!: string;
   selectedControlOption!: string;
-
+  scenario2Color = '#D9D9D9'; // grigio
+  scenario1Color = '#0066CC'; // blu
   kpisLeft?: KPIs;
   kpisRight?: KPIs;
   monoDimensionale = false;
@@ -36,7 +41,10 @@ export class ConfrontoScenariComponent {
   constructor(
     private scenarioService: ScenarioService,
     private plotService: PlotService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private pdfService: PdfService,
+    private translate: TranslateService
+    
   ) { }
 
   ngOnInit() {
@@ -120,15 +128,30 @@ export class ConfrontoScenariComponent {
 
     const container = slot === 1 ? this.chartLeft.nativeElement : this.chartRight.nativeElement;
     if (slot === 1) {
-      this.kpisLeft = input.kpis;
+      this.kpisLeft = input.kpis ? this.filterKpis(input.kpis) : undefined;
       this.widgetsLeft = res.widgets || {};
     } else {
-      this.kpisRight = input.kpis;
+      this.kpisRight = input.kpis ? this.filterKpis(input.kpis) : undefined;
       this.widgetsRight = res.widgets || {};
     }
-
     this.renderChart(container, input);
   }
+  filterKpis(rawData: Record<string, any>): Record<string, { level: number, confidence: number }> {
+    return Object.keys(rawData)
+      .filter(key => key.includes('_level_') || key === 'overtourism_level')
+      .reduce((obj, key) => {
+        const translatedKey = this.translate.instant('kpi.' + key);
+  
+        const value = rawData[key];
+        // se rawData[key] è un numero singolo, lo trasformiamo in oggetto level/confidence
+        obj[translatedKey] = typeof value === 'number'
+          ? { level: value, confidence: 0 }
+          : { level: value.level ?? 0, confidence: value.confidence ?? 0 };
+  
+        return obj;
+      }, {} as Record<string, { level: number, confidence: number }>);
+  }
+  
   getWidgetDiffs(
     widgetsA: Record<string, Widget[]>,
     widgetsB: Record<string, Widget[]>
@@ -210,4 +233,14 @@ export class ConfrontoScenariComponent {
   formatNumber(value: number): string {
     return value.toFixed(2);
   }
+  downloadPdf(): void {
+    this.pdfService.downloadPdfFromElement('pdfContent', `${this.getScenarioName(this.selectedScenario1Id)} vs ${this.getScenarioName(this.selectedScenario2Id)|| 'confronto'}.pdf`);
+  }
 }
+// const KPI_TRANSLATIONS: Record<string, string> = {
+//   constraint_level_alberghi: 'constraint_level_alberghi',
+//   constraint_level_parcheggi: 'kpi.constraint_level_parcheggi',
+//   constraint_level_ristoranti: 'kpi.constraint_level_ristoranti',
+//   constraint_level_spiaggia: 'kpi.constraint_level_spiaggia',
+//   overtourism_level: 'kpi.overtourism_level'
+// };

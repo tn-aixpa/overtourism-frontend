@@ -1,9 +1,11 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PlotService } from '../../../services/plot.service';
 import { ScenarioService } from '../../../services/scenario.service';
-import { Scenario } from '../../../models/scenario.model';
+import { ProblemScenario } from '../../../models/scenario.model';
 import { PlotComponent } from '../../../components/plot/plot.component';
+import { ItModalComponent } from 'design-angular-kit';
+import { PdfService } from '../../../services/pdf.service';
 
 @Component({
   selector: 'app-scenario-detail',
@@ -14,14 +16,19 @@ import { PlotComponent } from '../../../components/plot/plot.component';
 export class ScenarioDetailComponent  {
   @ViewChild('plotContainer') plotContainer!: ElementRef<HTMLDivElement>;
   @ViewChild(PlotComponent) plotComponent!: PlotComponent;
+  @ViewChild('deleteModal') deleteModal!: ItModalComponent;
 
   scenarioId!: string;
   problemId!: string;
-  scenario?: Scenario;
+  scenario?: ProblemScenario;
 
   constructor(
     private route: ActivatedRoute,
-    private scenarioService: ScenarioService
+    private scenarioService: ScenarioService,
+    private router: Router,
+    private pdfService: PdfService
+
+
   ) {}
 
   ngOnInit(): void {
@@ -37,6 +44,29 @@ export class ScenarioDetailComponent  {
     this.scenarioService.getScenariosByProblemId(this.problemId).subscribe({
       next: (scenarios) => {
         this.scenario = scenarios.find(s => s.id === this.scenarioId);
+      }
+    });
+  }
+  openDeleteModal(): void {
+    this.deleteModal.toggle();
+  }
+
+  onCancelDelete(): void {
+    this.deleteModal.hide();
+  }
+  downloadPdf(): void {
+    this.pdfService.downloadPdfFromElement('pdfContent', `${this.scenario?.name || 'scenario'}.pdf`);
+  }
+  confirmDelete(): void {
+    this.scenarioService.deleteScenario(this.scenarioId, this.problemId).subscribe({
+      next: () => {
+        this.deleteModal.hide();
+        this.router.navigate(['/problems', this.problemId, 'scenari']);
+      },
+      error: (err) => {
+        console.error('Errore durante la cancellazione dello scenario', err);
+        this.deleteModal.hide();
+        alert('Si è verificato un errore durante la cancellazione.');
       }
     });
   }

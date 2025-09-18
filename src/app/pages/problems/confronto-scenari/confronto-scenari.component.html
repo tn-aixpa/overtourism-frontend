@@ -1,68 +1,79 @@
-<div class="container-fluid">
+<div class="container-fluid" id="pdfContent">
+
+  <div class="row mb-4 align-items-center">
+    <!-- Scenario 1 -->
+    <div class="col-md-4 d-flex align-items-center">
+      <!-- Cerchio colorato -->
+      <div class="scenario-color me-2" [ngStyle]="{'background-color': scenario1Color}"></div>
+      <!-- Dropdown -->
+      <div class="flex-grow-1">
+        <div class="dropdown w-50">
+          <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <span>{{ getScenarioName(selectedScenario1Id) || ('common.selectScenario' | translate) }}</span>
+            <span class="material-icons ms-2">expand_more</span>
+          </button>
+          <div class="dropdown-menu w-100">
+            <div class="link-list-wrapper">
+              <ul class="link-list">
+                <li *ngFor="let s of scenari">
+                  <a class="list-item" (click)="selectScenario(1, s.id)">
+                    <span>{{ s.name }}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-flex align-items-center">
+    </div>
+    <!-- Scenario 2 -->
+    <div class="col-md-4 d-flex align-items-center">
+      <!-- Cerchio colorato -->
+      <div class="scenario-color me-2" [ngStyle]="{'background-color': scenario2Color}"></div>
+      <!-- Dropdown -->
+      <div class="flex-grow-1">
+        <div class="dropdown w-50">
+          <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <span>{{ getScenarioName(selectedScenario2Id) || ('common.selectScenario' | translate) }}</span>
+            <span class="material-icons ms-2">expand_more</span>
+          </button>
+          <div class="dropdown-menu w-100">
+            <div class="link-list-wrapper">
+              <ul class="link-list">
+                <li *ngFor="let s of scenari">
+                  <a class="list-item" (click)="selectScenario(2, s.id)">
+                    <span>{{ s.name }}</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 d-flex align-items-center">
+      <button itButton="primary" (click)="downloadPdf()">
+        Scarica PDF
+      </button>
+    </div>
+  </div>
   <div class="row mb-4">
     <div class="col-12">
-      <div class="d-flex justify-content">
-        <button [itButton]="!showControls ? 'outline-primary' : 'outline-secondary'"
-          class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()">
-          <span class="material-icons me-2">
-            visibility
-          </span> {{('plot.visualizza' | translate) }}
-        </button>
-      </div>
-      <app-plot-controls *ngIf="showControls" [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
-        [sottosistemaSelezionato]="sottosistemaSelezionato" (monoDimensionaleChange)="onMonoDimensionaleChange($event)"
-        (sottosistemaSelezionatoChange)="onSottosistemaSelezionatoChange($event)" (funzioneChange)="onFunzioneChange()">
-      </app-plot-controls>
+      <app-histogram-comparison
+        [dataLeft]="kpisLeft ?? {}"
+        [dataRight]="kpisRight??{}"
+        [labelLeft]="getScenarioName(selectedScenario1Id)||''"
+        [labelRight]="getScenarioName(selectedScenario2Id)||''">
+      </app-histogram-comparison>
     </div>
   </div>
-  <div class="row mb-4">
-    <!-- Scenario 1 -->
-    <div class="col-md-6">
-      <!-- <label class="form-label">{{ 'scenario.1' | translate }}</label> -->
-      <div class="dropdown d-block">
-        <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" type="button"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <span>{{ getScenarioName(selectedScenario1Id) || ('common.selectScenario' | translate) }}</span>
-          <span class="material-icons ms-2">expand_more</span>
-        </button>
-        <div class="dropdown-menu w-100">
-          <div class="link-list-wrapper">
-            <ul class="link-list">
-              <li *ngFor="let s of scenari">
-                <a class="list-item" (click)="selectScenario(1, s.id)">
-                  <span>{{ s.name }}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Scenario 2 -->
-    <div class="col-md-6">
-      <!-- <label class="form-label">{{ 'scenario.2' | translate }}</label> -->
-      <div class="dropdown d-block">
-        <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" type="button"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <span>{{ getScenarioName(selectedScenario2Id) || ('common.selectScenario' | translate) }}</span>
-          <span class="material-icons ms-2">expand_more</span>
-        </button>
-        <div class="dropdown-menu w-100">
-          <div class="link-list-wrapper">
-            <ul class="link-list">
-              <li *ngFor="let s of scenari">
-                <a class="list-item" (click)="selectScenario(2, s.id)">
-                  <span>{{ s.name }}</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="row">
+    <app-kpi-comparison [kpisLeft]="kpisLeft ?? {}" [kpisRight]="kpisRight ?? {}"></app-kpi-comparison>
   </div>
-
   <div class="row">
     <h3 class="mb-3 p-3 h3">Grafici</h3>
     <div class="col-md-6">
@@ -85,7 +96,8 @@
               <!-- <span class="text-muted ms-2">(altro: {{ diff.otherValue }})</span> -->
             </li>
           </ul>
-          <span *ngIf="getWidgetDiffs(widgetsLeft, widgetsRight).length === 0" class="text-muted">Nessuna differenza</span>
+          <span *ngIf="getWidgetDiffs(widgetsLeft, widgetsRight).length === 0" class="text-muted">Nessuna
+            differenza</span>
         </div>
       </div>
     </div>
@@ -103,11 +115,21 @@
       </div>
     </div>
   </div>
-  <br/>
-  <div class="row">
-    <app-kpi-comparison [kpisLeft]="kpisLeft ?? {}" [kpisRight]="kpisRight ?? {}"></app-kpi-comparison>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content" data-html2canvas-ignore="true">
+        <button [itButton]="!showControls ? 'outline-primary' : 'outline-secondary'"
+          class="m-4 d-flex justify-content-between align-items-center" (click)="toggleControls()">
+          <span class="material-icons me-2">
+            visibility
+          </span> {{('plot.visualizza' | translate) }}
+        </button>
+      </div>
+      <app-plot-controls class="exclude-from-pdf" *ngIf="showControls" [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
+        [sottosistemaSelezionato]="sottosistemaSelezionato" (monoDimensionaleChange)="onMonoDimensionaleChange($event)"
+        (sottosistemaSelezionatoChange)="onSottosistemaSelezionatoChange($event)" (funzioneChange)="onFunzioneChange()">
+      </app-plot-controls>
+    </div>
   </div>
-
-  <app-back-button></app-back-button>
+  <app-back-button class="exclude-from-pdf"></app-back-button>
 </div>
-

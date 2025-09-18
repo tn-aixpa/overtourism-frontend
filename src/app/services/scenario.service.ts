@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Scenario } from '../models/scenario.model';
+import { ProblemScenario } from '../models/scenario.model';
 import { Observable, BehaviorSubject, map } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
 import { ConfigService } from './config.service';
@@ -66,12 +66,15 @@ export class ScenarioService {
       { params: { problem_id: problemId } } // query
     );
   }
-  deleteScenario(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/scenarios/${id}`);
+  deleteScenario(scenarioId: string, problemId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/scenarios/${scenarioId}`,
+      { params: { problem_id: problemId } }
+    );
   }
-  getScenariosByProblemId(problemId: string): Observable<Scenario[]> {
+  getScenariosByProblemId(problemId: string): Observable<ProblemScenario[]> {
     return this.http
-      .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}`)
+      .get<ScenarioResponse>(`${this.baseUrl}/problems/${problemId}/scenarios`)
       .pipe(
         map(response => response.scenarios.map(scenario => ({
           id: scenario.scenario_id,
