@@ -17,7 +17,7 @@ export class ProblemService {
 
   /** GET all problems */
   getProblems(): Observable<Problem[]> {
-    return this.http.get<ProblemResponse>(`${this.baseUrl}/problems`).pipe(
+    return this.http.get<ProblemResponse>(`${this.baseUrl}/problems/`).pipe(
       map(response =>
         response.data?.map(problem => ({
           problem_id: problem.problem_id,
