@@ -41,6 +41,9 @@ import { ReadingComponent } from './components/plot/reading/reading.component';
 import { ProposalCreateComponent } from "./components/app-proposal-create/app-proposal-create.component";
 import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
 import { ProposalDetailComponent } from './components/proposal-detail/proposal-detail.component';
+import { OvertourismComponent } from './pages/overtourism/overtourism.component';
+import { OvertourismChartsComponent } from './components/overtourism-charts/overtourism-charts.component';
+import { OvertourismMapComponent } from './components/overtourism-map/overtourism-map.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -58,7 +61,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
      KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
       ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
-       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent],
+       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent, OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -70,23 +73,22 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     NgxSliderModule,
     HttpClientModule,
     TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: multiTranslateLoaderFactory,
-        deps: [HttpBackend]
-      }
+        loader: {
+            provide: TranslateLoader,
+            useFactory: multiTranslateLoaderFactory,
+            deps: [HttpBackend]
+        }
     }),
     DesignAngularKitModule.forRoot({
-      translateLoader: (itPrefix: string, itSuffix: string) => ({
-        provide: TranslateLoader,
-        useFactory: (http: HttpBackend) => new MultiTranslateHttpLoader(http, [
-          { prefix: itPrefix, suffix: itSuffix },
-          { prefix: './assets/i18n/app/', suffix: '.json' },
-        ]),
-        deps: [HttpBackend],
-      }),
-    })
-  ],
+        translateLoader: (itPrefix: string, itSuffix: string) => ({
+            provide: TranslateLoader,
+            useFactory: (http: HttpBackend) => new MultiTranslateHttpLoader(http, [
+                { prefix: itPrefix, suffix: itSuffix },
+                { prefix: './assets/i18n/app/', suffix: '.json' },
+            ]),
+            deps: [HttpBackend],
+        }),
+    })],
   providers: [
     // {
     //   provide: APP_INITIALIZER,

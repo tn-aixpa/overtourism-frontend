@@ -1,21 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home.component';
 import { FaqsComponent } from './pages/faqs/faqs.component';
-import { SettingsComponent } from './pages/settings/settings.component';
 import { PreferitiComponent } from './pages/problems/preferiti/preferiti.component';
 import { ScenariComponent } from './pages/problems/scenari/scenari.component';
 import { ProblemsComponent } from './pages/problems/problems/problems.component';
-import { TermsComponent } from './pages/terms/terms.component';
 import { ScenarioDetailComponent } from './pages/problems/scenario-detail/scenario-detail.component';
 import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/confronto-scenari.component';
 import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
 import { UnsavedChangesGuard } from './guards/plot-unsaved-changes.guard';
 import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
+import { OvertourismComponent } from './pages/overtourism/overtourism.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'problems', pathMatch: 'full' },
-  // { path: 'home', component: HomeComponent, data: { breadcrumb: 'Home' } },
   {
     path: 'problems',
     data: { breadcrumb: 'Problemi' },
@@ -54,9 +51,8 @@ const routes: Routes = [
       }
     ]
   },
+  { path: 'overtourism', component: OvertourismComponent },
   { path: 'faqs', component: FaqsComponent, data: { breadcrumb: 'FAQ' } },
-  // { path: 'terms', component: TermsComponent, data: { breadcrumb: 'Termini di utilizzo' } },
-  // { path: 'settings', component: SettingsComponent, data: { breadcrumb: 'Impostazioni' } }
 ];
 
 @NgModule({
