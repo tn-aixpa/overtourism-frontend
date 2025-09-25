@@ -15,6 +15,7 @@ import { Problem } from '../../../models/problem.model';
   styleUrls: ['./problem-detail.component.scss']
 })
 export class ProblemDetailComponent implements OnInit {
+
   problemId!: string;
   problem: any = null;
   proposals: Proposal[] = [];
@@ -24,10 +25,13 @@ export class ProblemDetailComponent implements OnInit {
   @ViewChild('proposalModal') proposalModal!: ItModalComponent;
   @ViewChild('editProblemModal') editProblemModal!: ItModalComponent;
 
-onProblemEdited(problem: Problem) {
-  this.editProblemModal.hide();
-  this.loadProblem(); // ricarica il dettaglio
-}
+  onProblemEdited(problem: Problem) {
+    this.editProblemModal.hide();
+    this.loadProblem();
+  }
+  onProblemEditCancelled() {
+    this.editProblemModal.hide();
+  }
   proposalToEdit?: Proposal;
 
   constructor(
@@ -109,13 +113,17 @@ onConfirmDeleteProblem(): void {
 
   this.problemService.deleteProblem(this.problemId).subscribe({
     next: () => {
+      this.notif.showSuccess(
+        this.translate.instant('problems.delete_success', { name: this.problem?.problem_name })
+      );
       this.deleteProblemModal.hide();
-
-      // vai alla lista problemi (adatta la rotta al tuo routing)
       this.router.navigate(['/problems']);
     },
     error: (err) => {
-      console.error('Errore durante eliminazione problema', err);
+      this.notif.showError(
+        this.translate.instant('problems.delete_error', { name: this.problem?.problem_name }) ||
+        err?.message
+      );
       this.deleteProblemModal.hide();
     }
   });
@@ -155,5 +163,8 @@ onConfirmDeleteProblem(): void {
 
   back() {
     this.router.navigate(['/problems']);
+  }
+  onProblemCancel() {
+    this.editProblemModal.hide();
   }
 }

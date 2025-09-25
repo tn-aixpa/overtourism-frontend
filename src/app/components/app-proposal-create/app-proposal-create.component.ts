@@ -5,6 +5,7 @@ import { Proposal, ProposalScenario } from '../../models/proposal.model';
 import { Router } from '@angular/router';
 import { ScenarioService } from '../../services/scenario.service';
 import { ProblemScenario } from '../../models/scenario.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-proposal-create',
@@ -62,7 +63,9 @@ export class ProposalCreateComponent {
   constructor(
     private proposalSvc: ProposalService,
     private notif: NotificationService,
-    private scenarioSvc: ScenarioService
+    private scenarioSvc: ScenarioService,
+    private translate: TranslateService
+    
 
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
@@ -112,39 +115,53 @@ export class ProposalCreateComponent {
     return value.startsWith('http://') || value.startsWith('https://');
   }
 
-  onSubmit() {
-    if (!this.problemId) {
-      this.notif.showError('Problema non valido');
-      return;
-    }
-
-    const payload: Proposal = {
-      proposal_id: this.generateId(),
-      proposal_title: this.model.title,
-      proposal_description: this.model.description , // necessario per il modello
-      resources: this.model.resources || [],
-      contextConditions: this.model.contextConditions || '',
-      potentialImpact: this.model.potentialImpact || '',
-      status: this.model.status || 'draft',
-      related_scenarios: this.model.related_scenarios || [],
-      created: new Date().toISOString(),
-      updated: new Date().toISOString()
-    };
+  async onSubmit() {
+    try {
+      if (!this.problemId) {
+        this.notif.showError(this.translate.instant('problems.proposals.invalid_problem'));
+        return;
+      }
   
-    if (this.proposalToEdit) {
-      this.proposalSvc.updateProposal(this.proposalToEdit.proposal_id, this.problemId, payload)
-      .subscribe({
-        next: () => this.proposalCreated.emit(),
-        error: (err) => this.notif.showError(err?.message || 'Errore durante l\'aggiornamento')
-      });
-    } else {
-      this.proposalSvc.createProposal(this.problemId, payload).subscribe({
-        next: () => this.proposalCreated.emit(),
-        error: (err) => this.notif.showError(err?.message || 'Errore durante la creazione')
-      });
+      const payload: Proposal = {
+        proposal_id: this.proposalToEdit ? this.proposalToEdit.proposal_id : this.generateId(),
+        proposal_title: this.model.title,
+        proposal_description: this.model.description,
+        resources: this.model.resources || [],
+        contextConditions: this.model.contextConditions || '',
+        potentialImpact: this.model.potentialImpact || '',
+        status: this.model.status || 'draft',
+        related_scenarios: this.model.related_scenarios || [],
+        created: this.proposalToEdit ? this.proposalToEdit.created : new Date().toISOString(),
+        updated: new Date().toISOString()
+      };
+  
+      let res: any;
+  
+      if (this.proposalToEdit) {
+        res = await this.proposalSvc
+          .updateProposal(this.proposalToEdit.proposal_id, this.problemId, payload)
+          .toPromise();
+  
+        this.notif.showSuccess(
+          this.translate.instant('problems.proposals.update_success', { name: payload.proposal_title })
+        );
+      } else {
+        res = await this.proposalSvc.createProposal(this.problemId, payload).toPromise();
+  
+        this.notif.showSuccess(
+          this.translate.instant('problems.proposals.create_success', { name: payload.proposal_title })
+        );
+      }
+  
+      this.proposalCreated.emit();
+    } catch (err: any) {
+      this.notif.showError(
+        this.translate.instant('problems.proposals.create_error', { name: this.model.title }) ||
+        err?.message
+      );
     }
-    
   }
+  
   private generateId(): string {
     return Math.random().toString(36).substring(2, 12);
   }

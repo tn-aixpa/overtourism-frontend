@@ -1,7 +1,7 @@
 <div class="d-flex flex-row gap-4">
   <!-- KPI a sinistra -->
   <div class="flex-shrink-0" style="min-width: 300px;">
-    <app-kpi-box [kpisData]="kpisData" ></app-kpi-box>
+    <app-kpi-box [kpisData]="kpisData"></app-kpi-box>
   </div>
 
   <!-- Grafico al centro + widget opzionale -->
@@ -11,51 +11,45 @@
       <div class="d-flex justify-content">
         <button [itButton]="!showControls ? 'outline-primary' : 'outline-secondary'"
           class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
-          (click)="toggleControls()"> 
+          (click)="toggleControls()">
           <span class="material-icons me-2">
-        visibility
+            visibility
           </span> {{('plot.visualizza' | translate) }}
         </button>
       </div>
-      <app-plot-controls *ngIf="showControls"
-        [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
-        [sottosistemaSelezionato]="sottosistemaSelezionato"
-         (monoDimensionaleChange)="monoDimensionale = $event"
-        (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event" (funzioneChange)="onFunzioneChange()"
-        ></app-plot-controls>
+      <app-plot-controls *ngIf="showControls" [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
+        [sottosistemaSelezionato]="sottosistemaSelezionato" (monoDimensionaleChange)="monoDimensionale = $event"
+        (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event"
+        (funzioneChange)="onFunzioneChange()"></app-plot-controls>
 
       <div #chartLib style="max-width: 600px;height: 600px; position: relative;">
         <div *ngIf="loading" class="loading-spinner">Loading...</div>
         <!-- Qui va il grafico vero e proprio -->
       </div>
       <div class="d-flex flex-row gap-4">
-      <button [itButton]="!isEditing ? 'primary' : 'secondary'"
-        class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
-        (click)="toggleEditing()"> <span
-          class="material-icons me-2">
-          settings
-        </span> {{('plot.edit' | translate) }}
-      </button>
-      <button itButton="primary"
-      class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
-
-      (click)="goToCompare()">
-      <span class="material-icons me-2">library_books</span>
-      {{ 'plot.compare' | translate }}
-    </button>
+        <button [itButton]="!isEditing ? 'primary' : 'secondary'"
+          class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
+          (click)="toggleEditing()"> <span class="material-icons me-2">
+            settings
+          </span> {{('plot.edit' | translate) }}
+        </button>
+        <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center "
+          data-html2canvas-ignore="true" (click)="goToCompare()">
+          <span class="material-icons me-2">library_books</span>
+          {{ 'plot.compare' | translate }}
+        </button>
       </div>
 
       <ng-container *ngIf="isEditing">
         <div class="row mt-4">
           <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
-          <app-plot-editor-widget [widgets]="widgets"
-          [editableIndexes]="editableIndexes || []"
-          (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
+          <app-plot-editor-widget [widgets]="widgets" [editableIndexes]="editableIndexes || []"
+            (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
         </div>
 
       </ng-container>
-       <!-- Info e note SEMPRE visibili -->
-       <ng-container >
+      <!-- Info e note SEMPRE visibili -->
+      <ng-container>
         <div class="row mt-4">
           <div class="col">
             <div class="p-3  h-100">
@@ -72,18 +66,14 @@
                   <ul class="list-unstyled small">
                     <li *ngFor="let key of objectKeys(indexDiffs)">
                       <span class="fw-bold">{{ getIndexNameFromKey(key) }}</span>:
-                      <span
-                        [ngClass]="{
+                      <span [ngClass]="{
                           'text-danger fw-bold': getLocallyChangedKeys().includes(key),
                           'text-body': !getLocallyChangedKeys().includes(key)
-                        }"
-                      >
+                        }">
                         {{ indexDiffs[key] }}
                       </span>
-                      <span
-                        class="text-muted ms-2"
-                        *ngIf="getLocallyChangedKeys().includes(key) && originalIndexDiffs[key] !== undefined"
-                      >
+                      <span class="text-muted ms-2"
+                        *ngIf="getLocallyChangedKeys().includes(key) && originalIndexDiffs[key] !== undefined">
                         (originale: {{ originalIndexDiffs[key] }})
                       </span>
                     </li>
@@ -95,14 +85,11 @@
                 <hr />
 
                 <h6 class="text-primary mb-3 mt-3 d-flex align-items-center gap-2">
-                  Informazioni di lettura 
+                  Informazioni di lettura
                 </h6>
-              <app-reading
-              [widgets]="widgets"
-              [indexDiffs]="indexDiffs"
-              [dataFacts]="inputData?.dataFacts || []"
-              [originalIndexDiffs]="originalIndexDiffs">
-            </app-reading>
+                <app-reading [widgets]="widgets" [indexDiffs]="indexDiffs" [dataFacts]="inputData?.dataFacts || []"
+                  [originalIndexDiffs]="originalIndexDiffs">
+                </app-reading>
               </div>
             </div>
           </div>
@@ -116,66 +103,56 @@
   </div>
 </div>
 <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="hasLocalDiffs()">
-  <button itButton="outline-primary"
-    class="m-4 d-flex justify-content-between align-items-center"
+  <button itButton="outline-primary" class="m-4 d-flex justify-content-between align-items-center"
     (click)="resetIndexDiffs()">
     <span class="material-icons me-2">replay</span>
     Ripristina modifiche
   </button>
-  <button itButton="primary"
-    class="m-4 d-flex justify-content-between align-items-center"
-    (click)="openSaveModal()">
+  <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center" (click)="openSaveModal()">
     <span class="material-icons me-2">save</span>
     Salva come nuovo scenario
   </button>
 </div>
 
 <it-modal #saveModal id="saveModal" closeButton="false">
-    <ng-container modalTitle>Salvataggio scenario modificato</ng-container>
+  <ng-container modalTitle>Salvataggio scenario modificato</ng-container>
 
-    <p>    Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
+  <p> Vuoi salvarlo come nuovo scenario per renderlo disponibile tra quelli salvati?
 
-    </p>
-    <it-input
-    label="{{ 'save.title' | translate }} *"
-    name="titolo"
-    required
-    [(ngModel)]="titolo"
-    #titoloInput="ngModel">
+  </p>
+  <it-input label="{{ 'save.title' | translate }} *" name="titolo" required [(ngModel)]="titolo" #titoloInput="ngModel">
   </it-input>
   <small *ngIf="formInvalid && !titolo?.trim()" class="text-danger">Il titolo è obbligatorio</small>
 
 
-  <it-textarea
-    class="w-100"
-    label="{{ 'save.description' | translate }} *"
-    name="descrizione"
-    required
-    [(ngModel)]="descrizione"
-
-    #descrizioneInput="ngModel">
+  <it-textarea class="w-100" label="{{ 'save.description' | translate }} *" name="descrizione" required
+    [(ngModel)]="descrizione" #descrizioneInput="ngModel">
   </it-textarea>
   <small *ngIf="formInvalid && !descrizione?.trim()" class="text-danger">La descrizione è obbligatoria</small>
 
 
-    <ng-container footer>
-      <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal" (click)="closeModal()">Annulla</button>
-      <button
-      itButton="primary"
-      size="sm"
-      type="button"
-      [disabled]="(titoloInput.invalid ?? false) || (descrizioneInput.invalid ?? false)"
+  <ng-container footer>
+    <button itButton="outline-primary" size="sm" type="button" data-bs-dismiss="modal"
+      (click)="closeModal()">Annulla</button>
+    <button itButton="primary" size="sm" type="button"
+      [disabled]="isSaving || (titoloInput.invalid ?? false) || (descrizioneInput.invalid ?? false)"
       (click)="confirmSave()">
-      Salva
+      <ng-container *ngIf="!isSaving; else saving">
+        Salva
+      </ng-container>
+      <ng-template #saving>
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Salvataggio...
+      </ng-template>
     </button>
-        </ng-container>
-  </it-modal>
-  <it-modal #unsavedModal>
-    <ng-container modalTitle>Modifiche non salvate</ng-container>
-    <p>Hai modifiche non salvate. Vuoi davvero uscire senza salvare?</p>
-    <ng-container footer>
-      <button itButton="outline-primary" (click)="onCancelLeave()">Annulla</button>
-      <button itButton="danger" (click)="onConfirmLeaveWithoutSaving()">Esci senza salvare</button>
-    </ng-container>
-  </it-modal>
+  </ng-container>
+</it-modal>
+<it-modal #unsavedModal>
+  <ng-container modalTitle>Modifiche non salvate</ng-container>
+  <p>Hai modifiche non salvate. Vuoi davvero uscire senza salvare?</p>
+  <ng-container footer>
+    <button itButton="outline-primary" (click)="onCancelLeave()">Annulla</button>
+    <button itButton="danger" (click)="onConfirmLeaveWithoutSaving()">Esci senza salvare</button>
+  </ng-container>
+</it-modal>
 <app-back-button></app-back-button>

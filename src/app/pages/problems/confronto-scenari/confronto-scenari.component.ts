@@ -37,7 +37,10 @@ export class ConfrontoScenariComponent {
   @ViewChild('chartLeft', { static: true }) chartLeft!: ElementRef<HTMLElement>;
   @ViewChild('chartRight', { static: true }) chartRight!: ElementRef<HTMLElement>;
   showControls: boolean = false; // per 'settings'
+  isDownloading = false;
 
+  
+  
   constructor(
     private scenarioService: ScenarioService,
     private plotService: PlotService,
@@ -62,6 +65,7 @@ export class ConfrontoScenariComponent {
       }
     });
   }
+
   getScenarioName(id: string | undefined): string | undefined {
     return this.scenari.find(s => s.id === id)?.name;
   }
@@ -233,8 +237,18 @@ export class ConfrontoScenariComponent {
   formatNumber(value: number): string {
     return value.toFixed(2);
   }
-  downloadPdf(): void {
-    this.pdfService.downloadPdfFromElement('pdfContent', `${this.getScenarioName(this.selectedScenario1Id)} vs ${this.getScenarioName(this.selectedScenario2Id)|| 'confronto'}.pdf`);
+  async downloadPdf(): Promise<void> {
+    if (this.isDownloading) return; // evita doppi click
+    this.isDownloading = true;
+  
+    try {
+      await this.pdfService.downloadPdfFromElement(
+        'pdfContent',
+        `${this.getScenarioName(this.selectedScenario1Id)} vs ${this.getScenarioName(this.selectedScenario2Id) || 'confronto'}.pdf`
+      );
+    } finally {
+      this.isDownloading = false;
+    }
   }
 }
 // const KPI_TRANSLATIONS: Record<string, string> = {

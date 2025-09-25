@@ -18,15 +18,17 @@
         {{ 'problems.createSubtitle' | translate }}
       </p>
     </it-callout>
-    <app-problem-create (problemSaved)="onProblemSaved($event)" (problemCancel)="onProblemCancel()"></app-problem-create>
-  </it-modal>
-    <it-search
+    <app-problem-create
+    (problemSaved)="onProblemSaved($event)"
+    (problemCancel)="onProblemCancel()">
+  </app-problem-create>  </it-modal>
+    <!-- <it-search
       label="Cerca nel sito"
       placeholder="Testo da cercare"
       [searchData]="searchProblems$"
       
       (searchSelectedEvent)="onSearchSelected($event)" 
-      />
+      /> -->
   <div class="row">
     <div class="col-12 col-lg-4 mb-4" *ngFor="let problem of problems">
       <div class="card-wrapper" [routerLink]="['/problems', problem.problem_id, 'scenari']"

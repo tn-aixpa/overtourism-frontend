@@ -4,6 +4,7 @@ import { ProblemScenario } from '../../../models/scenario.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ItModalComponent } from 'design-angular-kit';
 import { NotificationService } from '../../../services/notifications.service';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -28,7 +29,11 @@ export class ScenariComponent {
     private scenarioService: ScenarioService,
     private router: Router,
     private notificationService: NotificationService, 
+    private translate: TranslateService,
     private route: ActivatedRoute) { }
+    comparazioneDisponibile(): boolean {
+    return this.scenari.length >= 2;
+  }
   toggleComparazione() {
     this.comparazioneAttiva = !this.comparazioneAttiva;
     if (!this.comparazioneAttiva) {
@@ -146,19 +151,7 @@ export class ScenariComponent {
       }
     });
   }
-  // deleteScenario(scenario: Scenario): void {
-  //   if (confirm(`Vuoi davvero eliminare lo scenario "${scenario.name}"?`)) {
-  //     this.scenarioService.deleteScenario(scenario.id).subscribe({
-  //       next: () => {
-  //         this.scenari = this.scenari.filter(s => s.id !== scenario.id);
-  //       },
-  //       error: err => {
-  //         console.error('Errore durante l\'eliminazione dello scenario', err);
-  //         // eventualmente mostrare un messaggio all'utente
-  //       }
-  //     });
-  //   }
-  // }
+
   openDeleteModal(scenario: ProblemScenario): void {
     this.scenarioToDelete = scenario;
     this.deleteModal.toggle();
@@ -171,16 +164,23 @@ export class ScenariComponent {
 
   onConfirmDelete(): void {
     if (!this.scenarioToDelete) return;
-
+  
     this.scenarioService.deleteScenario(this.scenarioToDelete.id, this.problemId).subscribe({
       next: () => {
         this.scenari = this.scenari.filter(s => s.id !== this.scenarioToDelete!.id);
         this.deleteModal.toggle();
-        this.notificationService.showError('Scenario eliminato con successo');
+  
+        this.notificationService.showSuccess(
+          this.translate.instant('scenari.delete_success', { name: this.scenarioToDelete?.name })
+        );
+  
         this.scenarioToDelete = null;
       },
       error: (err) => {
-        this.notificationService.showError('Errore durante l\'eliminazione dello scenario');
+        this.notificationService.showError(
+          this.translate.instant('scenari.delete_error', { name: this.scenarioToDelete?.name }) ||
+          err?.message
+        );
         console.error('Errore durante l\'eliminazione dello scenario', err);
       }
     });

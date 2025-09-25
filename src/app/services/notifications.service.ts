@@ -1,24 +1,35 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+export interface Notification {
+  type: 'success' | 'danger';
+  message: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationService {
-  private errorSubject = new BehaviorSubject<string | null>(null);
-  private successSubject = new BehaviorSubject<string | null>(null);
-  public success$ = this.successSubject.asObservable();
-  public error$ = this.errorSubject.asObservable();
+  private notificationSubject = new BehaviorSubject<Notification | null>(null);
+  notification$ = this.notificationSubject.asObservable();
 
-
-  showError(message: string) {
-    this.errorSubject.next(message);
+  showSuccess(message: string, duration = 3000) {
+    this.pushNotification({ type: 'success', message }, duration);
   }
-  showSuccess(message: string) {
-    this.successSubject.next(message);
+
+  showError(message: string, duration = 3000) {
+    this.pushNotification({ type: 'danger', message }, duration);
+  }
+
+  private pushNotification(notification: Notification, duration: number) {
+    this.notificationSubject.next(notification);
+
+    if (duration > 0) {
+      setTimeout(() => this.clear(), duration);
+    }
   }
 
   clear() {
-    this.errorSubject.next(null);
+    this.notificationSubject.next(null);
   }
 }

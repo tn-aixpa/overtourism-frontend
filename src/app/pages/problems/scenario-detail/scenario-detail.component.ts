@@ -13,7 +13,7 @@ import { PdfService } from '../../../services/pdf.service';
   templateUrl: './scenario-detail.component.html',
   styleUrl: './scenario-detail.component.scss'
 })
-export class ScenarioDetailComponent  {
+export class ScenarioDetailComponent {
   @ViewChild('plotContainer') plotContainer!: ElementRef<HTMLDivElement>;
   @ViewChild(PlotComponent) plotComponent!: PlotComponent;
   @ViewChild('deleteModal') deleteModal!: ItModalComponent;
@@ -21,6 +21,7 @@ export class ScenarioDetailComponent  {
   scenarioId!: string;
   problemId!: string;
   scenario?: ProblemScenario;
+  isDownloading = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +30,7 @@ export class ScenarioDetailComponent  {
     private pdfService: PdfService
 
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
@@ -54,8 +55,16 @@ export class ScenarioDetailComponent  {
   onCancelDelete(): void {
     this.deleteModal.hide();
   }
-  downloadPdf(): void {
-    this.pdfService.downloadPdfFromElement('pdfContent', `${this.scenario?.name || 'scenario'}.pdf`);
+  async downloadPdf(): Promise<void> {
+    if (this.isDownloading) return; 
+    this.isDownloading = true;
+
+    try {
+      await this.pdfService.downloadPdfFromElement('pdfContent', `${this.scenario?.name || 'scenario'}.pdf`);
+    } finally {
+      this.isDownloading = false;
+    }
+
   }
   confirmDelete(): void {
     this.scenarioService.deleteScenario(this.scenarioId, this.problemId).subscribe({
@@ -70,4 +79,5 @@ export class ScenarioDetailComponent  {
       }
     });
   }
+
 }

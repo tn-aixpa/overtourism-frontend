@@ -15,12 +15,8 @@ export class AppComponent {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
   isMobile = false;
-  errorMessage$: Observable<string | null>;
-  successMessage$: Observable<string | null>;
 
-  constructor( public notificationService: NotificationService) {
-    this.errorMessage$ = this.notificationService.error$;
-    this.successMessage$ = this.notificationService.success$;
+  constructor( ) {
   }
 
 ngOnInit() {

@@ -10,7 +10,8 @@
 <h3 class="mb-2 mt-4" style="font-size: 1.25rem;">{{ 'scenari.title' | translate }}</h3>
 
 <!-- Pulsante comparazione (più piccolo) -->
-<button itButton="primary" size="sm" class="mb-4" (click)="toggleComparazione()">
+<button itButton="primary" size="sm" class="mb-4" (click)="toggleComparazione()" [disabled]="!comparazioneDisponibile"   [disabled]="scenari.length < 2"
+>
   {{ comparazioneAttiva ? ('scenari.disable_compare' | translate) : ('scenari.enable_compare' | translate) }}
 </button>
 <div class="table-responsive">

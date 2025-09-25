@@ -11,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 import { NotificationService } from '../../services/notifications.service';
 import { Router } from '@angular/router';
 import { ItModalComponent } from 'design-angular-kit';
+import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-plot',
   templateUrl: './plot.component.html',
@@ -59,7 +60,9 @@ export class PlotComponent implements AfterViewInit {
   constructor(private plotService: PlotService,
     private scenarioService: ScenarioService,
     private notificationService: NotificationService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService,
+    private notif: NotificationService
   ) { }
 
   ngAfterViewInit() {
@@ -82,20 +85,30 @@ export class PlotComponent implements AfterViewInit {
     this.saveAsNewScenario();
   }
   saveAsNewScenario(): void {
-    this.scenarioService.saveNewScenario(this.scenarioId, this.problemId, this.changedWidgets, this.titolo, this.descrizione).subscribe({
-      next: (res) => {
-        // this.notificationService.showError('Scenario salvato con successo!');
-        this.hasChanges = false;
-        this.closeModal();
-        this.navigationAfterSave = true;
-        this.router.navigate(['/problems', this.problemId, 'scenari']);
-
-      },
-      error: (err) => {
-        this.notificationService.showError('Errore durante il salvataggio del nuovo scenario.');
-        this.closeModal();
-      }
-    });
+    this.scenarioService
+      .saveNewScenario(this.scenarioId, this.problemId, this.changedWidgets, this.titolo, this.descrizione)
+      .subscribe({
+        next: (res) => {
+          this.isSaving = false;  
+          this.hasChanges = false;
+          this.closeModal();
+          this.navigationAfterSave = true;
+  
+          this.notif.showSuccess(
+            this.translate.instant('scenari.create_success', { name: this.titolo })
+          );
+  
+          this.router.navigate(['/problems', this.problemId, 'scenari']);
+        },
+        error: (err) => {
+          this.isSaving = false;  
+          this.notif.showError(
+            this.translate.instant('scenari.create_error', { name: this.titolo }) ||
+            err?.message
+          );
+          this.closeModal();
+        }
+      });
   }
   getIndexNameFromKey(key: string): string {
     for (const group of Object.keys(this.widgets)) {

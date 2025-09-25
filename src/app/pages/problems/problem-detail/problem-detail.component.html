@@ -8,7 +8,9 @@
     
       <app-problem-create 
         [editProblemId]="problem?.problem_id"
-        (problemSaved)="onProblemEdited($event)">
+        (problemSaved)="onProblemEdited($event)"
+        (problemCancel)="onProblemCancel()"
+        >
       </app-problem-create>
     </it-modal>
     
@@ -20,7 +22,7 @@
     </button>
   </div>
 
-  <h3 class="mb-4">{{ problem?.name }}</h3>
+  <h3 class="mb-4">{{ problem?.problem_name }}</h3>
 
   <!-- tabella info -->
   <table class="table table-borderless mb-4">

@@ -3,9 +3,15 @@
     <h4>{{ scenario?.name || 'Loading...' }}</h4>
   </div>
   <div class="col-auto">
-    <button itButton="primary" (click)="downloadPdf()">
+    <button itButton="primary" (click)="downloadPdf()" [disabled]="isDownloading">
+    <ng-container *ngIf="!isDownloading; else loading">
       Scarica PDF
-    </button>
+    </ng-container>
+    <ng-template #loading>
+      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+      Creazione PDF...
+    </ng-template>
+  </button>
 
      
   </div>

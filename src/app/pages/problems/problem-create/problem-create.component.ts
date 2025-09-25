@@ -111,16 +111,22 @@ export class ProblemCreateComponent {
 
       if (this.editProblemId) {
         res = await this.svc.updateProblem(this.editProblemId, payload).toPromise();
-        this.notif.showSuccess(this.translate.instant('problems.update_success'));
+        this.notif.showSuccess(
+          this.translate.instant('problems.update_success', { name: payload.problem_name })
+        );
       } else {
         res = await this.svc.createProblem(payload).toPromise();
         this.savedProblemId = res?.problem_id;
-        this.notif.showSuccess(this.translate.instant('problems.create_success'));
+        this.notif.showSuccess(
+          this.translate.instant('problems.create_success', { name: payload.problem_name })
+        );
       }
-
       this.problemSaved.emit(res);
     } catch (err: any) {
-      this.notif.showError(err?.message || this.translate.instant('problems.create_error'));
+      this.notif.showError(
+        this.translate.instant('problems.create_error', { name: this.model.name }) ||
+        err?.message
+      );
     }
   }
 
@@ -129,6 +135,5 @@ export class ProblemCreateComponent {
   }
   onCancel() {
     this.problemCancel.emit();
-
   }
 }
