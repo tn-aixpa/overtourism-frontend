@@ -143,6 +143,8 @@
     "cancel": "Annulla",
     "save": "Salva",
     "delete": "Elimina",
-    "remove": "Rimuovi"
+    "remove": "Rimuovi",
+    "saving": "Salvataggio..."
+
   }
 }

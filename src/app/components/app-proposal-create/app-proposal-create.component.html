@@ -114,10 +114,18 @@
       </div>
   
       <div class="border-top pt-3 mt-4 d-flex justify-content-end">
-        <button itButton="primary" type="submit" [disabled]="form.invalid ?? false">
-          {{ 'common.save' | translate }}
+        <button itButton="primary" type="submit" [disabled]="form.invalid || isSaving">
+          <ng-container *ngIf="!isSaving; else savingTemplate">
+            {{ 'common.save' | translate }}
+          </ng-container>
         </button>
       </div>
+      
+      <ng-template #savingTemplate>
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        {{ 'common.saving' | translate }}
+      </ng-template>
+      
     </form>
   </it-card>
   

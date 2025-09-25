@@ -115,53 +115,60 @@ export class ProposalCreateComponent {
     return value.startsWith('http://') || value.startsWith('https://');
   }
 
-  async onSubmit() {
-    try {
-      if (!this.problemId) {
-        this.notif.showError(this.translate.instant('problems.proposals.invalid_problem'));
-        return;
-      }
-  
-      const payload: Proposal = {
-        proposal_id: this.proposalToEdit ? this.proposalToEdit.proposal_id : this.generateId(),
-        proposal_title: this.model.title,
-        proposal_description: this.model.description,
-        resources: this.model.resources || [],
-        contextConditions: this.model.contextConditions || '',
-        potentialImpact: this.model.potentialImpact || '',
-        status: this.model.status || 'draft',
-        related_scenarios: this.model.related_scenarios || [],
-        created: this.proposalToEdit ? this.proposalToEdit.created : new Date().toISOString(),
-        updated: new Date().toISOString()
-      };
-  
-      let res: any;
-  
-      if (this.proposalToEdit) {
-        res = await this.proposalSvc
-          .updateProposal(this.proposalToEdit.proposal_id, this.problemId, payload)
-          .toPromise();
-  
-        this.notif.showSuccess(
-          this.translate.instant('problems.proposals.update_success', { name: payload.proposal_title })
-        );
-      } else {
-        res = await this.proposalSvc.createProposal(this.problemId, payload).toPromise();
-  
-        this.notif.showSuccess(
-          this.translate.instant('problems.proposals.create_success', { name: payload.proposal_title })
-        );
-      }
-  
-      this.proposalCreated.emit();
-    } catch (err: any) {
-      this.notif.showError(
-        this.translate.instant('problems.proposals.create_error', { name: this.model.title }) ||
-        err?.message
+  isSaving = false;
+
+async onSubmit() {
+  if (this.isSaving) return; // evita doppi click
+  this.isSaving = true;
+
+  try {
+    if (!this.problemId) {
+      this.notif.showError(this.translate.instant('problems.proposals.invalid_problem'));
+      return;
+    }
+
+    const payload: Proposal = {
+      proposal_id: this.proposalToEdit ? this.proposalToEdit.proposal_id : this.generateId(),
+      proposal_title: this.model.title,
+      proposal_description: this.model.description,
+      resources: this.model.resources || [],
+      contextConditions: this.model.contextConditions || '',
+      potentialImpact: this.model.potentialImpact || '',
+      status: this.model.status || 'draft',
+      related_scenarios: this.model.related_scenarios || [],
+      created: this.proposalToEdit ? this.proposalToEdit.created : new Date().toISOString(),
+      updated: new Date().toISOString()
+    };
+
+    let res: any;
+
+    if (this.proposalToEdit) {
+      res = await this.proposalSvc
+        .updateProposal(this.proposalToEdit.proposal_id, this.problemId, payload)
+        .toPromise();
+
+      this.notif.showSuccess(
+        this.translate.instant('problems.proposals.update_success', { name: payload.proposal_title })
+      );
+    } else {
+      res = await this.proposalSvc.createProposal(this.problemId, payload).toPromise();
+
+      this.notif.showSuccess(
+        this.translate.instant('problems.proposals.create_success', { name: payload.proposal_title })
       );
     }
+
+    this.proposalCreated.emit();
+  } catch (err: any) {
+    this.notif.showError(
+      this.translate.instant('problems.proposals.create_error', { name: this.model.title }) ||
+      err?.message
+    );
+  } finally {
+    this.isSaving = false;
   }
-  
+}
+
   private generateId(): string {
     return Math.random().toString(36).substring(2, 12);
   }

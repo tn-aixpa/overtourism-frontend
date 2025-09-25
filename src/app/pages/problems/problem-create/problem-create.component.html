@@ -100,12 +100,16 @@
     <!-- footer grigio con pulsante salva -->
     <div class="border-top pt-3 mt-4 d-flex justify-content-end">
       
-      <button itButton="secondary" type="button" class="me-2" (click)="onCancel()">
-        {{ 'common.cancel' | translate }}
+      <button itButton="primary" type="submit" [disabled]="form.invalid || isSaving">
+        <ng-container *ngIf="!isSaving; else savingTemplate">
+          {{ 'problems.common.save' | translate }}
+        </ng-container>
       </button>
-      <button itButton="primary" type="submit" [disabled]="form.invalid ?? false">
-        {{ 'common.save' | translate }}
-      </button>
+      
+      <ng-template #savingTemplate>
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        {{ 'common.saving' | translate }}
+      </ng-template>
     </div>
   </form>
 

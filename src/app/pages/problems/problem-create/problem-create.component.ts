@@ -30,6 +30,7 @@ export class ProblemCreateComponent {
   newResource = '';
 
   savedProblemId?: string;
+  isSaving = false;
 
   constructor(
     private svc: ProblemService,
@@ -95,40 +96,47 @@ export class ProblemCreateComponent {
     try { new URL(str); return true; } catch { return false; }
   }
 
-  async onSubmit() {
-    try {
-      const payload: Problem = {
-        problem_id: this.savedProblemId || '', 
-        problem_name: this.model.name,
-        problem_description: this.model.descriptionProblem,
-        objective: this.model.objective,
-        groups: Object.keys(this.model.groups).filter(k => this.model.groups[k]),
-        links: this.model.resources,
-        proposals: this.proposals
-      };
 
-      let res: any;
+async onSubmit() {
+  if (this.isSaving) return; // evita doppi click
+  this.isSaving = true;
 
-      if (this.editProblemId) {
-        res = await this.svc.updateProblem(this.editProblemId, payload).toPromise();
-        this.notif.showSuccess(
-          this.translate.instant('problems.update_success', { name: payload.problem_name })
-        );
-      } else {
-        res = await this.svc.createProblem(payload).toPromise();
-        this.savedProblemId = res?.problem_id;
-        this.notif.showSuccess(
-          this.translate.instant('problems.create_success', { name: payload.problem_name })
-        );
-      }
-      this.problemSaved.emit(res);
-    } catch (err: any) {
-      this.notif.showError(
-        this.translate.instant('problems.create_error', { name: this.model.name }) ||
-        err?.message
+  try {
+    const payload: Problem = {
+      problem_id: this.savedProblemId || '', 
+      problem_name: this.model.name,
+      problem_description: this.model.descriptionProblem,
+      objective: this.model.objective,
+      groups: Object.keys(this.model.groups).filter(k => this.model.groups[k]),
+      links: this.model.resources,
+      proposals: this.proposals
+    };
+
+    let res: any;
+
+    if (this.editProblemId) {
+      res = await this.svc.updateProblem(this.editProblemId, payload).toPromise();
+      this.notif.showSuccess(
+        this.translate.instant('problems.update_success', { name: payload.problem_name })
+      );
+    } else {
+      res = await this.svc.createProblem(payload).toPromise();
+      this.savedProblemId = res?.problem_id;
+      this.notif.showSuccess(
+        this.translate.instant('problems.create_success', { name: payload.problem_name })
       );
     }
+
+    this.problemSaved.emit(res);
+  } catch (err: any) {
+    this.notif.showError(
+      this.translate.instant('problems.create_error', { name: this.model.name }) ||
+      err?.message
+    );
+  } finally {
+    this.isSaving = false;
   }
+}
 
   cancel() {
     this.router.navigate(['/problems']);
