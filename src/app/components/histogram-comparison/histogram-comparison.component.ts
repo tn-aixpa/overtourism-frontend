@@ -136,12 +136,25 @@ export class HistogramComparisonComponent implements AfterViewInit, OnChanges {
       offsetgroup: 'right',
       width: barWidth
     };
-  
+    const uncertaintyLegend: any = {
+      x: [null],
+      y: [null],
+      type: 'bar',
+      marker: { color: '#e7b66e' },
+      name: 'Incertezza',   
+      showlegend: true,
+      hoverinfo: 'skip'
+    };
     // Layout
     const layout: Partial<Plotly.Layout> = {
-      barmode: 'group', // affianca Left e Right
+      barmode: 'group',
       margin: { t: 20, r: 20, l: 40, b: 70 },
-      legend: { orientation: 'h' },
+      legend: {
+        orientation: 'h',
+        y: -0.25,    
+        x: 0.5,
+        xanchor: 'center'
+      },
       xaxis: { automargin: true },
       yaxis: { automargin: true }
     };
@@ -150,7 +163,8 @@ export class HistogramComparisonComponent implements AfterViewInit, OnChanges {
     const traces: any[] = [
       leftMain, rightMain,
       leftConf, rightConf,
-      leftLevelLine, rightLevelLine
+      leftLevelLine, rightLevelLine,
+      uncertaintyLegend
     ];
   
     Plotly.newPlot(this.chartEl.nativeElement, traces, layout, { responsive: true });

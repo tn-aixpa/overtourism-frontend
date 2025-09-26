@@ -240,7 +240,8 @@ export class ConfrontoScenariComponent {
   async downloadPdf(): Promise<void> {
     if (this.isDownloading) return; // evita doppi click
     this.isDownloading = true;
-  
+    setTimeout(async () => {
+
     try {
       await this.pdfService.downloadPdfFromElement(
         'pdfContent',
@@ -249,6 +250,8 @@ export class ConfrontoScenariComponent {
     } finally {
       this.isDownloading = false;
     }
+  }, 0);
+
   }
 }
 // const KPI_TRANSLATIONS: Record<string, string> = {

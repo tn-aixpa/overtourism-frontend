@@ -55,16 +55,20 @@ export class ScenarioDetailComponent {
   onCancelDelete(): void {
     this.deleteModal.hide();
   }
-  async downloadPdf(): Promise<void> {
+  downloadPdf(): void {
     if (this.isDownloading) return; 
     this.isDownloading = true;
-
-    try {
-      await this.pdfService.downloadPdfFromElement('pdfContent', `${this.scenario?.name || 'scenario'}.pdf`);
-    } finally {
-      this.isDownloading = false;
-    }
-
+  
+    setTimeout(async () => {
+      try {
+        await this.pdfService.downloadPdfFromElement(
+          'pdfContent',
+          `${this.scenario?.name || 'scenario'}.pdf`
+        );
+      } finally {
+        this.isDownloading = false;
+      }
+    }, 0);
   }
   confirmDelete(): void {
     this.scenarioService.deleteScenario(this.scenarioId, this.problemId).subscribe({

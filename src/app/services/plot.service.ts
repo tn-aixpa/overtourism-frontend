@@ -22,6 +22,12 @@ export class PlotService {
     };
     return dashes[groupName] ?? 'solid';
   }
+  private buildHoverTemplate(labels: { x?: string; y?: string;  name?: string }): string {
+    return (labels.name ? `<b>${labels.name}</b><br>` : '') +
+           (labels.x ? `<b>${labels.x}:</b> %{x}<br>` : '') +
+           (labels.y ? `<b>${labels.y}:</b> %{y}<br>` : '') +
+           '<extra></extra>';
+  }
   async renderFunctionPlot(sottosistemaSelezionato: string, container: HTMLElement, input: PlotInput) {
 
     const data: Partial<Plotly.PlotData>[] = [];
@@ -56,12 +62,17 @@ export class PlotService {
           type: 'scatter',
           mode: 'markers',
           name: pt.name,
+          text: pt.name, // così %{text} funziona
           marker: pt.marker ?? {
             color: pt.color ?? 'black',
             size: 8,
             line: { width: 1, color: 'black' },
           },
-          hoverinfo: 'x+y+name',
+          hovertemplate: this.buildHoverTemplate({
+            name: 'Presenze',
+            x: 'Turisti',
+            y: 'Escursionisti'
+          })
         });
       }
     }
@@ -257,7 +268,7 @@ export class PlotService {
         size: 8,
 
       },
-      hovertemplate: 'Giorno: %{x}<br>Utilizzo: %{y}%<br>Livello di rischio: %{customdata:.4f}%<extra></extra>'
+      hovertemplate: 'Giorno: %{x}<br>Utilizzo: %{y}%<br>Livello di rischio: %{customdata:.1f}%<extra></extra>'
     };
 
     const layout: Partial<Plotly.Layout> = {

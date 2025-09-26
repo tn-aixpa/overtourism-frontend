@@ -45,8 +45,7 @@ export class ProblemCreateComponent {
       { key: 'Parcheggi', label: this.translate.instant('problems.fields.categories.parking') },
       { key: 'Spiaggia', label: this.translate.instant('problems.fields.categories.beach') },
       { key: 'Ristoranti', label: this.translate.instant('problems.fields.categories.restaurants') },
-      { key: 'Alberghi', label: this.translate.instant('problems.fields.categories.hotels') },
-      { key: 'Flussi', label: this.translate.instant('problems.fields.categories.flows') }
+      { key: 'Alberghi', label: this.translate.instant('problems.fields.categories.hotels') }
     ];
   
     this.editProblemId = this.route.snapshot.queryParamMap.get('edit') || undefined;
