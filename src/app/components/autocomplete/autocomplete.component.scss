@@ -1,0 +1,5 @@
+.ac-wrapper { width: 100%; }
+.max-height-200 { max-height: 240px; overflow:auto; }
+.ac-item { cursor: pointer; }
+.ac-item.active { background-color: #0066cc; color: white; }
+.dropdown-menu { display: block; } /* usiamo la classe show per mostrare/ nascondere */

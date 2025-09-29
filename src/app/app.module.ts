@@ -45,6 +45,7 @@ import { OvertourismComponent } from './pages/overtourism/overtourism.component'
 import { OvertourismChartsComponent } from './components/overtourism-charts/overtourism-charts.component';
 import { OvertourismMapComponent } from './components/overtourism-map/overtourism-map.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -62,7 +63,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
      KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
       ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
-       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent, OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent, ToastComponent],
+       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent, OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent, ToastComponent, AutocompleteComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
