@@ -1,8 +1,9 @@
 <it-card background="true" class="p-4">
   
-    <form (ngSubmit)="onSubmit()" #form="ngForm">
-      <div class="table-responsive mb-4">
-        <table class="table table-borderless">
+  <form (ngSubmit)="onSubmit()" #form="ngForm" (submit)="onSubmitForm($event)">
+
+          <div class="table-responsive mb-4">
+        <table class="table table-borderless mb-5">
           <tbody>
             <!-- Titolo -->
             <tr>
@@ -83,30 +84,35 @@
   
 
   
-            <!-- Scenari collegati (chips autocomplete) -->
             <tr>
               <td class="fw-bold w-25">
                 <label>{{ 'problems.proposals.fields.scenarios' | translate }}</label>
               </td>
               <td>
-                <it-autocomplete
-                id="scenarios"
-                [source]="scenarioSource"
+                <app-autocomplete
+                #scenarioAuto
+                [source]="scenarioNames"
+                [minLength]="0"
                 label="Scenari"
                 (selected)="addScenario($event)">
-              </it-autocomplete>
-              
+              </app-autocomplete>
               <div class="chips d-flex flex-wrap gap-2 mt-2">
-                <it-chip
-                *ngFor="let scenario of model.related_scenarios"
-                [label]="scenario.scenario_name"
-                [showCloseButton]="true"
-                (closeEvent)="removeScenario(scenario, $event)">
-              </it-chip>
+                <div 
+                  *ngFor="let scenario of model.related_scenarios" 
+                  class="chip d-inline-flex align-items-center px-2 py-1 rounded-pill">
               
-                               </div>
+                  <span class="me-1">{{ scenario.scenario_name }}</span>
               
-              </td>
+                  <button 
+                    type="button"
+                    class="btn p-0 ms-1 text-white"
+                    (click)="removeScenario(scenario, $event)">
+                    <span class="material-icons" style="font-size:16px; line-height:1;">close</span>
+                  </button>
+                </div>
+              </div>
+              
+                </td>
             </tr>
   
           </tbody>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NotificationService } from '../../services/notifications.service';
 import { ProposalService } from '../../services/proposal.service';
 import { Proposal, ProposalScenario } from '../../models/proposal.model';
@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { ScenarioService } from '../../services/scenario.service';
 import { ProblemScenario } from '../../models/scenario.model';
 import { TranslateService } from '@ngx-translate/core';
+import { AutocompleteComponent } from '../autocomplete/autocomplete.component';
 
 @Component({
   selector: 'app-proposal-create',
@@ -17,6 +18,7 @@ export class ProposalCreateComponent {
   @Input() problemId!: string;
   @Output() proposalCreated = new EventEmitter<void>();
   @Input() proposalToEdit?: Proposal;
+  @ViewChild('scenarioAuto') scenarioAuto!: AutocompleteComponent;
 
   model = {
     title: '',
@@ -41,19 +43,29 @@ export class ProposalCreateComponent {
       .map(s => s.scenario_name);
     populateResults(filtered);
   };
-
-  // 🔹 Quando selezioni uno scenario
+  get scenarioNames(): string[] {
+    return this.availableScenarios.map(s => s.scenario_name);
+  }
   addScenario(scenarioName: string) {
     const scenario = this.availableScenarios.find(s => s.scenario_name === scenarioName);
     if (scenario && !this.model.related_scenarios.some(s => s.scenario_id === scenario.scenario_id)) {
       this.model.related_scenarios.push(scenario);
     }
+  
+    // puliamo input e chiudiamo panel
+    if (this.scenarioAuto) {
+      this.scenarioAuto.clear(); // svuota e chiude
+      this.scenarioAuto.inputEl.nativeElement.blur(); // togli focus
+    }
   }
 
-  removeScenario(scenario: { scenario_id: string; scenario_name: string }, event?: Event) {
+  removeScenario(scenario: ProposalScenario, event?: Event) {
     if (event) {
       event.stopPropagation();
       event.preventDefault();
+      // anche se l'evento bubbla, evita che il form venga sottomesso
+      const form = (event.target as HTMLElement).closest('form');
+      form?.addEventListener('submit', e => e.preventDefault(), { once: true });
     }
     this.model.related_scenarios = this.model.related_scenarios.filter(
       s => s.scenario_id !== scenario.scenario_id
@@ -109,7 +121,13 @@ export class ProposalCreateComponent {
   removeResource(i: number) {
     this.model.resources.splice(i, 1);
   }
-
+  onSubmitForm(event: Event) {
+    if ((event.target as HTMLButtonElement).type === 'button') {
+      event.preventDefault();
+      return;
+    }
+    this.onSubmit();
+  }
 
   isUrl(value: string): boolean {
     return value.startsWith('http://') || value.startsWith('https://');

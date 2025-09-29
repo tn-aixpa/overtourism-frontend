@@ -1,5 +1,32 @@
-.ac-wrapper { width: 100%; }
-.max-height-200 { max-height: 240px; overflow:auto; }
-.ac-item { cursor: pointer; }
-.ac-item.active { background-color: #0066cc; color: white; }
-.dropdown-menu { display: block; } /* usiamo la classe show per mostrare/ nascondere */
+.ac-wrapper {
+    width: 100%;
+    position: relative; /* necessario per posizionare il panel assolutamente */
+    z-index: 1;         /* valore base */
+  }
+  
+  .ac-panel {
+    position: relative;
+    top: 100%;           /* sotto l'input */
+    left: 0;
+    width: 100%;
+    max-height: 240px;
+    overflow: auto;
+    z-index: 1050;       /* sopra bottone salva / card */
+    background-color: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .ac-item {
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+  
+  .ac-item.active {
+    background-color: #0066cc;
+    color: white;
+  }
+  app-autocomplete .autocomplete-panel {
+    position: fixed !important;
+    z-index: 2000 !important;
+  }

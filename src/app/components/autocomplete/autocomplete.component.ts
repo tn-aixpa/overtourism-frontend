@@ -88,6 +88,16 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
   openPanel(): void {
     this.panelOpen = true;
+    const panel = this.el.nativeElement.querySelector('.autocomplete-panel');
+    if (panel) {
+      document.body.appendChild(panel);
+      const rect = this.inputEl.nativeElement.getBoundingClientRect();
+      panel.style.position = 'absolute';
+      panel.style.top = rect.bottom + 'px';
+      panel.style.left = rect.left + 'px';
+      panel.style.width = rect.width + 'px';
+      panel.style.zIndex = '2000';
+    }
   }
 
   closePanel(): void {
