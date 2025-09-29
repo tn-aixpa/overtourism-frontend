@@ -6,17 +6,22 @@ import { ConfigService } from './config.service';
 
 @Injectable({ providedIn: 'root' })
 export class OvertourismService {
-private baseUrl: string;
+  private baseUrl: string;
 
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.baseUrl = environment.apiBaseUrl;
   }
 
-  getMap(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/data/overtourism/map`); 
+  getIndexes(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/data/overtourism/indexes/list`);
   }
 
-  getData(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/data/overtourism/data`);
+  getMap(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/data/overtourism/map`);
+  }
+
+  getDataByDataset(dataset: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/data/overtourism/indexes/data?dataframe=${dataset}`);
   }
 }
+

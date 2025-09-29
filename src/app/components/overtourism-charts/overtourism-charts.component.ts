@@ -14,6 +14,7 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   @Input() selectedKpi: string | null = null;
   @ViewChild('histogramChart', { static: false }) chartEl!: ElementRef;
   @ViewChild('comuneAuto') comuneAuto!: AutocompleteComponent;
+  @Input() kpis: { key: string; title: string; dataset: string; other: string[]; map: string }[] = [];
 
 
   comuni: string[] = [];
@@ -32,12 +33,16 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   ngAfterViewInit() {
     this.chartInitialized = true;
     this.updateComuni();
-    this.drawChart();
+    if(this.readyToDraw()) {
+      this.drawChart();
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.updateComuni();
-    this.drawChart();
+    if(this.readyToDraw()) {
+      this.drawChart();
+    }
   }
   toggleComune(comune: string) {
     if (this.selectedComuni.includes(comune)) {
@@ -65,14 +70,21 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   private updateComuni() {
     if (this.data?.length) {
       this.comuni = Array.from(new Set(this.data.map(d => d.comune))).sort();
+      if(this.comuni.includes('MOLVENO')) {
+        this.selectedComuni = ['MOLVENO'];
+      } else if(this.comuni.length) {
+        this.selectedComuni = [this.comuni[0]];
+      }
     }
-
   }
-
+  private readyToDraw(): boolean {
+    return !!(this.chartEl?.nativeElement && this.data?.length && this.selectedKpi && this.selectedComuni?.length);
+  }
   drawChart() {
-    if (!this.data?.length || !this.chartEl?.nativeElement || !this.selectedKpi || !this.selectedComuni?.length) return;
+    if (!this.readyToDraw()) return;
   
-    // calcola tutti gli anni unici dai comuni selezionati
+    const indexInfo = this.kpis.find((k: { key: string | null; }) => k.key === this.selectedKpi);
+  
     const anni = Array.from(new Set(
       this.selectedComuni.flatMap(comune => 
         this.data.filter(d => d.comune === comune).map(d => d.anno)
@@ -81,11 +93,24 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   
     const chartData: Plotly.Data[] = this.selectedComuni.map(comune => {
       const datiComune = this.data.filter(d => d.comune === comune);
-      
-      // mappa valori sull'array completo degli anni, usa null se manca
+  
       const valori = anni.map(y => {
         const record = datiComune.find(d => d.anno === y);
         return record ? record[this.selectedKpi!] : null;
+      });
+  
+      const hoverText = anni.map(y => {
+        const record = datiComune.find(d => d.anno === y);
+        if (!record || !indexInfo) return '';
+      
+        const lines = [
+          `Comune: ${comune}`,
+          `Anno: ${y}`,
+          `${indexInfo.title}: ${record[this.selectedKpi!]}`,
+          ...indexInfo.other.map(f => `${f}: ${record[f]}`)
+        ];
+      
+        return lines.join('<br>');
       });
   
       return {
@@ -93,20 +118,20 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
         y: valori,
         type: this.chartType,
         mode: this.chartType === 'scatter' ? 'lines+markers' : undefined,
-        name: comune
+        name: comune,
+        text: hoverText,
+        hoverinfo: 'text'
       } as Plotly.Data;
     });
   
     const layout: Partial<Plotly.Layout> = { 
       ...this.layout, 
-      xaxis: { 
-        ...this.layout.xaxis, 
-        type: 'category' as Plotly.AxisType 
-      } 
+      xaxis: { ...this.layout.xaxis, type: 'category' as Plotly.AxisType } 
     };
   
     Plotly.react(this.chartEl.nativeElement, chartData, layout, { responsive: true });
   }
+  
   
   
 }

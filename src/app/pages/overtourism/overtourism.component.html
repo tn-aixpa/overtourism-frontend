@@ -1,5 +1,6 @@
 <div class="container my-4">
 <!-- Dropdown KPI -->
+<!-- Dropdown KPI -->
 <div class="dropdown w-50 mb-3">
   <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" 
           type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -10,14 +11,15 @@
     <div class="link-list-wrapper">
       <ul class="link-list">
         <li *ngFor="let k of kpis">
-          <a class="list-item" (click)="selectKpi(k.value)">
-            <span>{{ k.text }}</span>
+          <a class="list-item" (click)="selectKpi(k.key)">
+            <span>{{ k.title }}</span>
           </a>
         </li>
       </ul>
     </div>
   </div>
 </div>
+
 
 
   <!-- Tabs -->
@@ -27,7 +29,7 @@
     </it-tab-item>
 
     <it-tab-item label="Grafici" icon="chart-line">
-      <app-overtourism-charts [data]="rawData" [selectedKpi]="selectedKpi"></app-overtourism-charts>
+      <app-overtourism-charts [data]="rawData" [selectedKpi]="selectedKpi" [kpis]="kpis"></app-overtourism-charts>
     </it-tab-item>
   </it-tab-container>
 </div>

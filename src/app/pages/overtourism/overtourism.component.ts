@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { OvertourismService } from '../../services/overtourism.service';
-import { SelectControlOption } from 'design-angular-kit';
 
 @Component({
   selector: 'app-overtourism',
@@ -11,28 +10,36 @@ import { SelectControlOption } from 'design-angular-kit';
 export class OvertourismComponent implements OnInit {
   geojson: any;
   rawData: any[] = [];
+  selectedKpi: string | null = null;
 
-  selectedKpi: string = 'ricettivita';
-
-  kpis: SelectControlOption<string>[] = [
-    { value: 'ricettivita', text: 'Ricettività' },
-    { value: 'turisticita', text: 'Turisticità' },
-    { value: 'turisticita_estiva', text: 'Turisticità Estiva' },
-    { value: 'non_convenzionali', text: 'Non Convenzionali' }
-  ];
+  kpis: { key: string; title: string; dataset: string; other: string[]; map: string }[] = [];
 
   constructor(private svc: OvertourismService) {}
 
-  getKpiName(arg0: string | null) {
-    return this.kpis.find(k => k.value === arg0)?.text;
-  }
-
   ngOnInit() {
-    this.svc.getMap().subscribe(res => (this.geojson = res));
-    this.svc.getData().subscribe((res: any) => (this.rawData = res.data));
+    this.svc.getMap().subscribe(res => this.geojson = res);
+
+    this.svc.getIndexes().subscribe((res: any) => {
+      this.kpis = Object.values(res);
+      if(this.kpis.length) {
+        this.selectKpi(this.kpis[0].key); // preseleziona primo KPI
+      }
+    });
   }
 
-  selectKpi(val: string) {
-    this.selectedKpi = val;
+  getKpiName(key: string | null): string | undefined {
+    return this.kpis.find(k => k.key === key)?.title;
+  }
+
+  selectKpi(key: string) {
+    this.selectedKpi = key;
+    const indexInfo = this.kpis.find(k => k.key === key);
+    if(!indexInfo) return;
+
+    this.svc.getDataByDataset(indexInfo.dataset).subscribe((res: any) => {
+      this.rawData = res.data;
+    });
   }
 }
+
+
