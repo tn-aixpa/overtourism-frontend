@@ -16,13 +16,15 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   @ViewChild('comuneAuto') comuneAuto!: AutocompleteComponent;
   @Input() kpis: { key: string; title: string; dataset: string; other: string[]; map: string }[] = [];
 
+  private resizeObserver?: ResizeObserver;
 
   comuni: string[] = [];
   selectedComuni: string[] = [];   // multiselect
   chartType: 'scatter' | 'bar' = 'scatter';
 
-  private chartInitialized = false;
+  private lastSignature: string | null = null;
 
+  private viewReady = false;  
   layout: Partial<Plotly.Layout> = {
     title: { text: 'Andamento Overtourism' },
     xaxis: { title: { text: 'Anno' }, tickformat: 'd' }, // solo interi
@@ -31,19 +33,121 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   };
 
   ngAfterViewInit() {
-    this.chartInitialized = true;
+    this.viewReady = true;
+      this.tryDraw();
+    if (this.chartEl?.nativeElement) {
+      this.resizeObserver = new ResizeObserver(() => {
+        if (this.chartEl?.nativeElement) {
+          Plotly.Plots.resize(this.chartEl.nativeElement);
+        }
+      });
+      this.resizeObserver.observe(this.chartEl.nativeElement);
+    }
+  }
+  
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+  }
+  ngOnChanges(changes: SimpleChanges) {
     this.updateComuni();
-    if(this.readyToDraw()) {
+    this.tryDraw();
+  }
+
+  private tryDraw() {
+    if (!this.readyToDraw()) return;
+
+    const signature = JSON.stringify({
+      comuni: this.selectedComuni,
+      kpi: this.selectedKpi,
+      len: this.data.length,
+      chartType: this.chartType
+    });
+
+    if (this.lastSignature !== signature) {
+      this.lastSignature = signature;
       this.drawChart();
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    this.updateComuni();
-    if(this.readyToDraw()) {
-      this.drawChart();
+  private readyToDraw(): boolean {
+    return !!(
+      this.viewReady &&  
+      this.chartEl?.nativeElement &&
+      this.data?.length &&
+      this.selectedKpi &&
+      this.selectedComuni?.length
+    );
+  }
+
+  private updateComuni() {
+    if (this.data?.length) {
+      this.comuni = Array.from(new Set(this.data.map(d => d.comune))).sort();
+      if (!this.selectedComuni.length) {
+        this.selectedComuni = this.comuni.includes('MOLVENO')
+          ? ['MOLVENO']
+          : [this.comuni[0]];
+      }
     }
   }
+
+  drawChart() {
+    if (!this.chartEl?.nativeElement) return;
+  
+    if (!(this.data?.length && this.selectedKpi && this.selectedComuni?.length)) {
+      // niente requisiti minimi → cancella grafico
+      Plotly.purge(this.chartEl.nativeElement);
+      return;
+    }
+  
+    const indexInfo = this.kpis.find(k => k.key === this.selectedKpi);
+  
+    const anni = Array.from(new Set(
+      this.selectedComuni.flatMap(comune =>
+        this.data.filter(d => d.comune === comune).map(d => d.anno)
+      )
+    )).sort((a, b) => a - b);
+  
+    const chartData: Plotly.Data[] = this.selectedComuni.map(comune => {
+      const datiComune = this.data.filter(d => d.comune === comune);
+  
+      const valori = anni.map(y => {
+        const record = datiComune.find(d => d.anno === y);
+        return record ? record[this.selectedKpi!] : null;
+      });
+  
+      const hoverText = anni.map(y => {
+        const record = datiComune.find(d => d.anno === y);
+        if (!record || !indexInfo) return '';
+        return [
+          `Comune: ${comune}`,
+          `Anno: ${y}`,
+          `${indexInfo.title}: ${typeof record[this.selectedKpi!] === 'number' ? record[this.selectedKpi!].toFixed(2) : record[this.selectedKpi!]}`,
+          ...indexInfo.other.map(f => `${f}: ${typeof record[f] === 'number' ? record[f].toFixed(2) : record[f]}`)
+        ].join('<br>');
+      });
+  
+      return {
+        x: anni,
+        y: valori,
+        type: this.chartType,
+        mode: this.chartType === 'scatter' ? 'lines+markers' : undefined,
+        name: comune,
+        text: hoverText,
+        hoverinfo: 'text',
+        textposition: 'none'  
+      } as Plotly.Data;
+    });
+  
+    const layout: Partial<Plotly.Layout> = {
+      ...this.layout,
+      xaxis: { ...this.layout.xaxis, type: 'category' as Plotly.AxisType }
+    };
+  
+    Plotly.react(this.chartEl.nativeElement, chartData, layout, { responsive: true });
+  }
+  
+
+  
   toggleComune(comune: string) {
     if (this.selectedComuni.includes(comune)) {
       this.selectedComuni = this.selectedComuni.filter(c => c !== comune);
@@ -67,70 +171,8 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
     this.selectedComuni = this.selectedComuni.filter(c => c !== comune);
     this.drawChart();
   }
-  private updateComuni() {
-    if (this.data?.length) {
-      this.comuni = Array.from(new Set(this.data.map(d => d.comune))).sort();
-      if(this.comuni.includes('MOLVENO')) {
-        this.selectedComuni = ['MOLVENO'];
-      } else if(this.comuni.length) {
-        this.selectedComuni = [this.comuni[0]];
-      }
-    }
-  }
-  private readyToDraw(): boolean {
-    return !!(this.chartEl?.nativeElement && this.data?.length && this.selectedKpi && this.selectedComuni?.length);
-  }
-  drawChart() {
-    if (!this.readyToDraw()) return;
   
-    const indexInfo = this.kpis.find((k: { key: string | null; }) => k.key === this.selectedKpi);
   
-    const anni = Array.from(new Set(
-      this.selectedComuni.flatMap(comune => 
-        this.data.filter(d => d.comune === comune).map(d => d.anno)
-      )
-    )).sort((a, b) => a - b);
-  
-    const chartData: Plotly.Data[] = this.selectedComuni.map(comune => {
-      const datiComune = this.data.filter(d => d.comune === comune);
-  
-      const valori = anni.map(y => {
-        const record = datiComune.find(d => d.anno === y);
-        return record ? record[this.selectedKpi!] : null;
-      });
-  
-      const hoverText = anni.map(y => {
-        const record = datiComune.find(d => d.anno === y);
-        if (!record || !indexInfo) return '';
-      
-        const lines = [
-          `Comune: ${comune}`,
-          `Anno: ${y}`,
-          `${indexInfo.title}: ${record[this.selectedKpi!]}`,
-          ...indexInfo.other.map(f => `${f}: ${record[f]}`)
-        ];
-      
-        return lines.join('<br>');
-      });
-  
-      return {
-        x: anni,
-        y: valori,
-        type: this.chartType,
-        mode: this.chartType === 'scatter' ? 'lines+markers' : undefined,
-        name: comune,
-        text: hoverText,
-        hoverinfo: 'text'
-      } as Plotly.Data;
-    });
-  
-    const layout: Partial<Plotly.Layout> = { 
-      ...this.layout, 
-      xaxis: { ...this.layout.xaxis, type: 'category' as Plotly.AxisType } 
-    };
-  
-    Plotly.react(this.chartEl.nativeElement, chartData, layout, { responsive: true });
-  }
   
   
   

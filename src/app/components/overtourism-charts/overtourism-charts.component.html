@@ -1,4 +1,6 @@
-<div *ngIf="data?.length; else noData">
+<div class="chart-wrapper">
+
+  <!-- Autocomplete comuni -->
   <app-autocomplete
     [source]="comuni"
     [minLength]="0"
@@ -8,27 +10,37 @@
     #comuneAuto>
   </app-autocomplete>
 
-<!-- Badge comuni selezionati -->
-<div class="mt-2 d-flex flex-wrap gap-2">
-  <span *ngFor="let c of selectedComuni" class="badge bg-primary">
-    {{ c }}
-    <button type="button" class="btn-close btn-close-white ms-1" aria-label="Rimuovi" (click)="removeComune(c)"></button>
-  </span>
-</div>
+  <!-- Badge comuni selezionati -->
+  <div class="mt-2 d-flex flex-wrap gap-2">
+    <span *ngFor="let c of selectedComuni" class="badge bg-primary">
+      {{ c }}
+      <button type="button"
+              class="btn-close btn-close-white ms-1"
+              aria-label="Rimuovi"
+              (click)="removeComune(c)">
+      </button>
+    </span>
+  </div>
 
+  <!-- Toggle chart type -->
   <div class="d-flex justify-content-end my-2">
-    <button class="btn btn-sm btn-outline-primary me-2" (click)="chartType = 'scatter'; drawChart()">Linee</button>
-    <button class="btn btn-sm btn-outline-primary" (click)="chartType = 'bar'; drawChart()">Barre</button>
+    <button class="btn btn-sm btn-outline-primary me-2"
+            (click)="chartType = 'scatter'; drawChart()">Linee</button>
+    <button class="btn btn-sm btn-outline-primary"
+            (click)="chartType = 'bar'; drawChart()">Barre</button>
   </div>
 
-  <div *ngIf="!selectedKpi || !selectedComuni?.length" class="text-center text-muted mt-2">
-    Seleziona uno o più <strong>comuni</strong> e un <strong>indicatore</strong> per visualizzare il grafico.
+  <!-- Messaggi -->
+  <div *ngIf="!data?.length" class="text-center text-muted mt-3">
+    Non ci sono dati disponibili.
   </div>
 
-  <!-- Grafico -->
-  <div #histogramChart class="plotly-chart w-100" style="height: 400px;"></div>
+  <div *ngIf="data?.length && (!selectedKpi || !selectedComuni?.length)"
+       class="text-center text-muted mt-3">
+    Seleziona uno o più <strong>comuni</strong> e un <strong>indicatore</strong>
+    per visualizzare il grafico.
+  </div>
+
+  <!-- Grafico sempre presente, ma vuoto se mancano requisiti -->
+  <div #histogramChart class="plotly-chart w-100" style="height: 400px; width: 100%;"></div>
 </div>
-
-<ng-template #noData>
-  <div class="text-center text-muted">Non ci sono dati disponibili.</div>
-</ng-template>
