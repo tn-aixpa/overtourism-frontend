@@ -25,10 +25,11 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   private lastSignature: string | null = null;
 
   private viewReady = false;  
+   indexInfo = this.kpis.find(k => k.key === this.selectedKpi);
+
   layout: Partial<Plotly.Layout> = {
-    title: { text: 'Andamento Overtourism' },
     xaxis: { title: { text: 'Anno' }, tickformat: 'd' }, // solo interi
-    yaxis: { title: { text: 'Valore' } },
+    yaxis: { title: { text:  this.indexInfo ? this.indexInfo.title : 'Valore'  } },
     legend: { orientation: 'h', y: -0.3 }
   };
 
@@ -140,7 +141,9 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   
     const layout: Partial<Plotly.Layout> = {
       ...this.layout,
-      xaxis: { ...this.layout.xaxis, type: 'category' as Plotly.AxisType }
+      xaxis: { ...this.layout.xaxis, type: 'category' as Plotly.AxisType },
+      yaxis: { ...this.layout.yaxis, title: { text: indexInfo ? indexInfo.title : 'Valore' } }
+
     };
   
     Plotly.react(this.chartEl.nativeElement, chartData, layout, { responsive: true });

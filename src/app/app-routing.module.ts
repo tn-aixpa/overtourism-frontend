@@ -51,7 +51,7 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'overtourism', component: OvertourismComponent },
+  { path: 'indicatori', component: OvertourismComponent },
   { path: 'faqs', component: FaqsComponent, data: { breadcrumb: 'FAQ' } },
 ];
 
