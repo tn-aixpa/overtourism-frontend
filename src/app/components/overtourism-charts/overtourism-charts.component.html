@@ -2,7 +2,7 @@
 
   <!-- Autocomplete comuni -->
   <app-autocomplete
-    [source]="comuni"
+    [source]="availableComuni"
     [minLength]="0"
     label="Comune"
     placeholder="Seleziona Comune"
@@ -21,14 +21,19 @@
       </button>
     </span>
   </div>
-
-  <!-- Toggle chart type -->
-  <div class="d-flex justify-content-end my-2">
-    <button class="btn btn-sm btn-outline-primary me-2"
-            (click)="chartType = 'scatter'; drawChart()">Linee</button>
-    <button class="btn btn-sm btn-outline-primary"
-            (click)="chartType = 'bar'; drawChart()">Barre</button>
-  </div>
+<!-- Toggle chart type -->
+<div class="d-flex justify-content-end my-2">
+  <button class="btn btn-sm me-2"
+          [ngClass]="{'btn-primary': chartType === 'scatter', 'btn-outline-primary': chartType !== 'scatter'}"
+          (click)="chartType = 'scatter'; drawChart()">
+    Linee
+  </button>
+  <button class="btn btn-sm"
+          [ngClass]="{'btn-primary': chartType === 'bar', 'btn-outline-primary': chartType !== 'bar'}"
+          (click)="chartType = 'bar'; drawChart()">
+    Barre
+  </button>
+</div>
 
   <!-- Messaggi -->
   <div *ngIf="!data?.length" class="text-center text-muted mt-3">

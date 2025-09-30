@@ -32,7 +32,9 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
     yaxis: { title: { text:  this.indexInfo ? this.indexInfo.title : 'Valore'  } },
     legend: { orientation: 'h', y: -0.3 }
   };
-
+  get availableComuni(): string[] {
+    return this.comuni.filter(c => !this.selectedComuni.includes(c));
+  }
   ngAfterViewInit() {
     this.viewReady = true;
       this.tryDraw();
