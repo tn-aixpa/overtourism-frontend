@@ -57,7 +57,7 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
       
     }
   }
-
+  
   drawMap() {
     // Se non c'è data, comune o KPI selezionato, non disegnare
     if (!this.data?.length || !this.geojson || !this.selectedKpi || this.selectedAnno === null) return;
