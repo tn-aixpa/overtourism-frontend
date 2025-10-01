@@ -1,31 +1,38 @@
 <div class="container my-4">
-<!-- Dropdown KPI -->
-<!-- Dropdown KPI -->
-<div class="dropdown w-50 mb-3">
-  <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" 
-          type="button" data-bs-toggle="dropdown" aria-expanded="false">
-    <span>{{ getKpiName(selectedKpi) || 'Seleziona Indicatore' }}</span>
-    <span class="material-icons ms-2">expand_more</span>
-  </button>
-  <div class="dropdown-menu w-100">
-    <div class="link-list-wrapper">
-      <ul class="link-list">
-        <li *ngFor="let k of kpis">
-          <a class="list-item" (click)="selectKpi(k.key)">
-            <span>{{ k.title }}</span>
-          </a>
-        </li>
-      </ul>
+  <!-- Dropdown KPI -->
+  <!-- Dropdown KPI -->
+  <div class="dropdown w-50 mb-3">
+    <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" type="button"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      <span>{{ getKpiName(selectedKpi) || 'Seleziona Indicatore' }}</span>
+      <span class="material-icons ms-2">expand_more</span>
+    </button>
+    <div class="dropdown-menu w-100">
+      <div class="link-list-wrapper">
+        <ul class="link-list">
+          <li *ngFor="let k of kpis; let i = index">
+            <a class="list-item" (click)="selectKpiByIndex(i)">
+              <span>{{ k.title }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 
 
 
   <!-- Tabs -->
   <it-tab-container>
     <it-tab-item label="Mappa" icon="map-marker" [active]="true">
-      <app-overtourism-map [data]="rawData" [geojson]="geojson" [selectedKpi]="selectedKpi"></app-overtourism-map>
+      <app-overtourism-map 
+      [data]="rawData" 
+      [geojson]="geojson" 
+      [selectedKpi]="selectedKpi" 
+      [featureIdKey]="featureIdKey"
+      [locationsCol]="locationsCol">
+    </app-overtourism-map>
+    
     </it-tab-item>
 
     <it-tab-item label="Grafici" icon="chart-line">

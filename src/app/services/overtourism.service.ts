@@ -16,8 +16,11 @@ export class OvertourismService {
     return this.http.get(`${this.baseUrl}/data/overtourism/indexes/list`);
   }
 
-  getMap(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/data/overtourism/map`);
+  // getMap(): Observable<any> {
+  //   return this.http.get(`${this.baseUrl}/data/overtourism/map`);
+  // }
+  getMapByDataset(dataset: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/data/overtourism/indexes/map?map=${dataset}`);
   }
 
   getDataByDataset(dataset: string): Observable<any> {

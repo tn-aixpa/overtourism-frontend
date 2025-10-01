@@ -19,7 +19,8 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   @Input() data: any[] = [];              // dati dei comuni con KPI e anno
   @Input() geojson: any = null;           // geometrie
   @Input() selectedKpi: string | null = null;
-
+  @Input() featureIdKey: string | null = null;   
+  @Input() locationsCol: string | null = null;  
   @ViewChild('mapChart', { static: false }) mapEl!: ElementRef;
 
   selectedAnno: number | null = null;
@@ -52,9 +53,8 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   private setupAnni() {
     if (this.data?.length) {
       this.anniDisponibili = Array.from(new Set(this.data.map(d => d.anno))).sort();
-      if (!this.selectedAnno) {
-        this.selectedAnno = this.anniDisponibili[this.anniDisponibili.length - 1]; // ultimo anno disponibile
-      }
+        this.selectedAnno = this.anniDisponibili[this.anniDisponibili.length - 1]; 
+      
     }
   }
 
@@ -66,24 +66,29 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
 
     const comuni: string[] = [];
     const valori: number[] = [];
-
+    console.log('Feature ID Key:', this.featureIdKey);
     this.geojson.features.forEach((feature: any) => {
-      const nomeComune = feature.properties?.name;
-      const datoComune = datiAnno.find(d => d.comune === nomeComune);
-      comuni.push(nomeComune);
+      const featureId = this.featureIdKey 
+        ? feature.properties[this.featureIdKey.split('.').pop()!] 
+        : null;
+    
+      const datoComune = datiAnno.find(d => d[this.locationsCol!] === featureId);
+    
+      comuni.push(featureId);
       valori.push(datoComune ? datoComune[this.selectedKpi!] : NaN);
     });
-
+    
     const trace: ChoroplethMapboxTrace = {
       type: 'choroplethmapbox',
       geojson: this.geojson,
       locations: comuni,
       z: valori,
-      featureidkey: 'properties.name',
+      featureidkey: this.featureIdKey || 'properties.name',
       colorscale: 'Viridis',
       marker: { line: { width: 0.5, color: 'white' } },
       hovertemplate: '<b>%{location}</b><br>' + `${this.selectedKpi}: %{z:.2f}<extra></extra>`
     };
+    
 
     const layout: Partial<Plotly.Layout> = {
       mapbox: {

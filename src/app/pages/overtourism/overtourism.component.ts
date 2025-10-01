@@ -10,19 +10,19 @@ import { OvertourismService } from '../../services/overtourism.service';
 export class OvertourismComponent implements OnInit {
   geojson: any;
   rawData: any[] = [];
-  selectedKpi: string | null = null;
-
-  kpis: { key: string; title: string; dataset: string; other: string[]; map: string }[] = [];
-
+  selectedKpi: string | null = null; 
+  kpis: { key: string; title: string; dataset: string; other: string[]; map: any }[] = [];
+  featureIdKey: string | null = null;
+  locationsCol: string | null = null;
   constructor(private svc: OvertourismService) {}
 
   ngOnInit() {
-    this.svc.getMap().subscribe(res => this.geojson = res);
-
     this.svc.getIndexes().subscribe((res: any) => {
       this.kpis = Object.values(res);
-      if(this.kpis.length) {
-        this.selectKpi(this.kpis[0].key); // preseleziona primo KPI
+      if (this.kpis.length) {
+        const firstKpi = this.kpis[0];
+        this.featureIdKey = firstKpi.key;
+        this.selectKpi(firstKpi.key); // preseleziona primo KPI e carica dati + mappa
       }
     });
   }
@@ -33,11 +33,39 @@ export class OvertourismComponent implements OnInit {
 
   selectKpi(key: string) {
     this.selectedKpi = key;
-    const indexInfo = this.kpis.find(k => k.key === key);
-    if(!indexInfo) return;
 
+    const indexInfo = this.kpis.find(k => k.key === key);
+    this.selectedKpi = indexInfo ? indexInfo.key : null;
+    if (!indexInfo) return;
+  
+    // dati KPI
     this.svc.getDataByDataset(indexInfo.dataset).subscribe((res: any) => {
       this.rawData = res.data;
+    });
+  
+    // geojson relativo a quel dataset
+    this.svc.getMapByDataset(indexInfo.map.geojson).subscribe(res => {
+      this.geojson = res;
+      this.featureIdKey = indexInfo.map.key;         // es. "properties.com_code"
+      this.locationsCol = indexInfo.map.locations_col;
+    });
+  }
+  selectKpiByIndex(i: number) {
+    const indexInfo = this.kpis[i];
+    if (!indexInfo) return;
+  
+    this.selectedKpi = indexInfo.key;
+  
+    // dati KPI
+    this.svc.getDataByDataset(indexInfo.dataset).subscribe((res: any) => {
+      this.rawData = res.data;
+    });
+  
+    // geojson relativo a quel dataset
+    this.svc.getMapByDataset(indexInfo.map.geojson).subscribe(res => {
+      this.geojson = res;
+      this.featureIdKey = indexInfo.map.key;         // es. "properties.com_code"
+      this.locationsCol = indexInfo.map.locations_col; // es. "ID"
     });
   }
 }
