@@ -23,20 +23,27 @@
 
 
   <!-- Tabs -->
-  <it-tab-container>
-    <it-tab-item label="Mappa" icon="map-marker" [active]="true">
+  <it-tab-container (tabSelected)="onTabSelected($event)">
+    <it-tab-item label="Mappa" icon="map-marker" [active]="activeTab === 'mappa'">
       <app-overtourism-map 
-      [data]="rawData" 
-      [geojson]="geojson" 
-      [selectedKpi]="selectedKpi" 
-      [featureIdKey]="featureIdKey"
-      [locationsCol]="locationsCol">
-    </app-overtourism-map>
-    
+        *ngIf="activeTab === 'mappa'"
+        [data]="rawData" 
+        [geojson]="geojson" 
+        [selectedKpi]="selectedKpi"
+        [featureIdKey]="featureIdKey"
+        [locationsCol]="locationsCol">
+      </app-overtourism-map>
     </it-tab-item>
-
-    <it-tab-item label="Grafici" icon="chart-line">
-      <app-overtourism-charts [data]="rawData" [selectedKpi]="selectedKpi" [kpis]="kpis"></app-overtourism-charts>
+  
+    <it-tab-item label="Grafici" icon="chart-line" [active]="activeTab === 'grafici'">
+      <app-overtourism-charts 
+        *ngIf="activeTab === 'grafici'"
+        [data]="rawData" 
+        [selectedKpi]="selectedKpi" 
+        [kpis]="kpis">
+      </app-overtourism-charts>
     </it-tab-item>
   </it-tab-container>
+  
+  
 </div>

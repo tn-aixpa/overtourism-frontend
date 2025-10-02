@@ -14,7 +14,16 @@ export class OvertourismComponent implements OnInit {
   kpis: { key: string; title: string; dataset: string; other: string[]; map: any }[] = [];
   featureIdKey: string | null = null;
   locationsCol: string | null = null;
-  constructor(private svc: OvertourismService) {}
+  activeTab: string = 'mappa';
+
+  onTabSelected(event: any) {
+    console.log('Tab selezionato:', event);
+    if (event.label === 'Mappa') {
+      this.activeTab = 'mappa';
+    } else if (event.label === 'Grafici') {
+      this.activeTab = 'grafici';
+    }
+  }  constructor(private svc: OvertourismService) {}
 
   ngOnInit() {
     this.svc.getIndexes().subscribe((res: any) => {

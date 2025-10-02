@@ -21,25 +21,29 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   @Input() selectedKpi: string | null = null;
   @Input() featureIdKey: string | null = null;   
   @Input() locationsCol: string | null = null;  
+  @Input() active: boolean = true;
+
   @ViewChild('mapChart', { static: false }) mapEl!: ElementRef;
 
   selectedAnno: number | null = null;
   anniDisponibili: number[] = [];
-  private initialized = false;
 
   ngAfterViewInit() {
-    this.initialized = true;
     this.tryDrawMap();
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    // Disegna solo se il componente è inizializzato e se ci sono dati e geojson
-    if (!this.initialized) return;
   
     if ((changes['data'] && this.data?.length) || 
         (changes['geojson'] && this.geojson) || 
         changes['selectedKpi']) {
+          if (this.active) {
+
       this.setupAnni();
+      this.tryDrawMap();
+          }
+    }
+    if (changes['active'] && this.active) {
       this.tryDrawMap();
     }
   }
@@ -59,7 +63,6 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   }
   
   drawMap() {
-    // Se non c'è data, comune o KPI selezionato, non disegnare
     if (!this.data?.length || !this.geojson || !this.selectedKpi || this.selectedAnno === null) return;
     if (!this.mapEl?.nativeElement) return;
     const datiAnno = this.data.filter(d => d.anno === this.selectedAnno);
@@ -101,4 +104,5 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
 
     Plotly.react(this.mapEl.nativeElement, [trace], layout, { responsive: true });
   }
+
 }
