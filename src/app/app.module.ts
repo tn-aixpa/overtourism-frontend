@@ -41,11 +41,15 @@ import { ReadingComponent } from './components/plot/reading/reading.component';
 import { ProposalCreateComponent } from "./components/app-proposal-create/app-proposal-create.component";
 import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
 import { ProposalDetailComponent } from './components/proposal-detail/proposal-detail.component';
-import { OvertourismComponent } from './pages/overtourism/overtourism.component';
 import { OvertourismChartsComponent } from './components/overtourism-charts/overtourism-charts.component';
 import { OvertourismMapComponent } from './components/overtourism-map/overtourism-map.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { AutocompleteComponent } from './components/autocomplete/autocomplete.component';
+import { CapacityComponent } from './pages/overtourism/capacity/capacity.component';
+import { FlowsComponent } from './pages/overtourism/flows/flows.component';
+import { RedistributionComponent } from './pages/overtourism/redistribution/redistribution.component';
+import { HiddenComponent } from './pages/overtourism/hidden/hidden.component';
+import { OvertourismComponent } from './pages/overtourism/overtourism/overtourism.component';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -63,7 +67,7 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
      KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
       ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
-       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent, OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent, ToastComponent, AutocompleteComponent],
+       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent, OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent, ToastComponent, AutocompleteComponent, CapacityComponent, FlowsComponent, RedistributionComponent, HiddenComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

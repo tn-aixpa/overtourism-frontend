@@ -9,7 +9,11 @@ import { ConfrontoScenariComponent } from './pages/problems/confronto-scenari/co
 import { ProblemCreateComponent } from './pages/problems/problem-create/problem-create.component';
 import { UnsavedChangesGuard } from './guards/plot-unsaved-changes.guard';
 import { ProblemDetailComponent } from './pages/problems/problem-detail/problem-detail.component';
-import { OvertourismComponent } from './pages/overtourism/overtourism.component';
+import { CapacityComponent } from './pages/overtourism/capacity/capacity.component';
+import { FlowsComponent } from './pages/overtourism/flows/flows.component';
+import { HiddenComponent } from './pages/overtourism/hidden/hidden.component';
+import { RedistributionComponent } from './pages/overtourism/redistribution/redistribution.component';
+import { OvertourismComponent } from './pages/overtourism/overtourism/overtourism.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'problems', pathMatch: 'full' },
@@ -51,7 +55,11 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'indicatori', component: OvertourismComponent },
+  { path: 'capacity', component: CapacityComponent },
+  { path: 'overtourism', component: OvertourismComponent },
+  { path: 'flows', component: FlowsComponent },
+  { path: 'redistribution', component: RedistributionComponent },
+  { path: 'hidden', component: HiddenComponent },
   { path: 'faqs', component: FaqsComponent, data: { breadcrumb: 'FAQ' } },
 ];
 

@@ -15,7 +15,9 @@ export class OvertourismService {
   getIndexes(): Observable<any> {
     return this.http.get(`${this.baseUrl}/data/overtourism/indexes/list`);
   }
-
+  getIndexesByCategory(category: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/data/overtourism/indexes/list?category=${category}`);
+  }
   // getMap(): Observable<any> {
   //   return this.http.get(`${this.baseUrl}/data/overtourism/map`);
   // }

@@ -16,12 +16,13 @@ constructor(public router: Router) {
     document.body.classList.toggle('it-dark-mode', this.darkMode);
   }
   links = [
-    // { label: 'Home', route: '/home' },
     { label: 'Problemi', route: '/problems' },
     { label: 'Indicatori', route: '/indicatori' },
-    // { label: 'FAQs', route: '/faqs' },
-    // { label: 'Terms', route: '/terms' },
-    // { label: 'Settings', route: '/settings' }
+    { label: 'Indici di Capacità', route: '/capacity' },
+    { label: 'Livello di Affollamento', route: '/overtourism' },
+    { label: 'Flussi', route: '/flows' },
+    { label: 'Ridistribuzione dei turisti', route: '/redistribution' },
+    { label: 'Turismo Sommerso', route: '/hidden' },
   ];
 
   isActive(link: any): boolean {
