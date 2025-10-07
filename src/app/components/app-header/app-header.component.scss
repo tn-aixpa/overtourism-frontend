@@ -17,3 +17,22 @@
       font-size: 1.5rem;
     }
   }
+  it-navbar-item {
+    position: relative;
+  }
+  it-navbar-item .nav-link.active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px; /* spessore della linea */
+    background-color: #fff;
+    z-index: 10; /* sopra lo sticky header */
+  }
+  it-navbar-item .nav-link.active {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+  
