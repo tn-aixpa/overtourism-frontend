@@ -1,62 +1,100 @@
 <div class="container my-4">
-    <!-- Dropdown KPI -->
-    <div class="dropdown w-50 mb-3">
-      <button class="btn btn-outline-primary w-100 d-flex justify-content-between align-items-center" 
-              type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <span>{{ getKpiName(selectedKpi) || 'Seleziona Indicatore' }}</span>
-        <span class="material-icons ms-2">expand_more</span>
-      </button>
-      <div class="dropdown-menu w-100">
-        <div class="link-list-wrapper">
-          <ul class="link-list">
-            <li *ngFor="let k of kpis">
-              <a class="list-item" (click)="selectKpi(k.key)">
-                <span>{{ k.title }}</span>
-              </a>
-            </li>
-          </ul>
+
+  <!-- Callout -->
+  <div class="col-auto border">
+    <div class="callout callout-highlight note pt-3 pb-3">
+      <div class="row">
+        <div class="col d-flex align-items-center gap-2">
+          <span class="material-icons text-primary">tune</span>
+          <h5 class="text-primary mb-0">Impostazioni di visualizzazione</h5>
+        </div>
+      </div>
+
+      <div class="row pt-3 pb-3">
+        <!-- Indicatore -->
+        <div class="col-md-4">
+          <fieldset>
+            <legend class="fw-bold mb-2">Indicatore</legend>
+            <it-radio-button
+              *ngFor="let i of ['tutti','escursionisti','rapporto']"
+              name="indicatore"
+              [value]="i"
+              [label]="i | titlecase"
+              [(ngModel)]="indicatore"
+              (ngModelChange)="applyFilters()">
+            </it-radio-button>
+          </fieldset>
+        </div>
+
+        <!-- Direzione -->
+        <div class="col-md-4">
+          <fieldset>
+            <legend class="fw-bold mb-2">Direzione</legend>
+            <it-radio-button
+              *ngFor="let d of ['in','out']"
+              name="direzione"
+              [value]="d"
+              [label]="d === 'in' ? 'Ingresso' : 'Uscita'"
+              [(ngModel)]="direzione"
+              (ngModelChange)="applyFilters()">
+            </it-radio-button>
+          </fieldset>
+        </div>
+
+        <!-- Giorni -->
+        <div class="col-md-4">
+          <fieldset>
+            <legend class="fw-bold mb-2">Giorni</legend>
+            <it-radio-button
+              *ngFor="let g of ['feriali','prefestivi','festivi','sempre']"
+              name="giorni"
+              [value]="g"
+              [label]="g | titlecase"
+              [(ngModel)]="giorni"
+              (ngModelChange)="applyFilters()">
+            </it-radio-button>
+          </fieldset>
         </div>
       </div>
     </div>
-  
-    <!-- Accordion Help -->
-    <div class="accordion mb-3" *ngIf="selectedHelp">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingHelp">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" 
-                  data-bs-target="#collapseHelp" aria-expanded="true" aria-controls="collapseHelp">
-            Descrizione
-          </button>
-        </h2>
-        <div id="collapseHelp" class="accordion-collapse collapse show" aria-labelledby="headingHelp">
-          <div class="accordion-body">
-            {{ selectedHelp }}
-          </div>
-        </div>
-      </div>
-    </div>
-  
-    <!-- Tabs -->
-    <it-tab-container (tabSelected)="onTabSelected($event)">
-      <it-tab-item label="Mappa" icon="map-marker" [active]="activeTab === 'mappa'">
-        <app-overtourism-map 
-          *ngIf="activeTab === 'mappa'"
-          [data]="rawData" 
-          [geojson]="geojson" 
-          [selectedKpi]="selectedKpi"
-          [featureIdKey]="featureIdKey"
-          [locationsCol]="locationsCol">
-        </app-overtourism-map>
-      </it-tab-item>
-  
-      <it-tab-item label="Grafici" icon="chart-line" [active]="activeTab === 'grafici'">
-        <app-overtourism-charts 
-          *ngIf="activeTab === 'grafici'"
-          [data]="rawData" 
-          [selectedKpi]="selectedKpi" 
-          [kpis]="kpis">
-        </app-overtourism-charts>
-      </it-tab-item>
-    </it-tab-container>
   </div>
-  
+
+  <!-- Accordion Help -->
+  <div class="accordion my-3" *ngIf="selectedHelp">
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHelp" aria-expanded="true">
+          Descrizione
+        </button>
+      </h2>
+      <div id="collapseHelp" class="accordion-collapse collapse show">
+        <div class="accordion-body">
+          {{ selectedHelp }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <it-tab-container (tabSelected)="onTabSelected($event)">
+    <it-tab-item label="Mappa" icon="map-marker" [active]="activeTab === 'mappa'">
+      <app-overtourism-map
+        *ngIf="activeTab === 'mappa'"
+        [data]="rawData"
+        [geojson]="geojson"
+        [selectedKpi]="selectedKpi"
+        [featureIdKey]="featureIdKey"
+        [locationsCol]="locationsCol">
+      </app-overtourism-map>
+    </it-tab-item>
+
+    <it-tab-item label="Grafici" icon="chart-line" [active]="activeTab === 'grafici'">
+      <app-overtourism-charts
+        *ngIf="activeTab === 'grafici'"
+        [data]="rawData"
+        [selectedKpi]="selectedKpi"
+        [kpis]="kpis">
+      </app-overtourism-charts>
+    </it-tab-item>
+  </it-tab-container>
+</div>

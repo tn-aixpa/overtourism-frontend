@@ -26,7 +26,7 @@ export class CapacityComponent implements OnInit {
         const firstKpi = this.kpis[0];
         this.featureIdKey = firstKpi.map.key;
         this.locationsCol = firstKpi.map.locations_col;
-        this.selectKpi(firstKpi.key); // preseleziona primo KPI
+        this.selectKpi(firstKpi.key); 
       }
     });
   }

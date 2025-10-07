@@ -1,6 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { OvertourismService } from '../../../services/overtourism.service';
 
+
+export interface KpiInfo {
+  key: string;
+  title: string;
+  dataset: string;
+  other: string[];
+  map: {
+    geojson: string;
+    key: string;
+    locations_col: string;
+  };
+  help?: string;
+  ticks?: any;
+  _id?: string; // chiave originale del record
+}
 @Component({
   selector: 'app-flows',
   templateUrl: './flows.component.html',
@@ -11,42 +26,50 @@ export class FlowsComponent implements OnInit {
   geojson: any;
   rawData: any[] = [];
   selectedKpi: string | null = null;
-  kpis: { key: string; title: string; dataset: string; other: string[]; map: any; help?: string }[] = [];
+  kpis: KpiInfo[] = [];
   featureIdKey: string | null = null;
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
-  selectedHelp: string | null = null;   // help del KPI selezionato
+  selectedHelp: string | null = null;
+
+  // Filtri
+  indicatore = 'tutti';
+  direzione = 'in';
+  giorni = 'feriali';
+Object: any;
 
   constructor(private svc: OvertourismService) {}
 
   ngOnInit() {
     this.svc.getIndexesByCategory('flows').subscribe((res: any) => {
-      this.kpis = Object.values(res);
-      if (this.kpis.length) {
-        const firstKpi = this.kpis[0];
-        this.featureIdKey = firstKpi.map.key;
-        this.locationsCol = firstKpi.map.locations_col;
-        this.selectKpi(firstKpi.key); // preseleziona primo KPI
-      }
+      this.kpis = Object.entries(res).map(([key, value]) => ({
+        ...(value as object),
+        _id: key,
+      })) as KpiInfo[];
+           this.applyFilters();
     });
   }
 
-  getKpiName(key: string | null): string | undefined {
-    return this.kpis.find(k => k.key === key)?.title;
-  }
+  applyFilters() {
+    const key = `flusso_${this.direzione}_${this.indicatore}_${this.giorni}`;
+    console.log('Filtri aggiornati:', { key });
 
-  selectKpi(key: string) {
-    const indexInfo = this.kpis.find(k => k.key === key);
-    this.selectedKpi = indexInfo ? indexInfo.key : null;
-    this.selectedHelp = indexInfo?.help || null;   // salva help
-    if (!indexInfo) return;
+    // ✅ cerca usando la chiave originale salvata come _id
+    const indexInfo = this.kpis.find(kpi => kpi._id === key);
+    if (!indexInfo) {
+      console.warn(`Nessun KPI trovato per ${key}`);
+      return;
+    }
 
-    // dati KPI
+    this.selectedKpi = indexInfo.key;
+    this.selectedHelp = indexInfo.help ?? null;
+
+    // ✅ carica dati KPI
     this.svc.getDataByDataset(indexInfo.dataset).subscribe((res: any) => {
       this.rawData = res.data;
     });
 
-    // geojson relativo
+    // ✅ carica geojson relativo
     this.svc.getMapByDataset(indexInfo.map.geojson).subscribe(res => {
       this.geojson = res;
       this.featureIdKey = indexInfo.map.key;

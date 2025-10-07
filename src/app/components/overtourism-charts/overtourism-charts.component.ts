@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, ViewChild, ElementRef, AfterViewInit, SimpleChanges } from '@angular/core';
 import * as Plotly from 'plotly.js-dist-min';
 import { AutocompleteComponent } from '../autocomplete/autocomplete.component';
+import { KpiInfo } from '../../pages/overtourism/flows/flows.component';
 
 @Component({
   selector: 'app-overtourism-charts',
@@ -14,8 +15,7 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   @Input() selectedKpi: string | null = null;
   @ViewChild('histogramChart', { static: false }) chartEl!: ElementRef;
   @ViewChild('comuneAuto') comuneAuto!: AutocompleteComponent;
-  @Input() kpis: { key: string; title: string; dataset: string; other: string[]; map: string }[] = [];
-
+  @Input() kpis: KpiInfo[] = [];
   private resizeObserver?: ResizeObserver;
 
   comuni: string[] = [];
