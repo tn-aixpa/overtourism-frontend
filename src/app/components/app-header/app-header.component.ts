@@ -17,7 +17,6 @@ constructor(public router: Router) {
   }
   links = [
     { label: 'Problemi', route: '/problems' },
-    { label: 'Indicatori', route: '/indicatori' },
     { label: 'Indici di Capacità', route: '/capacity' },
     { label: 'Livello di Affollamento', route: '/overtourism' },
     { label: 'Flussi', route: '/flows' },
