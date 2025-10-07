@@ -29,8 +29,9 @@
       </tr>
     </ng-container>
     <ng-container tbody >
-      <tr *ngFor="let scenario of scenari; let i = index" [ngClass]="{'bg-light': i % 2 === 0, 'bg-white': i % 2 !== 0}"
-        (click)="goToScenario(scenario)" style="cursor: pointer;">
+      <tr *ngFor="let scenario of scenari; let i = index"
+      [ngClass]="{'bg-custom-light': i % 2 === 0, 'bg-white': i % 2 !== 0}"
+      (click)="goToScenario(scenario)" style="cursor: pointer;">
         <td *ngIf="comparazioneAttiva">
           <it-checkbox class="me-2" [label]="''" [(ngModel)]="checkboxStates[scenario.id]"
             [disabled]="!checkboxStates[scenario.id] && selectedScenari.length >= 2" (click)="$event.stopPropagation()"
@@ -65,16 +66,14 @@
               visibility
               </span>
              </button>
-            <!-- <button class="btn btn-sm btn-icon text-primary" (click)="openEdit(scenario); $event.stopPropagation()"
-              [disabled]="comparazioneAttiva" aria-label="Modifica scenario">
-              <span class="material-icons">edit</span>
-            </button> -->
-            <button class="btn btn-sm btn-icon text-primary"
-            (click)="openDeleteModal(scenario); $event.stopPropagation()" 
-            [disabled]="comparazioneAttiva"
-              aria-label="Elimina scenario">
-              <span class="material-icons">delete</span>
-            </button>
+            
+             <button *ngIf="scenario.id !== 'model_0'" 
+             class="btn btn-sm btn-icon text-primary"
+             (click)="openDeleteModal(scenario); $event.stopPropagation()" 
+             [disabled]="comparazioneAttiva"
+             aria-label="Elimina scenario">
+       <span class="material-icons">delete</span>
+     </button>
           </div>
         </td>
 

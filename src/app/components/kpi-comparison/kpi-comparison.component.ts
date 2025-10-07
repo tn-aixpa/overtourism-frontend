@@ -35,7 +35,7 @@ export class KpiComparisonComponent {
     }
     
     getDeltaClass(left: { level: number }, right: { level: number }): string {
-      const deltaPerc = right.level - left.level;
+      const deltaPerc = right?.level - left?.level;
     
       if (Math.abs(deltaPerc) <= 2) return 'btn-outline-secondary'; // Grigio
       if (deltaPerc > 2) return 'btn-outline-danger';               // Rosso
