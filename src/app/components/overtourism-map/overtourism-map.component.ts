@@ -16,12 +16,14 @@ interface ChoroplethMapboxTrace extends Partial<Plotly.PlotData> {
   standalone: false,
 })
 export class OvertourismMapComponent implements OnChanges, AfterViewInit {
-  @Input() data: any[] = [];              // dati dei comuni con KPI e anno
-  @Input() geojson: any = null;           // geometrie
+  @Input() data: any[] = [];
+  @Input() geojson: any = null;
   @Input() selectedKpi: string | null = null;
-  @Input() featureIdKey: string | null = null;   
-  @Input() locationsCol: string | null = null;  
+  @Input() featureIdKey: string | null = null;
+  @Input() locationsCol: string | null = null;
   @Input() active: boolean = true;
+
+  @Input() hoverTemplateBuilder: ((d: any) => string) | null = null;
 
   @ViewChild('mapChart', { static: false }) mapEl!: ElementRef;
 
@@ -33,65 +35,71 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-  
     if ((changes['data'] && this.data?.length) || 
         (changes['geojson'] && this.geojson) || 
         changes['selectedKpi']) {
-          if (this.active) {
-
-      this.setupAnni();
-      this.tryDrawMap();
-          }
+      if (this.active) {
+        this.setupAnni();
+        this.tryDrawMap();
+      }
     }
     if (changes['active'] && this.active) {
       this.tryDrawMap();
     }
   }
+
   private tryDrawMap() {
-    // Non disegnare se manca qualcosa
     if (!this.data?.length || !this.geojson || !this.selectedKpi || this.selectedAnno === null) return;
     if (!this.mapEl?.nativeElement) return;
-  
     this.drawMap();
   }
+
   private setupAnni() {
     if (this.data?.length) {
       this.anniDisponibili = Array.from(new Set(this.data.map(d => d.anno))).sort();
-        this.selectedAnno = this.anniDisponibili[this.anniDisponibili.length - 1]; 
-      
+      this.selectedAnno = this.anniDisponibili[this.anniDisponibili.length - 1];
     }
   }
-  
+
   drawMap() {
     if (!this.data?.length || !this.geojson || !this.selectedKpi || this.selectedAnno === null) return;
     if (!this.mapEl?.nativeElement) return;
+
     const datiAnno = this.data.filter(d => d.anno === this.selectedAnno);
 
     const comuni: string[] = [];
     const valori: number[] = [];
-    console.log('Feature ID Key:', this.featureIdKey);
+    const hoverTexts: string[] = [];
+
     this.geojson.features.forEach((feature: any) => {
       const featureId = this.featureIdKey 
         ? feature.properties[this.featureIdKey.split('.').pop()!] 
         : null;
-    
       const datoComune = datiAnno.find(d => d[this.locationsCol!] === featureId);
-    
+      
       comuni.push(featureId);
-      valori.push(datoComune ? datoComune[this.selectedKpi!] : NaN);
+      const valore = datoComune ? datoComune[this.selectedKpi!] : NaN;
+      valori.push(valore);
+
+      // 👉 costruzione hover
+      if (datoComune && this.hoverTemplateBuilder) {
+        hoverTexts.push(this.hoverTemplateBuilder(datoComune));
+      } else {
+        hoverTexts.push(`${featureId}<br>${this.selectedKpi}: ${valore}`);
+      }
     });
-    
+
     const trace: ChoroplethMapboxTrace = {
       type: 'choroplethmapbox',
       geojson: this.geojson,
       locations: comuni,
       z: valori,
       featureidkey: this.featureIdKey || 'properties.name',
+      text: hoverTexts,
+      hoverinfo: 'text',
       colorscale: 'Viridis',
-      marker: { line: { width: 0.5, color: 'white' } },
-      hovertemplate: '<b>%{location}</b><br>' + `${this.selectedKpi}: %{z:.2f}<extra></extra>`
+      marker: { line: { width: 0.5, color: 'white' } }
     };
-    
 
     const layout: Partial<Plotly.Layout> = {
       mapbox: {
@@ -104,5 +112,4 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
 
     Plotly.react(this.mapEl.nativeElement, [trace], layout, { responsive: true });
   }
-
 }

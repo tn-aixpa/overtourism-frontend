@@ -7,6 +7,7 @@ export interface KpiInfo {
   title: string;
   dataset: string;
   other: string[];
+  alias: Record<string, string>;
   map: {
     geojson: string;
     key: string;
@@ -37,6 +38,7 @@ export class FlowsComponent implements OnInit {
   direzione = 'in';
   giorni = 'feriali';
 Object: any;
+hoverTemplateBuilder: ((d: any) => string) | null = null;
 
   constructor(private svc: OvertourismService) {}
 
@@ -56,6 +58,16 @@ Object: any;
 
     // ✅ cerca usando la chiave originale salvata come _id
     const indexInfo = this.kpis.find(kpi => kpi._id === key);
+    if (indexInfo) {
+      const fields = ['anno', 'comune', ...(indexInfo.other || [])];
+      const alias = indexInfo.alias || {};
+    
+      this.hoverTemplateBuilder = (d: any) => {
+        return fields
+          .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
+          .join('');
+      };
+    }
     if (!indexInfo) {
       console.warn(`Nessun KPI trovato per ${key}`);
       return;

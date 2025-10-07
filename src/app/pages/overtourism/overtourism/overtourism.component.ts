@@ -11,11 +11,20 @@ export class OvertourismComponent implements OnInit {
   geojson: any;
   rawData: any[] = [];
   selectedKpi: string | null = null;
-  kpis: { key: string; title: string; dataset: string; other: string[]; map: any; help?: string }[] = [];
-  featureIdKey: string | null = null;
+  kpis: {
+    key: string;
+    title: string;
+    dataset: string;
+    other: string[];
+    alias: Record<string, string>;
+    map: any;
+    help?: string;
+  }[] = [];  
+    featureIdKey: string | null = null;
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
-  selectedHelp: string | null = null;   // help del KPI selezionato
+  selectedHelp: string | null = null;   
+  hoverTemplateBuilder: ((d: any) => string) | null = null;
 
   constructor(private svc: OvertourismService) {}
 
@@ -37,6 +46,16 @@ export class OvertourismComponent implements OnInit {
 
   selectKpi(key: string) {
     const indexInfo = this.kpis.find(k => k.key === key);
+    if (indexInfo) {
+      const fields = ['anno', 'comune', ...(indexInfo.other || [])];
+      const alias = indexInfo.alias || {};
+    
+      this.hoverTemplateBuilder = (d: any) => {
+        return fields
+          .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
+          .join('');
+      };
+    }
     this.selectedKpi = indexInfo ? indexInfo.key : null;
     this.selectedHelp = indexInfo?.help || null;   // salva help
     if (!indexInfo) return;
@@ -53,7 +72,14 @@ export class OvertourismComponent implements OnInit {
       this.locationsCol = indexInfo.map.locations_col;
     });
   }
+  // overtourismHoverTemplate = (d: any) => {
+  //   return `
+  //     <b>Comune:</b> ${d.comune}<br>
+  //     <b>Anno:</b> ${d.anno}<br>
+  //     <b>Livello:</b> ${d.level}
 
+  //   `;
+  // };
   onTabSelected(event: any) {
     this.activeTab = event.label === 'Mappa' ? 'mappa' : 'grafici';
   }
