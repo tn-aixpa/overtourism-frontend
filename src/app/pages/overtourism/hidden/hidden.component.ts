@@ -25,6 +25,7 @@ export class HiddenComponent implements OnInit {
   activeTab: string = 'mappa';
   selectedHelp: string | null = null;   // help del KPI selezionato
   hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
+  selectedKpiAlias: Record<string, string> = {};
 
   constructor(private svc: OvertourismService) {}
 
@@ -55,7 +56,10 @@ export class HiddenComponent implements OnInit {
           .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
           .join('');
       };
-    }
+      this.selectedKpiAlias = alias; 
+    } else {
+      this.selectedKpiAlias = {};
+      }
     this.selectedKpi = indexInfo ? indexInfo.key : null;
     this.selectedHelp = indexInfo?.help || null;   // salva help
     if (!indexInfo) return;

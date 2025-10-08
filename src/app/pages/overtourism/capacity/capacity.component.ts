@@ -25,6 +25,7 @@ export class CapacityComponent implements OnInit {
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
   selectedHelp: string | null = null;
+  selectedKpiAlias: Record<string, string> = {};
 
   hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
@@ -58,6 +59,9 @@ export class CapacityComponent implements OnInit {
           .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
           .join('');
       };
+      this.selectedKpiAlias = alias; 
+  } else {
+    this.selectedKpiAlias = {};
     }
 
     this.selectedKpi = indexInfo ? indexInfo.key : null;

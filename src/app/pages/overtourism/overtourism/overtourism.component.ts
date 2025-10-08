@@ -19,14 +19,15 @@ export class OvertourismComponent implements OnInit {
     alias: Record<string, string>;
     map: any;
     help?: string;
-  }[] = [];  
-    featureIdKey: string | null = null;
+  }[] = [];
+  featureIdKey: string | null = null;
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
-  selectedHelp: string | null = null;   
+  selectedHelp: string | null = null;
   hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
+  selectedKpiAlias: Record<string, string> = {};
 
-  constructor(private svc: OvertourismService) {}
+  constructor(private svc: OvertourismService) { }
 
   ngOnInit() {
     this.svc.getIndexesByCategory('overtourism').subscribe((res: any) => {
@@ -49,12 +50,15 @@ export class OvertourismComponent implements OnInit {
     if (indexInfo) {
       const fields = ['anno', 'comune', ...(indexInfo.other || [])];
       const alias = indexInfo.alias || {};
-    
+
       this.hoverTemplateBuilder = (d: any) => {
         return fields
           .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
           .join('');
       };
+      this.selectedKpiAlias = alias;
+    } else {
+      this.selectedKpiAlias = {};
     }
     this.selectedKpi = indexInfo ? indexInfo.key : null;
     this.selectedHelp = indexInfo?.help || null;   // salva help

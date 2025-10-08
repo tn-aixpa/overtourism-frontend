@@ -39,6 +39,7 @@ export class FlowsComponent implements OnInit {
   giorni = 'feriali';
 Object: any;
 hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
+selectedKpiAlias: Record<string, string> = {};
 
   constructor(private svc: OvertourismService) {}
 
@@ -67,7 +68,10 @@ hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
           .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
           .join('');
       };
-    }
+      this.selectedKpiAlias = alias; 
+    } else {
+      this.selectedKpiAlias = {};
+      }
     if (!indexInfo) {
       console.warn(`Nessun KPI trovato per ${key}`);
       return;
