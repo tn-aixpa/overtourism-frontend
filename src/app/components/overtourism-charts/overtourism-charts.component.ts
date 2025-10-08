@@ -16,6 +16,8 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   @ViewChild('histogramChart', { static: false }) chartEl!: ElementRef;
   @ViewChild('comuneAuto') comuneAuto!: AutocompleteComponent;
   @Input() kpis: KpiInfo[] = [];
+  @Input() hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
+
   private resizeObserver?: ResizeObserver;
 
   comuni: string[] = [];
@@ -121,12 +123,14 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
       const hoverText = anni.map(y => {
         const record = datiComune.find(d => d.anno === y);
         if (!record || !indexInfo) return '';
-        return [
-          `Comune: ${comune}`,
-          `Anno: ${y}`,
-          `${indexInfo.title}: ${typeof record[this.selectedKpi!] === 'number' ? record[this.selectedKpi!].toFixed(2) : record[this.selectedKpi!]}`,
-          ...indexInfo.other.map(f => `${f}: ${typeof record[f] === 'number' ? record[f].toFixed(2) : record[f]}`)
-        ].join('<br>');
+      
+        if (this.hoverTemplateBuilder) {
+          return this.hoverTemplateBuilder(record, indexInfo.alias);
+        }
+      
+        return Object.entries(record)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join('<br>');
       });
   
       return {

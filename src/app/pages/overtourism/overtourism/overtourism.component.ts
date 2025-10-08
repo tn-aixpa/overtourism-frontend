@@ -24,7 +24,7 @@ export class OvertourismComponent implements OnInit {
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
   selectedHelp: string | null = null;   
-  hoverTemplateBuilder: ((d: any) => string) | null = null;
+  hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
   constructor(private svc: OvertourismService) {}
 

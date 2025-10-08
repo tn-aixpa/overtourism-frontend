@@ -23,7 +23,7 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   @Input() locationsCol: string | null = null;
   @Input() active: boolean = true;
 
-  @Input() hoverTemplateBuilder: ((d: any) => string) | null = null;
+  @Input() hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
   @ViewChild('mapChart', { static: false }) mapEl!: ElementRef;
 

@@ -55,7 +55,8 @@
           *ngIf="activeTab === 'grafici'"
           [data]="rawData" 
           [selectedKpi]="selectedKpi" 
-          [kpis]="kpis">
+          [kpis]="kpis"
+          [hoverTemplateBuilder]="hoverTemplateBuilder">
         </app-overtourism-charts>
       </it-tab-item>
     </it-tab-container>

@@ -19,12 +19,14 @@ export class CapacityComponent implements OnInit {
     alias: Record<string, string>;
     map: any;
     help?: string;
-  }[] = [];  
+  }[] = [];
+
   featureIdKey: string | null = null;
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
-  selectedHelp: string | null = null;   // help del KPI selezionato
-  hoverTemplateBuilder: ((d: any) => string) | null = null;
+  selectedHelp: string | null = null;
+
+  hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
   constructor(private svc: OvertourismService) {}
 
@@ -35,7 +37,7 @@ export class CapacityComponent implements OnInit {
         const firstKpi = this.kpis[0];
         this.featureIdKey = firstKpi.map.key;
         this.locationsCol = firstKpi.map.locations_col;
-        this.selectKpi(firstKpi.key); 
+        this.selectKpi(firstKpi.key);
       }
     });
   }
@@ -49,15 +51,17 @@ export class CapacityComponent implements OnInit {
     if (indexInfo) {
       const fields = ['anno', 'comune', ...(indexInfo.other || [])];
       const alias = indexInfo.alias || {};
-    
-      this.hoverTemplateBuilder = (d: any) => {
+
+      this.hoverTemplateBuilder = (d: any): string => {
+        if (!d) return '';
         return fields
           .map(f => `<b>${alias[f] || f}:</b> ${d[f] ?? '-'}<br>`)
           .join('');
       };
     }
+
     this.selectedKpi = indexInfo ? indexInfo.key : null;
-    this.selectedHelp = indexInfo?.help || null;   // salva help
+    this.selectedHelp = indexInfo?.help || null;
     if (!indexInfo) return;
 
     // dati KPI
@@ -72,6 +76,7 @@ export class CapacityComponent implements OnInit {
       this.locationsCol = indexInfo.map.locations_col;
     });
   }
+
   onTabSelected(event: any) {
     this.activeTab = event.label === 'Mappa' ? 'mappa' : 'grafici';
   }

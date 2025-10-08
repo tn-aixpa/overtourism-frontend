@@ -24,7 +24,7 @@ export class HiddenComponent implements OnInit {
   locationsCol: string | null = null;
   activeTab: string = 'mappa';
   selectedHelp: string | null = null;   // help del KPI selezionato
-  hoverTemplateBuilder: ((d: any) => string) | null = null;
+  hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
   constructor(private svc: OvertourismService) {}
 

@@ -38,7 +38,7 @@ export class FlowsComponent implements OnInit {
   direzione = 'in';
   giorni = 'feriali';
 Object: any;
-hoverTemplateBuilder: ((d: any) => string) | null = null;
+hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
   constructor(private svc: OvertourismService) {}
 
