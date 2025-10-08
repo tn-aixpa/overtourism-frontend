@@ -23,6 +23,7 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
   @Input() featureIdKey: string | null = null;
   @Input() locationsCol: string | null = null;
   @Input() active: boolean = true;
+  @Input() kpiTicks: [number[], string[]] | null = null;
 
   @Input() hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 
@@ -127,8 +128,9 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
         yanchor: 'middle',          
         x: 1.01,                   
         outlinewidth: 0.5,
-        tickfont: { size: 12 }
-      }  };
+        tickfont: { size: 12 },
+        tickvals: this.kpiTicks?.[0],
+        ticktext: this.kpiTicks?.[1]      }  };
 
     const layout: Partial<Plotly.Layout> = {
       mapbox: {

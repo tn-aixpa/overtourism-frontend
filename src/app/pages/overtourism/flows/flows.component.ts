@@ -40,6 +40,7 @@ export class FlowsComponent implements OnInit {
 Object: any;
 hoverTemplateBuilder?: (record: any, alias?: Record<string, string>) => string;
 selectedKpiAlias: Record<string, string> = {};
+selectedKpiTicks: [number[], string[]] | null = null;
 
   constructor(private svc: OvertourismService) {}
 
@@ -79,6 +80,7 @@ selectedKpiAlias: Record<string, string> = {};
 
     this.selectedKpi = indexInfo.key;
     this.selectedHelp = indexInfo.help ?? null;
+    this.selectedKpiTicks = indexInfo.ticks ?? null;
 
     // ✅ carica dati KPI
     this.svc.getDataByDataset(indexInfo.dataset).subscribe((res: any) => {
