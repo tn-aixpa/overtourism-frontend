@@ -18,8 +18,8 @@ constructor(public router: Router) {
   links = [
     { label: 'Problemi', route: '/problems' },
     { label: 'Indici di Capacità', route: '/capacity' },
-    { label: 'Livello di Affollamento', route: '/overtourism' },
     { label: 'Flussi', route: '/flows' },
+    { label: 'Livello di Affollamento', route: '/overtourism' },
     { label: 'Ridistribuzione dei turisti', route: '/redistribution' },
     { label: 'Turismo Sommerso', route: '/hidden' },
   ];
