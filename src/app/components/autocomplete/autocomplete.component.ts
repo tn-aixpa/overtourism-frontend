@@ -6,7 +6,11 @@ import {
   ElementRef,
   ViewChild,
   OnInit,
-  OnDestroy
+  OnDestroy,
+  ChangeDetectorRef,
+  ViewContainerRef,
+  TemplateRef,
+  EmbeddedViewRef
 } from '@angular/core';
 
 type FunctionSource = (query: string, populateResults: (results: string[]) => void) => void;
@@ -14,33 +18,41 @@ type FunctionSource = (query: string, populateResults: (results: string[]) => vo
 @Component({
   selector: 'app-autocomplete',
   templateUrl: './autocomplete.component.html',
-  standalone: false,
-  styleUrls: ['./autocomplete.component.scss']
+  styleUrls: ['./autocomplete.component.scss'],
+  standalone: false
 })
 export class AutocompleteComponent implements OnInit, OnDestroy {
   @Input() source: string[] | FunctionSource = [];
-  @Input() label: string = '';
-  @Input() placeholder: string = '';
-  @Input() minLength: number = 0;
-  @Input() showAllOnFocus: boolean = true;
-  @Input() maxResults: number = 200;
+  @Input() label = '';
+  @Input() placeholder = '';
+  @Input() minLength = 0;
+  @Input() showAllOnFocus = true;
+  @Input() maxResults = 200;
 
   @Output() selected = new EventEmitter<string>();
 
   @ViewChild('inputEl', { static: true }) inputEl!: ElementRef<HTMLInputElement>;
+  @ViewChild('panelTemplate', { static: true }) panelTemplate!: TemplateRef<any>;
 
   inputValue = '';
   filtered: string[] = [];
   panelOpen = false;
   highlighted = -1;
 
+  private viewRef?: EmbeddedViewRef<any>;
+  private panelEl?: HTMLElement;
+
   private outsideClickHandler = (e: Event) => {
-    if (!this.el.nativeElement.contains(e.target)) {
+    if (!this.el.nativeElement.contains(e.target) && !this.panelEl?.contains(e.target as Node)) {
       this.closePanel();
     }
   };
 
-  constructor(private el: ElementRef) {}
+  constructor(
+    private el: ElementRef,
+    private cdr: ChangeDetectorRef,
+    private vcr: ViewContainerRef
+  ) {}
 
   ngOnInit(): void {
     document.addEventListener('click', this.outsideClickHandler);
@@ -48,9 +60,10 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     document.removeEventListener('click', this.outsideClickHandler);
+    this.closePanel(true);
   }
 
-  // apertura su focus / click
+  // === Input & filtro ===
   onFocus(): void {
     if (this.showAllOnFocus && this.minLength === 0) {
       this.updateResults('');
@@ -58,7 +71,6 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
   }
 
-  // input change
   onInput(): void {
     const q = this.inputValue ?? '';
     if (q.length < this.minLength) {
@@ -66,19 +78,17 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
       return;
     }
     this.updateResults(q);
-    if (this.filtered.length) this.openPanel();
-    else this.closePanel();
+    this.filtered.length ? this.openPanel() : this.closePanel();
   }
 
-  // aggiorna risultati da array o da funzione
   updateResults(query: string): void {
     if (typeof this.source === 'function') {
-      (this.source as FunctionSource)(query, (results: string[]) => {
+      (this.source as FunctionSource)(query, results => {
         this.filtered = (results || []).slice(0, this.maxResults);
         this.highlighted = this.filtered.length ? 0 : -1;
       });
     } else {
-      const q = (query || '').toLowerCase();
+      const q = query.toLowerCase();
       this.filtered = (this.source as string[])
         .filter(s => s.toLowerCase().includes(q))
         .slice(0, this.maxResults);
@@ -86,70 +96,82 @@ export class AutocompleteComponent implements OnInit, OnDestroy {
     }
   }
 
+  // === Apertura dinamica del pannello ===
   openPanel(): void {
+    if (this.panelOpen) return;
     this.panelOpen = true;
-    const panel = this.el.nativeElement.querySelector('.autocomplete-panel');
-    if (panel) {
-      document.body.appendChild(panel);
-      const rect = this.inputEl.nativeElement.getBoundingClientRect();
-      panel.style.position = 'absolute';
-      panel.style.top = rect.bottom + 'px';
-      panel.style.left = rect.left + 'px';
-      panel.style.width = rect.width + 'px';
-      panel.style.zIndex = '2000';
-    }
+
+    // Crea la vista dal template
+    this.viewRef = this.vcr.createEmbeddedView(this.panelTemplate);
+    this.cdr.detectChanges();
+
+    // Aggiungila al body
+    setTimeout(() => {
+      this.panelEl = this.viewRef?.rootNodes[0] as HTMLElement;
+      if (!this.panelEl) return;
+
+      document.body.appendChild(this.panelEl);
+      this.positionPanel();
+
+      // Listener per reposition
+      window.addEventListener('scroll', this.positionPanel.bind(this), true);
+      window.addEventListener('resize', this.positionPanel.bind(this));
+    });
   }
 
-  closePanel(): void {
+  private positionPanel(): void {
+    if (!this.panelEl) return;
+    const rect = this.inputEl.nativeElement.getBoundingClientRect();
+    Object.assign(this.panelEl.style, {
+      position: 'absolute',
+      top: rect.bottom + window.scrollY + 'px',
+      left: rect.left + window.scrollX + 'px',
+      width: rect.width + 'px',
+      zIndex: '3000'
+    });
+  }
+
+  // === Chiusura pannello ===
+  closePanel(force = false): void {
+    if (!this.panelOpen && !force) return;
     this.panelOpen = false;
     this.highlighted = -1;
+
+    window.removeEventListener('scroll', this.positionPanel.bind(this), true);
+    window.removeEventListener('resize', this.positionPanel.bind(this));
+
+    if (this.panelEl && document.body.contains(this.panelEl)) {
+      document.body.removeChild(this.panelEl);
+    }
+    this.panelEl = undefined;
+    this.viewRef?.destroy();
   }
 
   select(item: string): void {
     if (!item) return;
     this.selected.emit(item);
-  
-    // svuota campo e chiudi
     this.inputValue = '';
     this.filtered = [];
     this.closePanel();
-  
   }
 
-  // navigazione tastiera
   onKeyDown(e: KeyboardEvent): void {
-    if (!this.panelOpen) {
-      if (e.key === 'ArrowDown' && this.filtered.length) {
-        this.openPanel();
-        e.preventDefault();
-      }
-      return;
-    }
+    if (!this.panelOpen) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       this.highlighted = Math.min(this.highlighted + 1, this.filtered.length - 1);
-      this.scrollIntoViewIfNeeded();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       this.highlighted = Math.max(this.highlighted - 1, 0);
-      this.scrollIntoViewIfNeeded();
-    } else if (e.key === 'Enter') {
+    } else if (e.key === 'Enter' && this.highlighted >= 0) {
       e.preventDefault();
-      if (this.highlighted >= 0) this.select(this.filtered[this.highlighted]);
+      this.select(this.filtered[this.highlighted]);
     } else if (e.key === 'Escape') {
-      e.preventDefault();
       this.closePanel();
     }
   }
 
-  // aiuta a vedere l'elemento evidenziato se la lista è scrollabile
-  private scrollIntoViewIfNeeded(): void {
-    const el = this.el.nativeElement.querySelectorAll('.ac-item')[this.highlighted] as HTMLElement | undefined;
-    if (el) el.scrollIntoView({ block: 'nearest' });
-  }
-
-  // API utile per reset manuale
-  public clear(): void {
+  clear(): void {
     this.inputValue = '';
     this.filtered = [];
     this.closePanel();

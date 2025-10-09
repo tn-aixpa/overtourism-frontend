@@ -1,34 +1,42 @@
 <div class="ac-wrapper position-relative">
-    <label *ngIf="label" class="form-label small text-muted">{{ label }}</label>
-  
-    <input
-      #inputEl
-      class="form-control"
-      type="text"
-      [placeholder]="placeholder"
-      [(ngModel)]="inputValue"
-      [ngModelOptions]="{standalone:true}"   
-      (focus)="onFocus()"
-      (input)="onInput()"
-      (keydown)="onKeyDown($event)"
-      aria-autocomplete="list"
-      [attr.aria-expanded]="panelOpen"  
-          role="combobox"
-    />
-  
-    <div class="dropdown-menu w-100 mt-1" [class.show]="panelOpen" *ngIf="panelOpen">
-      <ul class="list-group list-group-flush max-height-200">
+  <label *ngIf="label" class="form-label small text-muted">{{ label }}</label>
+
+  <input
+    #inputEl
+    class="form-control"
+    type="text"
+    [placeholder]="placeholder"
+    [(ngModel)]="inputValue"
+    [ngModelOptions]="{ standalone: true }"
+    (focus)="onFocus()"
+    (input)="onInput()"
+    (keydown)="onKeyDown($event)"
+    aria-autocomplete="list"
+    [attr.aria-expanded]="panelOpen"
+    role="combobox"
+  />
+
+  <!-- Template del pannello -->
+  <ng-template #panelTemplate>
+    <div
+      #panelRef
+      class="autocomplete-panel dropdown-menu show"
+      style="max-height: 240px; overflow-y: auto;"
+    >
+      <ul class="list-group list-group-flush">
         <li
           *ngFor="let item of filtered; let i = index"
-          class="list-group-item ac-item list-item"
+          class="list-group-item ac-item"
           [class.active]="i === highlighted"
           (mouseenter)="highlighted = i"
           (click)="select(item)"
-          role="option">
+        >
           {{ item }}
         </li>
-        <li *ngIf="!filtered.length" class="list-group-item text-muted small">Nessun risultato</li>
+        <li *ngIf="!filtered.length" class="list-group-item text-muted small">
+          Nessun risultato
+        </li>
       </ul>
     </div>
-  </div>
-  
+  </ng-template>
+</div>
