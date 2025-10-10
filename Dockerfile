@@ -1,4 +1,4 @@
-FROM node:20.12.2 AS build
+FROM node:20.19.5 AS build
 
 LABEL org.opencontainers.image.source=https://github.com/tn-aixpa/overtourism-frontend
 
