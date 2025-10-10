@@ -1,0 +1,19 @@
+FROM node:20 AS build
+
+LABEL org.opencontainers.image.source=https://github.com/tn-aixpa/overtourism-frontend
+
+WORKDIR /app
+
+# ARG VITE_APP_URL_TOKEN
+# ARG VITE_APP_AXIOS_URL
+# ARG VITE_APP_HATEDEMICS_API_URL
+# ARG VITE_APP_TITLE="Hatedemics"
+# ARG VITE_APP_HATEDEMICS_API_GEN_URL
+COPY package.json /app
+COPY package-lock.json /app
+# RUN rm .env*
+# RUN npm install --legacy-peer-deps
+RUN npm install
+
+FROM scratch
+COPY --from=build /app/node_modules /app/node_modules
