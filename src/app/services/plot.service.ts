@@ -83,10 +83,12 @@ export class PlotService {
         range: [0, input.yMax ?? undefined],
         scaleanchor: 'x',
         scaleratio: 1,
+        layer: 'below traces'
       },
       xaxis: {
         title: { text: 'Turisti' },
-        range: [0, input.xMax ?? undefined]
+        range: [0, input.xMax ?? undefined],
+        layer: 'below traces'
       },
       title: { text: '' },
       showlegend: true,
@@ -289,7 +291,8 @@ export class PlotService {
               'Livello di utilizzo della risorsa ' + sottosistemaSelezionato
         },
         range: [0, yAxisMax],
-        tickformat: '.0f'
+        tickformat: '.0f',
+        layer: 'below traces'
       },
       margin: { t: 50, b: 80, l: 80, r: 60 },
       showlegend: true,

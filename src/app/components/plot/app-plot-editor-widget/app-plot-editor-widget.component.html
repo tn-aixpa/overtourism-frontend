@@ -24,54 +24,45 @@
                 <div *ngIf="widget.editable">
                   <div class="p-2  rounded h-100">
                     <div class="d-flex justify-content-between align-items-center small">
-                      <label class="form-label mb-0" [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' :  undefined ">
+                      <label class="form-label mb-0"
+                        [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' :  undefined ">
                         {{ widget.index_name }}
                       </label>
-                      <span  *ngIf="widget.description"
-                        class="material-icons text-muted ms-2"
-                        style="font-size: 16px; cursor: pointer;"
-                        [itTooltip]="widget.description"
-                        itTooltipPosition="right"
-                      >
+                      <span *ngIf="widget.description" class="material-icons text-muted ms-2"
+                        style="font-size: 16px; cursor: pointer;" [itTooltip]="widget.description"
+                        itTooltipPosition="right">
                         help_outline
                       </span>
                     </div>
-                    <!-- Se ha una scala -->
-                    <ng-container *ngIf="widget.index_category !== '%' && widget.scale">
-                      <div class="custom-slider" [ngClass]="{ 'disabled-slider': !isEditable(widget),'disabled-slider-wrapper': !isEditable(widget) } "
-                        [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' : undefined" >
-                        <!-- [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' : undefined"> -->
-
+                    <!-- Se ha una scala (mostra ngx-slider) -->
+                    <ng-container
+                      *ngIf="widget.index_category !== '%' && widget.scale && widget.index_type !== 'lognorm'; else rangeBlock">
+                      <div class="custom-slider" [ngClass]="{
+      'disabled-slider': !isEditable(widget),
+      'disabled-slider-wrapper': !isEditable(widget)
+    }" [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' : undefined">
                         <ngx-slider [(value)]="widget.vMin!" [(highValue)]="widget.vMax!" [options]="{
-                      floor: widget.min,
-                      ceil: widget.max,
-                      step: widget.step || 1
-                    }" (userChangeEnd)="onWidgetChange()"></ngx-slider>
+        floor: widget.min,
+        ceil: widget.max,
+        step: widget.step || 1
+      }" (userChangeEnd)="onWidgetChange()"></ngx-slider>
                       </div>
                     </ng-container>
 
-                    <!-- Default: it-range -->
-                    <ng-container *ngIf="!widget.scale">
-                      <div
-                        class="position-relative"
-                        [ngClass]="{ 'disabled-slider-wrapper': !isEditable(widget) }"
-                      >
-                        <it-range
-                          [min]="widget.min"
-                          [max]="widget.max"
-                          [step]="widget.step"
-                          [(ngModel)]="widget.v"
-                          leftColor="var(--bs-primary)"
-                          rightColor="hsl(210, 100%, 70%)"
-                          [label]="''"
+                    <!-- it-range come fallback o per lognorm -->
+                    <ng-template #rangeBlock>
+                      <div class="position-relative" [ngClass]="{ 'disabled-slider-wrapper': !isEditable(widget) }">
+                        <it-range [min]="widget.min" [max]="widget.max" [step]="widget.step" [(ngModel)]="widget.v"
+                          leftColor="var(--bs-primary)" rightColor="hsl(210, 100%, 70%)" [label]="''"
                           (ngModelChange)="onWidgetChange()"
-                          [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' : undefined"
-
-                        ></it-range>
+                          [itTooltip]="!isEditable(widget) ? 'Modifica non disponibile per questo indice' : undefined"></it-range>
                       </div>
-                      <div class="small text-end text-muted">{{ widget.v }} <span *ngIf="widget.index_category === '%'">%</span></div>
-                    </ng-container>
-                    
+                      <div class="small text-end text-muted">
+                        {{ widget.v }} <span *ngIf="widget.index_category === '%'">%</span>
+                      </div>
+                    </ng-template>
+
+
 
                   </div>
                 </div>

@@ -147,37 +147,37 @@ export class PlotComponent implements AfterViewInit {
   }
   onWidgetsChanged(updatedWidgets: Record<string, Widget[]>) {
     console.log('Widgets changed:', updatedWidgets);
-
+  
     const changedValues: Record<string, number | [number, number]> = {};
-
+  
     for (const key of Object.keys(updatedWidgets)) {
       const currentGroup = this.originalWidgets[key] || [];
-            // const currentGroup = this.widgets[key] || [];
-
       const updatedGroup = updatedWidgets[key];
-
+  
       for (let i = 0; i < updatedGroup.length; i++) {
         const updated = updatedGroup[i];
         const original = currentGroup[i];
-
+  
         if (!original) {
-          // Nuovo widget (unlikely ma per sicurezza)
+          // Nuovo widget
           changedValues[updated.index_id] = this.extractValue(updated);
           continue;
         }
-
-        if (
-          updated.v !== original.v ||
-          updated.vMin !== original.vMin ||
-          updated.vMax !== original.vMax
-        ) {
+  
+        // Per lognorm confronto solo v, per gli altri confronto anche vMin e vMax
+        const isLognorm = updated.index_type === 'lognorm';
+        const hasChanged =
+          isLognorm
+            ? updated.v !== original.v
+            : updated.v !== original.v || updated.vMin !== original.vMin || updated.vMax !== original.vMax;
+  
+        if (hasChanged) {
           changedValues[updated.index_id] = this.extractValue(updated);
         }
       }
     }
-    //TODO fix always true
-    // if (true || Object.keys(changedValues).length > 0) {
-      if (true || Object.keys(changedValues).length > 0) {
+  
+    if (Object.keys(changedValues).length > 0) {
       console.log('Sending changed widgets:', changedValues);
       this.hasChanges = true;
       this.changedWidgets = changedValues;
@@ -187,13 +187,15 @@ export class PlotComponent implements AfterViewInit {
       console.log('Widgets are equal, no update needed');
     }
   }
+  
 
   extractValue(widget: Widget): number | [number, number] {
-    if (widget.scale && widget.index_category !== '%') {
+    if (widget.scale && widget.index_category !== '%' && widget.index_type !== 'lognorm') {
       const vMin = widget.vMin ?? widget.loc;
       const vMax = widget.vMax ?? (widget.loc + widget.scale);
       return [vMin ?? 1, vMax ?? 1];
     }
+  
     return widget.v ?? widget.loc ?? 0;
   }
   updateData(values: Record<string, number | [number, number]>) {

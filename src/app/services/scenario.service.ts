@@ -19,6 +19,7 @@ scale?: any;
   index_id: string;
   index_name: string;
   index_category?: string;
+  index_type?: string;
   group: string;
   editable: boolean;
   description?: string;
