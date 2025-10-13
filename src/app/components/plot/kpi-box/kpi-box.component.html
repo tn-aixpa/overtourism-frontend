@@ -13,8 +13,16 @@
                 ⚠️ Critico
               </span>
             </h6>
-            <p class="h3 text-secondary">
-              {{ formatNumber(getKpiValue(key)) }}
+            <p class="h3 text-secondary d-flex align-items-baseline gap-1">
+              <span class="fw-bold">{{ getKpiLevel(key) | number:'1.1-1' }}%</span>
+              <span
+                *ngIf="getKpiConfidence(key) !== null"
+                class="text-muted small ms-1"
+                title="Intervallo di confidenza"
+                style="cursor: help;"
+              >
+                ± {{ getKpiConfidence(key) | number:'1.1-1' }}%
+              </span>
             </p>
           </div>
         </ng-container>

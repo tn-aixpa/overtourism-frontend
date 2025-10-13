@@ -9,11 +9,37 @@ import { KPIs } from '../../../models/plot.model';
 export class KpiBoxComponent {
   @Input() kpisData?: KPIs;
 
-  formatNumber(v: number): string {
-    if (typeof v !== 'number' || isNaN(v)) return '-';
-    const scaled = v ;
-    if (scaled < 1 && scaled > 0) return '<1%';
-    return `${Math.round(scaled)}%`;
+  formatNumber(value: number | { level?: number; confidence?: number } | undefined): string {
+    if (value == null) return '-';
+  
+    let level: number | undefined;
+    let confidence: number | undefined;
+  
+    if (typeof value === 'number') {
+      level = value;
+    } else if (typeof value === 'object') {
+      level = value.level;
+      confidence = value.confidence;
+    }
+  
+    if (typeof level !== 'number' || isNaN(level)) return '-';
+  
+    const main = level.toFixed(1);
+    const conf = confidence ? ` ± ${confidence.toFixed(1)}` : '';
+  
+    return `${main}${conf} %`;
+  }
+  getKpiLevel(key: string): number | null {
+    const value = this.kpisData?.[key];
+    if (typeof value === 'number') return value;
+    if (typeof value === 'object' && value && 'level' in value) return value.level;
+    return null;
+  }
+  
+  getKpiConfidence(key: string): number | null {
+    const value = this.kpisData?.[key];
+    if (typeof value === 'object' && value && 'confidence' in value) return value.confidence ?? null;
+    return null;
   }
   getKpiValue(key: string): number {
     const value = this.kpisData?.[key];
