@@ -23,7 +23,7 @@
   "problems": {
     "title": "Domande progettuali",
     "loading": "Caricamento domande progettuali...",
-    "create": "Aggiungi o modifica domanda",
+    "create": "Aggiungi domanda",
     "createTitle": "Definizione del problema",
     "createSubtitle": "In questa sezione è possibile inserire le informazioni principali relative al problema e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
     "editTitle": "Modifica del problema",
@@ -45,7 +45,7 @@
       "resources": "Dati e tecnologie rilevanti",
       "resourcePlaceholder": "Inserisci un URL a una risorsa esterna",
       "addResource": "Aggiungi risorsa",
-      "addProposal": "Aggiungi proposta",
+      "addProposal": "Aggiungi proposta scenario",
       "group": "Sottosistemi disponili",
       "categories": {
         "parking": "Parcheggi",
@@ -64,7 +64,7 @@
       "invalid_problem": "Problema non valido",
       "createTitle": "Crea nuova proposta",
       "edit_title": "Modifica proposta",
-      "add_title": "Aggiungi proposta",
+      "add_title": "Aggiungi proposta scenario",
       "fields": {
         "title": "Titolo",
         "titlePlaceholder": "Inserisci un titolo per la proposta",
