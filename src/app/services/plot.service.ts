@@ -252,7 +252,11 @@ export class PlotService {
 
     const usageMax = Math.max(...y);
     const yAxisMax = usageMax * 1.2;
-
+    const hoverTemplate =
+    sottosistemaSelezionato === 'default'
+      ? 'Giorno: %{x}<br>Utilizzo: %{y:.1f}%<br>Livello di rischio: %{customdata:.1f}%<extra></extra>'
+      : 'Giorno: %{x}<br>Utilizzo: %{y:.0f}<br>Livello di rischio: %{customdata:.1f}%<extra></extra>';
+  
     const trace: Partial<Plotly.PlotData> = {
       x,
       y,
@@ -268,7 +272,7 @@ export class PlotService {
         size: 8,
 
       },
-      hovertemplate: 'Giorno: %{x}<br>Utilizzo: %{y}%<br>Livello di rischio: %{customdata:.1f}%<extra></extra>'
+      hovertemplate: hoverTemplate
     };
 
     const layout: Partial<Plotly.Layout> = {
