@@ -23,7 +23,7 @@
   "problems": {
     "title": "Ambiti di analisi",
     "loading": "Caricamento ambiti di analisi...",
-    "create": "Aggiungi analisi",
+    "create": "Aggiungi ambito di analisi",
     "createTitle": "Definizione dell'ambito di analisi",
     "createSubtitle": "In questa sezione è possibile inserire le informazioni principali relative all'analisi e agli scenari che si intendono simulare. Si tratta di una fase preliminare fondamentale per contestualizzare l’analisi e guidare correttamente la scelta dei parametri successivi. Gli scenari possono specificare, ad esempio, l’area geografica di riferimento, il periodo dell’anno, la tipologia di visitatori attesi (turisti, escursionisti, residenti), eventuali eventi particolari, e gli obiettivi della simulazione (es. ridurre il traffico, migliorare la distribuzione dei flussi, testare nuove soluzioni). Queste informazioni serviranno a costruire uno scenario realistico e coerente con le politiche o le strategie che si vogliono valutare.",
     "editTitle": "Modifica dell'analisi",
