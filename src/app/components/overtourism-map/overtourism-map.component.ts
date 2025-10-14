@@ -79,16 +79,18 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
     if (line) lines.push(line.trim());
     return lines.join('<br>');
   }
+
+  
   drawMap() {
     if (!this.data?.length || !this.geojson || !this.selectedKpi || this.selectedAnno === null) return;
     if (!this.mapEl?.nativeElement) return;
-
+  
     const datiAnno = this.data.filter(d => d.anno === this.selectedAnno);
-
+  
     const comuni: string[] = [];
     const valori: number[] = [];
     const hoverTexts: string[] = [];
-
+  
     this.geojson.features.forEach((feature: any) => {
       const featureId = this.featureIdKey 
         ? feature.properties[this.featureIdKey.split('.').pop()!] 
@@ -98,15 +100,46 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
       comuni.push(featureId);
       const valore = datoComune ? datoComune[this.selectedKpi!] : NaN;
       valori.push(valore);
-
-      // 👉 costruzione hover
+  
       if (datoComune && this.hoverTemplateBuilder) {
         hoverTexts.push(this.hoverTemplateBuilder(datoComune));
       } else {
         hoverTexts.push(`${featureId}<br>${this.selectedKpi}: ${valore}`);
       }
     });
-
+  
+    // 🎨 Scala discreta se abbiamo kpiTicks, altrimenti Viridis continua
+    let colorscale: [number, string][] | string = 'Viridis';
+    let zmin: number | undefined;
+    let zmax: number | undefined;
+    let tickvals: number[] | undefined;
+    let ticktext: string[] | undefined;
+  
+    if (this.kpiTicks && this.kpiTicks[0].length > 1) {
+      const [vals, labels] = this.kpiTicks;
+      tickvals = vals;
+      ticktext = labels;
+      zmin = vals[0];
+      zmax = vals[vals.length - 1];
+  
+      // 🎨 Campiona Viridis in blocchi discreti
+      const viridisColors = [
+        '#440154', '#482878', '#3E4989', '#31688E', '#26828E',
+        '#1F9E89', '#35B779', '#6CCE59', '#B4DE2C', '#FDE725'
+      ];
+  
+      const colorscaleSteps: [number, string][] = [];
+      for (let i = 0; i < vals.length - 1; i++) {
+        const relStart = (vals[i] - zmin) / (zmax - zmin);
+        const relEnd = (vals[i + 1] - zmin) / (zmax - zmin);
+        const color = viridisColors[i % viridisColors.length];
+        colorscaleSteps.push([relStart, color]);
+        colorscaleSteps.push([relEnd, color]);
+      }
+  
+      colorscale = colorscaleSteps;
+    }
+  
     const trace: ChoroplethMapboxTrace = {
       type: 'choroplethmapbox',
       geojson: this.geojson,
@@ -115,33 +148,41 @@ export class OvertourismMapComponent implements OnChanges, AfterViewInit {
       featureidkey: this.featureIdKey || 'properties.name',
       text: hoverTexts,
       hoverinfo: 'text',
-      colorscale: 'Viridis',
+      colorscale,
+      zmin,
+      zmax,
       marker: { line: { width: 0.5, color: 'white' } },
       colorbar: {
         title: {
           text: this.wrapLabel(this.kpiAlias[this.selectedKpi!] || this.selectedKpi, 15),
-          font: { size: 14 }      
+          font: { size: 14 },
         },
-        thickness: 15,             
-        len: 0.6,                  
-        y: 0.5,                    
-        yanchor: 'middle',          
-        x: 1.01,                   
+        thickness: 15,
+        len: 0.6,
+        y: 0.5,
+        yanchor: 'middle',
+        x: 1.01,
         outlinewidth: 0.5,
         tickfont: { size: 12 },
-        tickvals: this.kpiTicks?.[0],
-        ticktext: this.kpiTicks?.[1]      }  };
-
+        tickmode: tickvals ? 'array' : undefined,
+        tickvals,
+        ticktext,
+      },
+    };
+  
     const layout: Partial<Plotly.Layout> = {
       mapbox: {
         style: 'carto-positron',
         zoom: 8,
-        center: { lon: 11.12, lat: 46.07 }
+        center: { lon: 11.12, lat: 46.07 },
       },
       margin: { t: 0, b: 0, l: 0, r: 0 },
-      showlegend: true
+      showlegend: true,
     };
-
+  
     Plotly.react(this.mapEl.nativeElement, [trace], layout, { responsive: true });
   }
+  
+  
+  
 }

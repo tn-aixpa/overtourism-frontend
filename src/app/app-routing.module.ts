@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'problems', pathMatch: 'full' },
   {
     path: 'problems',
-    data: { breadcrumb: 'Problemi' },
+    data: { breadcrumb: 'Analisi' },
     children: [
       {
         path: '',

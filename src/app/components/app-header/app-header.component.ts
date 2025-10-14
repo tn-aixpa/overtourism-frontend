@@ -16,7 +16,7 @@ constructor(public router: Router) {
     document.body.classList.toggle('it-dark-mode', this.darkMode);
   }
   links = [
-    { label: 'Problemi', route: '/problems' },
+    { label: 'Analisi', route: '/problems' },
     { label: 'Indici di Capacità', route: '/capacity' },
     { label: 'Flussi', route: '/flows' },
     { label: 'Livello di Affollamento', route: '/overtourism' },
