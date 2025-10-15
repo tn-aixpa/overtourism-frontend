@@ -20,6 +20,7 @@
     "constraint_level_ristoranti": "Giorni di criticità Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
+
   "problems": {
     "title": "Ambiti di analisi",
     "loading": "Caricamento ambiti di analisi...",
@@ -54,6 +55,7 @@
         "hotels": "Alberghi",
         "flows": "Flussi"
       }
+
     },
     "confirm_delete_title": "Conferma eliminazione",
     "confirm_delete_message": "Sei sicuro di voler eliminare questa analisi?",
@@ -65,6 +67,9 @@
       "createTitle": "Crea nuova proposta",
       "edit_title": "Modifica proposta",
       "add_title": "Aggiungi proposta scenario",
+      "currentProposals": "Proposte correnti",
+      "confirm_delete_title": "Conferma eliminazione proposta",
+  "confirm_delete_message": "Sei sicuro di voler eliminare la proposta \"{{name}}\"?",
       "fields": {
         "title": "Titolo",
         "titlePlaceholder": "Inserisci un titolo per la proposta",
@@ -79,6 +84,15 @@
         "status": "Stato",
         "scenarios": "Scenari collegati",
         "scenarioPlaceholder": "Cerca o seleziona uno scenario"
+      },
+      "tableHeader": {
+        "title": "Proposte",
+        "description": "Descrizione",
+        "status": "Stato",
+        "actions": "Azioni",
+        "context": "Contesto",
+        "impact": "Impatto",
+        "resources":"Risorse"
       }
     },
     "common": {

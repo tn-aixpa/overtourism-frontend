@@ -20,6 +20,7 @@ export class ScenarioDetailComponent {
 
   scenarioId!: string;
   problemId!: string;
+  proposalId!: string;
   scenario?: ProblemScenario;
   isDownloading = false;
 
@@ -34,6 +35,7 @@ export class ScenarioDetailComponent {
 
   ngOnInit(): void {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
+    this.proposalId = this.route.snapshot.paramMap.get('proposalId')!;
     this.scenarioId = this.route.snapshot.paramMap.get('scenarioId')!;
     this.loadScenarioDetails();
   }
@@ -71,10 +73,16 @@ export class ScenarioDetailComponent {
     }, 0);
   }
   confirmDelete(): void {
-    this.scenarioService.deleteScenario(this.scenarioId, this.problemId).subscribe({
+    this.scenarioService.deleteScenario(this.scenarioId, this.problemId, this.proposalId).subscribe({
       next: () => {
         this.deleteModal.hide();
-        this.router.navigate(['/problems', this.problemId, 'scenari']);
+        // ✅ Naviga alla pagina della proposta
+        this.router.navigate([
+          '/problems',
+          this.problemId,
+          'proposals',
+          this.proposalId
+        ]);
       },
       error: (err) => {
         console.error('Errore durante la cancellazione dello scenario', err);

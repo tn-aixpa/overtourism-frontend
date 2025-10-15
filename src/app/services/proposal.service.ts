@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Proposal } from '../models/proposal.model';
 import { ConfigService } from './config.service';
 
@@ -14,7 +14,18 @@ export class ProposalService {
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.baseUrl = environment.apiBaseUrl;
   }
-
+getProposal(proposalId: string, problemId: string): Observable<Proposal> {
+  return this.http.get<Proposal>(`${this.baseUrl}/proposals/${proposalId}`, {
+    params: { problem_id: problemId }
+  });
+}
+getProposals(problemId: string): Observable<Proposal[]> {
+  return this.http.get<{ data: Proposal[] }>(`${this.baseUrl}/proposals`, {
+    params: { problem_id: problemId }
+  }).pipe(
+    map(res => res.data)
+  );
+}
   createProposal(problemId: string, payload: Proposal) {
     return this.http.post(`${this.baseUrl}/proposals?problem_id=${problemId}`, payload);
   }

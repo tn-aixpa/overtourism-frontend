@@ -50,6 +50,9 @@ import { FlowsComponent } from './pages/overtourism/flows/flows.component';
 import { RedistributionComponent } from './pages/overtourism/redistribution/redistribution.component';
 import { HiddenComponent } from './pages/overtourism/hidden/hidden.component';
 import { OvertourismComponent } from './pages/overtourism/overtourism/overtourism.component';
+import { ProposalDetailPageComponent } from './pages/problems/proposal-detail-page/proposal-detail-page.component';
+import { ProposalListPageComponent } from './pages/problems/proposal-list-page/proposal-list-page.component';
+import { EmptyFieldPipe } from './pipes/empty-field.pipe';
 
 
 // Funzione per caricare i file delle traduzioni
@@ -63,11 +66,14 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
 //   return () => configService.loadConfig();
 // }
 @NgModule({
-  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent, 
+  declarations: [AppComponent, HomeComponent, ProblemsComponent, ScenariComponent, PreferitiComponent,
     FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
-     KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
-      ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
-       HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, ProposalDetailComponent, OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent, ToastComponent, AutocompleteComponent, CapacityComponent, FlowsComponent, RedistributionComponent, HiddenComponent],
+    KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
+    ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
+    HistogramComparisonComponent, ReadingComponent, ProposalCreateComponent, ProblemDetailComponent, 
+    ProposalDetailComponent, ProposalDetailPageComponent,OvertourismComponent, OvertourismChartsComponent, OvertourismMapComponent,
+     ToastComponent, AutocompleteComponent, CapacityComponent, FlowsComponent, RedistributionComponent, 
+     HiddenComponent, ProposalListPageComponent, EmptyFieldPipe],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -79,21 +85,21 @@ export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
     NgxSliderModule,
     HttpClientModule,
     TranslateModule.forRoot({
-        loader: {
-            provide: TranslateLoader,
-            useFactory: multiTranslateLoaderFactory,
-            deps: [HttpBackend]
-        }
+      loader: {
+        provide: TranslateLoader,
+        useFactory: multiTranslateLoaderFactory,
+        deps: [HttpBackend]
+      }
     }),
     DesignAngularKitModule.forRoot({
-        translateLoader: (itPrefix: string, itSuffix: string) => ({
-            provide: TranslateLoader,
-            useFactory: (http: HttpBackend) => new MultiTranslateHttpLoader(http, [
-                { prefix: itPrefix, suffix: itSuffix },
-                { prefix: './assets/i18n/app/', suffix: '.json' },
-            ]),
-            deps: [HttpBackend],
-        }),
+      translateLoader: (itPrefix: string, itSuffix: string) => ({
+        provide: TranslateLoader,
+        useFactory: (http: HttpBackend) => new MultiTranslateHttpLoader(http, [
+          { prefix: itPrefix, suffix: itSuffix },
+          { prefix: './assets/i18n/app/', suffix: '.json' },
+        ]),
+        deps: [HttpBackend],
+      }),
     })],
   providers: [
     // {

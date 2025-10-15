@@ -1,8 +1,7 @@
-
 <div *ngIf="loading">{{ 'loading' | translate }}</div>
 
 <div *ngIf="!loading" class="bd-example">
-  <h3>{{ 'problems.title' | translate }}  </h3>
+  <h3>{{ 'problems.title' | translate }}</h3>
 
   <button itButton="primary" (click)="openCreateProblemModal()" class="mb-5 d-flex align-items-center gap-2">
     <span class="material-icons">add_circle_outline</span>
@@ -19,27 +18,21 @@
       </p>
     </it-callout>
     <app-problem-create
-    (problemSaved)="onProblemSaved($event)"
-    (problemCancel)="onProblemCancel()">
-  </app-problem-create>  </it-modal>
-    <!-- <it-search
-      label="Cerca nel sito"
-      placeholder="Testo da cercare"
-      [searchData]="searchProblems$"
-      
-      (searchSelectedEvent)="onSearchSelected($event)" 
-      /> -->
+      (problemSaved)="onProblemSaved($event)"
+      (problemCancel)="onProblemCancel()">
+    </app-problem-create>
+  </it-modal>
+
   <div class="row">
     <div class="col-12 col-lg-4 mb-4" *ngFor="let problem of problems">
-      <div class="card-wrapper" [routerLink]="['/problems', problem.problem_id, 'scenari']"
-      [queryParams]="{ problemName: problem.problem_name }">
+      <div class="card-wrapper" [routerLink]="['/problems', problem.problem_id]">
         <it-card background="true">
           <div class="categoryicon-top">
             <it-icon name="file"></it-icon>
             <span class="w-100 text-end">{{problem.updated|date:'dd/MM/yyyy'}}<br /></span>
           </div>
 
-          <a >
+          <a>
             <h3 class="card-title h5">{{ problem.problem_name }}</h3>
           </a>
 

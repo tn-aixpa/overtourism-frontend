@@ -29,32 +29,42 @@
     <tbody>
       <tr>
         <td class="fw-bold w-25">{{ 'problems.fields.title' | translate }}</td>
-        <td>{{ problem?.problem_name }}</td>
+        <td>{{ problem?.problem_name| emptyField:'(vuoto)' }}</td>
       </tr>
       <tr>
         <td class="fw-bold w-25">{{ 'problems.fields.objective' | translate }}</td>
-        <td>{{ problem?.objective }}</td>
+        <td>{{ problem?.objective| emptyField:'(vuoto)' }}</td>
       </tr>
       <tr>
         <td class="fw-bold w-25">{{ 'problems.fields.descriptionProblem' | translate }}</td>
-        <td>{{ problem?.problem_description }}</td>
+        <td>{{ problem?.problem_description| emptyField:'(vuoto)' }}</td>
       </tr>
       <tr>
         <td class="fw-bold w-25">{{ 'problems.fields.category' | translate }}</td>
         <td>
-          <span *ngFor="let cat of problem?.groups; let last=last">
-            {{ cat | translate }}<span *ngIf="!last">, </span>
-          </span>
+          <ng-container *ngIf="problem?.groups?.length; else noGroups">
+            <span *ngFor="let cat of problem.groups; let last = last">
+              {{ cat | translate }}<span *ngIf="!last">, </span>
+            </span>
+          </ng-container>
+          <ng-template #noGroups>
+            <span class="text-muted fst-italic">(vuoto)</span>
+          </ng-template>
         </td>
       </tr>
       <tr>
         <td class="fw-bold w-25">{{ 'problems.fields.resources' | translate }}</td>
         <td>
-          <ul>
-            <li *ngFor="let link of problem?.links">
-              <a [href]="link" target="_blank">{{ link }}</a>
-            </li>
-          </ul>
+          <ng-container *ngIf="problem?.links?.length; else noLinks">
+            <ul>
+              <li *ngFor="let link of problem.links">
+                <a [href]="link" target="_blank">{{ link }}</a>
+              </li>
+            </ul>
+          </ng-container>
+          <ng-template #noLinks>
+            <span class="text-muted fst-italic">(vuoto)</span>
+          </ng-template>
         </td>
       </tr>
     </tbody>
@@ -66,10 +76,62 @@
   </div>
 
   <div class="mt-4" *ngIf="proposals?.length">
-      <h4>Proposte attuali</h4>
-      <app-proposal-detail *ngFor="let proposal of proposals" [proposal]="proposal"    (editProposal)="editProposal($event)"
-      (deleteProposal)="removeProposal($event)"></app-proposal-detail>
-    </div>
+    <h4 class="mb-3">{{ 'problems.proposals.currentProposals' | translate }}</h4>
+  
+    <it-table>
+      <ng-container thead>
+        <tr>
+          <th class="text-start align-middle">#</th>
+          <th class="text-start align-middle">{{ 'problems.proposals.tableHeader.title' | translate }}</th>
+          <th class="text-start align-middle">{{ 'problems.proposals.tableHeader.description' | translate }}</th>
+          <th class="text-start align-middle">{{ 'problems.proposals.tableHeader.status' | translate }}</th>
+          <th class="text-start align-middle">{{ 'problems.proposals.tableHeader.actions' | translate }}</th>
+        </tr>
+      </ng-container>
+  
+      <ng-container tbody>
+        <tr *ngFor="let proposal of proposals; let i = index"
+            [ngClass]="{'bg-custom-light': i % 2 === 0, 'bg-white': i % 2 !== 0}">
+          <td class="text-start align-middle">{{ i + 1 }}</td>
+          <td class="text-start align-middle">{{ proposal?.proposal_title }}</td>
+          <td class="text-start align-middle text-truncate" style="max-width: 300px;">
+            {{ proposal?.proposal_description }}
+          </td>
+          <td class="text-start align-middle">
+            <span class="badge bg-secondary">{{ proposal?.status }}</span>
+          </td>
+          <td class="text-start align-middle">
+            <div class="d-flex gap-2">
+              <!-- 👁️ Pulsante di dettaglio -->
+              <button
+                class="btn btn-sm btn-icon text-primary"
+                (click)="viewProposalDetail(proposal.proposal_id)">
+                <span class="material-icons align-middle">visibility</span>
+              </button>
+  
+              <!-- ✏️ Modifica -->
+              <button
+                class="btn btn-sm btn-icon text-primary"
+                (click)="editProposal(proposal.proposal_id)">
+                <span class="material-icons align-middle">edit</span>
+              </button>
+  
+              <!-- 🗑️ Elimina -->
+              <button
+              class="btn btn-sm btn-icon text-primary"
+              (click)="openDeleteProposalModal(proposal); $event.stopPropagation()"
+              aria-label="Elimina proposta">
+              <span class="material-icons align-middle">delete</span>
+            </button>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </it-table>
+  </div>
+  
+  
+  
 
   <app-back-button (click)="back()"></app-back-button>
 </it-card>
@@ -105,6 +167,24 @@
   <ng-container footer>
     <button itButton="outline-primary" (click)="onCancelProposal()">
       {{ 'common.cancel' | translate }}
+    </button>
+  </ng-container>
+</it-modal>
+<it-modal #deleteProposalModal>
+  <ng-container modalTitle>
+    {{ 'problems.proposals.confirm_delete_title' | translate }}
+  </ng-container>
+
+  <p>
+    {{ 'problems.proposals.confirm_delete_message' | translate:{name: proposalToDelete?.proposal_title} }}
+  </p>
+
+  <ng-container footer>
+    <button itButton="outline-primary" (click)="onCancelDeleteProposal()">
+      {{ 'common.cancel' | translate }}
+    </button>
+    <button itButton="danger" (click)="onConfirmDeleteProposal()">
+      {{ 'common.delete' | translate }}
     </button>
   </ng-container>
 </it-modal>

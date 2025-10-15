@@ -24,8 +24,8 @@ export class ProposalCreateComponent {
     title: '',
     description: '',
     resources: [] as string[],
-    contextConditions: '',
-    potentialImpact: '',
+    context: '',
+    impact: '',
     status: 'draft',
     related_scenarios: [] as ProposalScenario[]
   };
@@ -89,28 +89,39 @@ export class ProposalCreateComponent {
       this.model = {
         title: this.proposalToEdit.proposal_title,
         description: this.proposalToEdit.proposal_description,
-        resources: [...this.proposalToEdit.resources],
-        contextConditions: this.proposalToEdit.contextConditions,
-        potentialImpact: this.proposalToEdit.potentialImpact,
+        resources: [...(this.proposalToEdit.resources || [])],
+        context: this.proposalToEdit.context,
+        impact: this.proposalToEdit.impact,
         status: this.proposalToEdit.status,
-        related_scenarios: [...this.proposalToEdit.related_scenarios]
+        related_scenarios: [...(this.proposalToEdit.related_scenarios || [])]
       };
     }
   }
+  
   loadScenarios() {
     this.scenarioSvc.getScenariosByProblemId(this.problemId).subscribe({
       next: (scenarios: ProblemScenario[]) => {
-        // mappiamo ProblemScenario → ProposalScenario
+        // 🔹 Mappiamo ProblemScenario → ProposalScenario
         this.availableScenarios = scenarios.map(s => ({
           scenario_id: s.id,
           scenario_name: s.name
         } as ProposalScenario));
+  
+        const baseScenario = this.availableScenarios.find(s => s.scenario_id === 'model_0');
+  
+        if (
+          baseScenario &&
+          !this.model.related_scenarios.some(s => s.scenario_id === baseScenario.scenario_id)
+        ) {
+          this.model.related_scenarios.push(baseScenario);
+        }
       },
       error: (err) => {
         this.notif.showError(err?.message || 'Errore nel caricamento degli scenari');
       }
     });
   }
+  
   addResource() {
     if (this.newResource.trim()) {
       this.model.resources.push(this.newResource.trim());
@@ -150,8 +161,8 @@ async onSubmit() {
       proposal_title: this.model.title,
       proposal_description: this.model.description,
       resources: this.model.resources || [],
-      contextConditions: this.model.contextConditions || '',
-      potentialImpact: this.model.potentialImpact || '',
+      context: this.model.context || '',
+      impact: this.model.impact || '',
       status: this.model.status || 'draft',
       related_scenarios: this.model.related_scenarios || [],
       created: this.proposalToEdit ? this.proposalToEdit.created : new Date().toISOString(),

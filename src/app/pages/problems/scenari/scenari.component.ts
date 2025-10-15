@@ -6,7 +6,6 @@ import { ItModalComponent } from 'design-angular-kit';
 import { NotificationService } from '../../../services/notifications.service';
 import { TranslateService } from '@ngx-translate/core';
 
-
 @Component({
   selector: 'app-scenari',
   standalone: false,
@@ -19,41 +18,59 @@ export class ScenariComponent {
 
   scenari: ProblemScenario[] = [];
   loading = true;
-  problemId:any;
+  problemId: any;
+  proposalId: any;
   problemName: any;
   comparazioneAttiva = false;
   selectedScenari: any[] = [];
   widgets: any;
+  checkboxStates: { [id: string]: boolean } = {};
 
   constructor(
     private scenarioService: ScenarioService,
     private router: Router,
     private notificationService: NotificationService, 
     private translate: TranslateService,
-    private route: ActivatedRoute) { }
-    comparazioneDisponibile(): boolean {
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit(): void {
+    this.problemId = this.route.snapshot.paramMap.get('problemId')!;
+    this.proposalId = this.route.snapshot.paramMap.get('proposalId')!;
+    this.problemName = this.route.snapshot.queryParamMap.get('problemName');
+    
+    this.loadScenarios(this.problemId);
+    this.loadWidgets();
+  }
+
+  comparazioneDisponibile(): boolean {
     return this.scenari.length >= 2;
   }
+
   toggleComparazione() {
     this.comparazioneAttiva = !this.comparazioneAttiva;
     if (!this.comparazioneAttiva) {
       this.selectedScenari = [];
+      this.checkboxStates = {};
     }
   }
-  openEdit(scenario: any) {
-    //
-    alert('Vado allEdit di: ' + scenario.name);
 
-  }
   isScenarioSelected(scenario: any): boolean {
     return this.selectedScenari.some(s => s.id === scenario.id);
   }
 
-  checkboxStates: { [id: string]: boolean } = {};
   goToScenario(scenario: ProblemScenario): void {
-    if (this.comparazioneAttiva) return; // Se la comparazione è attiva, non navigare
-    this.router.navigate(['/problems', this.problemId, 'scenari', scenario.id]);
+    if (this.comparazioneAttiva) return;
+    this.router.navigate([
+      '/problems', 
+      this.problemId, 
+      'proposals', 
+      this.proposalId, 
+      'scenari', 
+      scenario.id
+    ]);
   }
+
   hasParams(scenario: any): boolean {
     return !!scenario.index_diffs && Object.keys(scenario.index_diffs).length > 0;
   }
@@ -63,13 +80,13 @@ export class ScenariComponent {
       if (this.selectedScenari.length < 2 && !this.isScenarioSelected(scenario)) {
         this.selectedScenari.push(scenario);
       } else {
-        // Se sono già 2, non accettare altri
         this.checkboxStates[scenario.id] = false;
       }
     } else {
       this.selectedScenari = this.selectedScenari.filter(s => s.id !== scenario.id);
     }
   }
+
   getDiffDescription(scenario: any): string {
     if (!scenario.index_diffs) return '';
   
@@ -83,7 +100,7 @@ export class ScenariComponent {
   
   getIndexNameFromKey(key: string): string {
     if (!this.widgets) {
-      return key; // fallback
+      return key;
     }
   
     for (const group of Object.keys(this.widgets)) {
@@ -98,20 +115,15 @@ export class ScenariComponent {
     this.router.navigate([
       '/problems',
       this.problemId,
+      'proposals',
+      this.proposalId,
       'scenari',
       'confronta',
       s1.id,
       s2.id
     ]);
   }
-  ngOnInit(): void {
-    this.problemId = this.route.snapshot.paramMap.get('problemId')!;
-    this.problemName = this.route.snapshot.queryParamMap.get('problemName');
-    
-    this.loadScenarios(this.problemId);
-    this.loadWidgets();
 
-  }
   loadWidgets() {
     this.scenarioService.getWidgets().subscribe({
       next: (data) => {
@@ -123,22 +135,21 @@ export class ScenariComponent {
       }
     });
   }
-    private initializeWidgetBounds(widgets: Record<string, Widget[]>): Record<string, Widget[]> {
-      const clone = JSON.parse(JSON.stringify(widgets));
-      for (const key of Object.keys(clone)) {
-        for (const widget of clone[key]) {
-          if (widget.scale && widget.index_category !== '%') {
-            widget.vMin ??= widget.loc;
-            widget.vMax ??= widget.loc + widget.scale;
-          }
+
+  private initializeWidgetBounds(widgets: Record<string, Widget[]>): Record<string, Widget[]> {
+    const clone = JSON.parse(JSON.stringify(widgets));
+    for (const key of Object.keys(clone)) {
+      for (const widget of clone[key]) {
+        if (widget.scale && widget.index_category !== '%') {
+          widget.vMin ??= widget.loc;
+          widget.vMax ??= widget.loc + widget.scale;
         }
       }
-      return clone;
     }
+    return clone;
+  }
+
   loadScenarios(problemId: any): void {
-    // this.loading = true;
-    // this.scenari=this.mockScenarios;
-    // this.loading = false;
     this.loading = true;
     this.scenarioService.getScenariosByProblemId(problemId).subscribe({
       next: (data) => {
@@ -165,7 +176,7 @@ export class ScenariComponent {
   onConfirmDelete(): void {
     if (!this.scenarioToDelete) return;
   
-    this.scenarioService.deleteScenario(this.scenarioToDelete.id, this.problemId).subscribe({
+    this.scenarioService.deleteScenario(this.scenarioToDelete.id, this.problemId, this.proposalId).subscribe({
       next: () => {
         this.scenari = this.scenari.filter(s => s.id !== this.scenarioToDelete!.id);
         this.deleteModal.toggle();
@@ -185,10 +196,10 @@ export class ScenariComponent {
       }
     });
   }
+
   goToProblemDetail() {
     if (this.problemId) {
       this.router.navigate(['/problems', this.problemId]);
     }
   }
-
 }

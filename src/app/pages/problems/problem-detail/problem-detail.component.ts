@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProblemService } from '../../../services/problem.service';
 import { NotificationService } from '../../../services/notifications.service';
@@ -7,14 +7,19 @@ import { Proposal } from '../../../models/proposal.model';
 import { ProposalService } from '../../../services/proposal.service';
 import { ItModalComponent } from 'design-angular-kit';
 import { Problem } from '../../../models/problem.model';
+import { ModalCleanupService } from '../../../services/modal-cleanup.service.ts.service';
 
+interface ProposalResponse {
+  data: Proposal[];
+  message?: string;
+}
 @Component({
   selector: 'app-problem-detail',
   templateUrl: './problem-detail.component.html',
   standalone: false,
   styleUrls: ['./problem-detail.component.scss']
 })
-export class ProblemDetailComponent implements OnInit {
+export class ProblemDetailComponent implements OnInit,AfterViewInit {
 
   problemId!: string;
   problem: any = null;
@@ -24,6 +29,7 @@ export class ProblemDetailComponent implements OnInit {
   @ViewChild('deleteProblemModal') deleteProblemModal!: ItModalComponent;
   @ViewChild('proposalModal') proposalModal!: ItModalComponent;
   @ViewChild('editProblemModal') editProblemModal!: ItModalComponent;
+  @ViewChild('deleteProposalModal') deleteProposalModal: any;
 
   onProblemEdited(problem: Problem) {
     this.editProblemModal.hide();
@@ -33,6 +39,7 @@ export class ProblemDetailComponent implements OnInit {
     this.editProblemModal.hide();
   }
   proposalToEdit?: Proposal;
+  proposalToDelete: Proposal | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,12 +47,28 @@ export class ProblemDetailComponent implements OnInit {
     private problemService: ProblemService,
     private notif: NotificationService,
     private translate: TranslateService,
-    private proposalService: ProposalService
+    private proposalService: ProposalService,
+        private modalCleanup: ModalCleanupService
+    
   ) {}
 
   ngOnInit() {
     this.problemId = this.route.snapshot.paramMap.get('problemId')!;
     this.loadProblem();
+  }
+  ngAfterViewInit(): void {
+      if (this.deleteProblemModal) {
+        this.modalCleanup.register(this.deleteProblemModal);
+      }
+      if (this.deleteProposalModal) {
+        this.modalCleanup.register(this.deleteProposalModal);
+      }
+      if (this.proposalModal) {
+        this.modalCleanup.register(this.proposalModal);
+      }
+      if (this.editProblemModal) {
+        this.modalCleanup.register(this.editProblemModal);
+      }
   }
   onProposalCreated() {
     this.showProposalForm = false;   
@@ -128,34 +151,57 @@ onConfirmDeleteProblem(): void {
     }
   });
 }
-  loadProblem() {
-    this.problemService.getProblemById(this.problemId).subscribe({
-      next: (res) => {
-        this.problem = res;
 
-        if (res.proposals?.length) {
-          this.proposals = res.proposals.map((p: any) => ({
-            proposal_id: p.proposal_id,
-            problem_id: res.problem_id,
-            proposal_title: p.proposal_title || 'Proposal',
-            proposal_description: p.proposal_description || '',
-            resources: p.data || [],
-            contextConditions: p.context || '',
-            potentialImpact: p.impact || '',
-            status: p.status || 'draft',
-            related_scenarios: (p.related_scenarios || []).map((s: any) => ({
-              scenario_id: s.scenario_id,
-              scenario_name: s.scenario_name
-            })),
-            created: p.created,
-            updated: p.updated
-          }));
-        }
-        
-      },
-      error: (err) => this.notif.showError(err.message || this.translate.instant('problems.load_error'))
-    });
-  }
+loadProposals() {
+  if (!this.problemId) return;
+
+  this.proposalService.getProposals(this.problemId).subscribe({
+    next: (res: Proposal[]) => {
+      this.proposals = res;
+    },
+    error: (err) => this.notif.showError(err.message || this.translate.instant('problems.load_error'))  });
+}
+loadProblem() {
+  this.problemService.getProblemById(this.problemId).subscribe({
+    next: (res) => {
+      this.problem = res;
+      this.loadProposals(); 
+    },
+    error: (err) => this.notif.showError(err?.message || this.translate.instant('problems.load_error'))
+  });
+}
+viewProposalDetail(proposalId: any) {
+  if (!this.problemId) return;
+  this.router.navigate([`/problems/${this.problemId}/proposals/${proposalId}`]);
+}
+openDeleteProposalModal(proposal: any): void {
+  this.proposalToDelete = proposal;
+  this.deleteProposalModal.show();
+}
+
+onCancelDeleteProposal(): void {
+  this.deleteProposalModal.hide();
+  this.proposalToDelete = null;
+}
+
+onConfirmDeleteProposal(): void {
+  if (!this.proposalToDelete || !this.problemId) return;
+
+  const proposalId = this.proposalToDelete.proposal_id;
+
+  this.proposalService.deleteProposal(proposalId, this.problemId).subscribe({
+    next: () => {
+      this.notif.showSuccess('Proposta eliminata con successo');
+      this.proposals = this.proposals.filter(p => p.proposal_id !== proposalId);
+      this.deleteProposalModal.hide();
+      this.proposalToDelete = null;
+    },
+    error: (err) => {
+      this.notif.showError(err?.message || 'Errore durante l\'eliminazione della proposta');
+      this.deleteProposalModal.hide();
+    }
+  });
+}
 
   toggleProposalForm() {
     this.showProposalForm = !this.showProposalForm;

@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject, map } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
 import { ConfigService } from './config.service';
 import { environment } from '../../environments/environment';
+
 interface ScenarioResponse {
   scenarios: Array<{
     problem_id: string;
@@ -41,14 +42,14 @@ export class ScenarioService {
   constructor(private http: HttpClient, private configService: ConfigService) {
     this.baseUrl = environment.apiBaseUrl;
   }
-  saveNewScenario(scenarioId: string, problemId: string, values: Record<string, number | [number, number]>, titolo: string, descrizione: string)
+  saveNewScenario(scenarioId: string, problemId: string, proposalId:string, values: Record<string, number | [number, number]>, titolo: string, descrizione: string)
     : Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}/scenarios/${scenarioId}`,
       { values,
         scenario_name: titolo, scenario_description: descrizione
        }, // body
-      { params: { problem_id: problemId } } // query
+      { params: { problem_id: problemId,proposal_id:proposalId } } // query
     );
   }
   getScenarioData(scenarioId: string, problemId: string): Observable<any> {
@@ -67,10 +68,10 @@ export class ScenarioService {
       { params: { problem_id: problemId } } // query
     );
   }
-  deleteScenario(scenarioId: string, problemId: string): Observable<void> {
+  deleteScenario(scenarioId: string, problemId: string,proposalId:string): Observable<void> {
     return this.http.delete<void>(
       `${this.baseUrl}/scenarios/${scenarioId}`,
-      { params: { problem_id: problemId } }
+      { params: { problem_id: problemId, proposal_id:proposalId} }
     );
   }
   getScenariosByProblemId(problemId: string): Observable<ProblemScenario[]> {

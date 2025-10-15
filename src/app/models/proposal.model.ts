@@ -1,6 +1,7 @@
 export interface ProposalScenario {
   scenario_id: string;
   scenario_name: string;
+  scenario_description: string;
   }
   
   export interface Proposal {
@@ -9,8 +10,8 @@ export interface ProposalScenario {
     proposal_title: string;
     proposal_description: string;
     resources: string[];
-    contextConditions: string;
-    potentialImpact: string;
+    context: string;
+    impact: string;
     status: string;
     related_scenarios: ProposalScenario[];
     created: string;

@@ -4,34 +4,34 @@
   </div>
   <div class="col-auto">
     <button itButton="primary" (click)="downloadPdf()" [disabled]="isDownloading">
-    <ng-container *ngIf="!isDownloading; else loading">
-      Scarica PDF
-    </ng-container>
-    <ng-template #loading>
-      <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-      Creazione PDF...
-    </ng-template>
-  </button>
+      <ng-container *ngIf="!isDownloading; else loading">
+        Scarica PDF
+      </ng-container>
+      <ng-template #loading>
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Creazione PDF...
+      </ng-template>
+    </button>
 
-     
+
   </div>
-  <div class="col-auto">
+  <div class="col-auto" *ngIf="scenarioId !== 'model_0'">
 
     <button itButton="danger" (click)="openDeleteModal()">
       {{ 'common.delete' | translate }}
     </button>
-     
+
   </div>
 
 </div>
 
 <div class="my-4 d-flex flex-column w-100">
-  <app-plot [scenarioId]="scenarioId" [problemId]="problemId" id="pdfContent"></app-plot>
+  <app-plot [scenarioId]="scenarioId" [problemId]="problemId" [proposalId]="proposalId" id="pdfContent"></app-plot>
 </div>
 <it-modal #deleteModal id="deleteModal">
   <ng-container modalTitle>Elimina scenario</ng-container>
   <p>
-    Vuoi davvero eliminare lo scenario <b>{{ scenario?.name }}</b>?<br/>
+    Vuoi davvero eliminare lo scenario <b>{{ scenario?.name }}</b>?<br />
     L'operazione non può essere annullata.
   </p>
   <ng-container footer>

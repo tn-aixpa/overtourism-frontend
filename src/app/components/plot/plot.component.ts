@@ -27,6 +27,7 @@ export class PlotComponent implements AfterViewInit {
   @Input() editing: boolean = false;
   @Input() scenarioId!: string;
   @Input() problemId!: string;
+  @Input() proposalId!: string;
   private navigationAfterSave = false;
   isSaving = false;
   inputData: PlotInput | null = null;
@@ -86,7 +87,7 @@ export class PlotComponent implements AfterViewInit {
   }
   saveAsNewScenario(): void {
     this.scenarioService
-      .saveNewScenario(this.scenarioId, this.problemId, this.changedWidgets, this.titolo, this.descrizione)
+      .saveNewScenario(this.scenarioId, this.problemId, this.proposalId, this.changedWidgets, this.titolo, this.descrizione)
       .subscribe({
         next: (res) => {
           this.isSaving = false;  
@@ -222,18 +223,19 @@ export class PlotComponent implements AfterViewInit {
   toggleControls(): void {
     this.showControls = !this.showControls;
   }
-  goToCompare(): void {
-    // const [s1, s2] = this.selectedScenari;
-    this.router.navigate([
-      '/problems',
-      this.problemId,
-      'scenari',
-      'confronta',
-      this.scenarioId,
-      'default'
-    ]);
-    console.log('Vai alla pagina di confronto');
-  }
+    goToCompare(): void {
+      this.router.navigate([
+        '/problems',
+        this.problemId,
+        'proposals',
+        this.proposalId,
+        'scenari',
+        'confronta',
+        this.scenarioId,
+        'default'
+      ]);
+      console.log('Vai alla pagina di confronto');
+    }
   private applyIndexDiffsToWidgets(
     widgets: Record<string, Widget[]>,
     indexDiffs: Record<string, string>

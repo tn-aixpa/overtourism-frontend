@@ -29,8 +29,8 @@
         </div>
   
         <p><strong>Risorse:</strong> {{ proposal.resources.length ? proposal.resources.join(', ') : 'Nessuna' }}</p>
-        <p><strong>Contesto:</strong> {{ proposal.contextConditions || 'Nessuno' }}</p>
-        <p><strong>Impatto:</strong> {{ proposal.potentialImpact || 'Nessuno' }}</p>
+        <p><strong>Contesto:</strong> {{ proposal.context || 'Nessuno' }}</p>
+        <p><strong>Impatto:</strong> {{ proposal.impact || 'Nessuno' }}</p>
   
         <p>
           <strong>Scenari correlati:</strong>

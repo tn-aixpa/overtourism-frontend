@@ -42,26 +42,33 @@ export class BreadcrumbService {
   
     const nextUrl = routeURL ? `${url}/${routeURL}` : url;
   
-    const routeData = primaryRoute.snapshot.data;
-    const hasComponent = !!primaryRoute.routeConfig?.component;
-  
-    // Aggiungi solo se ha data.breadcrumb e non è un path vuoto senza componente
-    if (routeData['breadcrumb'] && routeURL ) {
+    const routeData = primaryRoute.snapshot.data || {};
+    const params = primaryRoute.snapshot.params || {};
+    if (routeData['breadcrumb']) {
+      let link = nextUrl;
+    
+      // Usa breadcrumbUrl se presente
+      if (routeData['breadcrumbUrl']) {
+        link = this.interpolatePath(routeData['breadcrumbUrl'], params);
+      }
+    
       breadcrumbs.push({
-        label: this.interpolateLabel(routeData['breadcrumb'], primaryRoute.snapshot.params),
-        url: nextUrl
+        label: this.interpolateLabel(routeData['breadcrumb'], params),
+        url: link
       });
     }
   
     return this.buildBreadcrumbs(primaryRoute, nextUrl, breadcrumbs);
   }
   
+  private interpolatePath(path: string, params: any): string {
+    return path.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => params[key] ?? '');
+  }
+  
+  
 
   private interpolateLabel(label: string, params: any): string {
     return label.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => params[key] || key);
   }
 
-  private interpolatePath(path: string, params: any): string {
-    return path.replace(/:([a-zA-Z0-9_]+)/g, (_, key) => params[key] ?? '');
-  }
 }
