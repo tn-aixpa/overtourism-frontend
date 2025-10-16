@@ -104,6 +104,7 @@
                   <span class="me-1">{{ scenario.scenario_name }}</span>
               
                   <button 
+                    *ngIf="scenario.scenario_id !== 'model_0'"
                     type="button"
                     class="btn p-0 ms-1 text-white"
                     (click)="removeScenario(scenario, $event)">
