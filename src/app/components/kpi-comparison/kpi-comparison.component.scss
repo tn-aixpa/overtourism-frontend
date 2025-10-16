@@ -14,3 +14,10 @@
     padding-left: 6rem;  /* oppure px a tua scelta */
     padding-right: 6rem;
   }
+
+  .kpi-value-left small,
+.kpi-value-right small {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-left: 0.25rem;
+}

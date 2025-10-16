@@ -14,11 +14,10 @@ export class KpiComparisonComponent {
     const excluded = ['uncertainty', 'uncertainty_by_constraint', 'critical_constraint'];
     return Object.keys(this.kpisLeft || {}).filter(key => !excluded.includes(key));  }
 
-    formatNumber(v: { level: number } | undefined): string {
+    formatNumber(v: { level: number; confidence?: number } | undefined): string {
       if (!v || typeof v.level !== 'number' || isNaN(v.level)) return '-';
-      const scaled = v.level;
-      if (scaled < 1 && scaled > 0) return '<1%';
-      return `${Math.round(scaled)}%`;
+      const level = Math.round(v.level);
+      return `${level}%`;
     }
     
 
