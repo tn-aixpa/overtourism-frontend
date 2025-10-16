@@ -54,8 +54,10 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
     this.resizeObserver?.disconnect();
   }
   ngOnChanges(changes: SimpleChanges) {
-    this.updateComuni();
-    this.tryDraw();
+    if (changes['data'] && this.data?.length) {
+      this.updateComuni();
+      this.tryDraw();
+    }
   }
 
   private tryDraw() {
