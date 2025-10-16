@@ -296,7 +296,7 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
     this.scenarioService.deleteScenario(scenarioId, this.problemId, this.proposalId).subscribe({
       next: () => {
         this.notificationService.showSuccess('Proposta eliminata con successo');
-        this.scenari = this.scenari.filter(s => s.id !== scenarioId);
+        this.scenari = this.scenari.filter(s => s.scenario_id !== scenarioId);
         this.deleteScenarioModal.hide();
         this.scenarioToDelete = null;
       },
