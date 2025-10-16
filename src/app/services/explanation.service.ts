@@ -34,9 +34,9 @@ export class ExplanationService {
         if (dataFact.violations_percentage === 0) {
           text += `\n- ${cat}: nessun superamento rilevato`;
         } else if (dataFact.violations_percentage < 5) {
-          text += `\n- ${cat}: solo ${dataFact.violations_percentage}% di giornate con superamento capacità (incertezza ±${dataFact.uncertainty})`;
+          text += `\n- ${cat}: solo ${dataFact.violations_percentage}% di giornate con superamento capacità (incertezza ±${dataFact.uncertainty})%`;
         } else {
-          text += `\n- ${cat}: ${dataFact.violations_percentage}% di giornate con superamento capacità (incertezza ±${dataFact.uncertainty})`;
+          text += `\n- ${cat}: ${dataFact.violations_percentage}% di giornate con superamento capacità (incertezza ±${dataFact.uncertainty})%`;
         }
         if (dataFact.violations_percentage > mostCriticalValue) {
           mostCriticalValue = dataFact.violations_percentage;
