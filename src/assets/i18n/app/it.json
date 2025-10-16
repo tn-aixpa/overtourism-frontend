@@ -13,7 +13,7 @@
   "kpi": {
     "title": "Indici",
     "area": "Area Totale",
-    "overtourism_level": "Giorni di criticità",
+    "overtourism_level": "Giorni di criticità complessiva",
     "constraint_level_parcheggi": "Giorni di criticità Parcheggi",
     "constraint_level_spiaggia": "Giorni di criticità Spiaggia",
     "constraint_level_alberghi": "Giorni di criticità Alberghi",

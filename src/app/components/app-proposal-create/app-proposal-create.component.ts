@@ -19,6 +19,7 @@ export class ProposalCreateComponent {
   @Output() proposalCreated = new EventEmitter<void>();
   @Input() proposalToEdit?: Proposal;
   @ViewChild('scenarioAuto') scenarioAuto!: AutocompleteComponent;
+  @ViewChild('form') proposalForm: any;
 
   model = {
     title: '',
@@ -85,18 +86,37 @@ export class ProposalCreateComponent {
       this.loadScenarios();
     }
   
-    if (changes['proposalToEdit'] && this.proposalToEdit) {
-      this.model = {
-        title: this.proposalToEdit.proposal_title,
-        description: this.proposalToEdit.proposal_description,
-        resources: [...(this.proposalToEdit.resources || [])],
-        context: this.proposalToEdit.context,
-        impact: this.proposalToEdit.impact,
-        status: this.proposalToEdit.status,
-        related_scenarios: [...(this.proposalToEdit.related_scenarios || [])]
-      };
+    if (changes['proposalToEdit']) {
+      if (this.proposalToEdit) {
+        this.model = {
+          title: this.proposalToEdit.proposal_title,
+          description: this.proposalToEdit.proposal_description,
+          resources: [...(this.proposalToEdit.resources || [])],
+          context: this.proposalToEdit.context,
+          impact: this.proposalToEdit.impact,
+          status: this.proposalToEdit.status,
+          related_scenarios: [...(this.proposalToEdit.related_scenarios || [])]
+        };
+      } else {
+        this.model = {
+          title: '',
+          description: '',
+          resources: [],
+          context: '',
+          impact: '',
+          status: 'draft',
+          related_scenarios: []
+        };
+        if (this.proposalForm) {
+          this.proposalForm.resetForm();
+        }
+        if (this.scenarioAuto) {
+          this.scenarioAuto.clear();
+        }
+      }
     }
   }
+  
   
   loadScenarios() {
     this.scenarioSvc.getScenariosByProblemId(this.problemId).subscribe({

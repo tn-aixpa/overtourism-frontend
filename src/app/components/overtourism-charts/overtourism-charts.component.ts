@@ -114,12 +114,14 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
   
     const chartData: Plotly.Data[] = this.selectedComuni.map(comune => {
       const datiComune = this.data.filter(d => d.comune === comune);
-  
+      console.log(`Dati per il comune ${comune}:`, datiComune);
       const valori = anni.map(y => {
         const record = datiComune.find(d => d.anno === y);
+        console.log(`Valore per anno ${y} nel comune ${comune}:`, record ? record[this.selectedKpi!] : null);
         return record ? record[this.selectedKpi!] : null;
       });
   
+      console.log(`Valori per il comune ${comune}:`, valori);
       const hoverText = anni.map(y => {
         const record = datiComune.find(d => d.anno === y);
         if (!record || !indexInfo) return '';

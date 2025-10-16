@@ -174,20 +174,20 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onScenarioCheck(scenario: ProblemScenario, checked: boolean): void {
+  onScenarioCheck(scenario: any, checked: boolean): void {
     if (checked) {
       if (this.selectedScenari.length < 2 && !this.isScenarioSelected(scenario)) {
         this.selectedScenari.push(scenario);
       } else {
-        this.checkboxStates[scenario.id] = false;
+        this.checkboxStates[scenario.scenario_id] = false;
       }
     } else {
-      this.selectedScenari = this.selectedScenari.filter(s => s.id !== scenario.id);
+      this.selectedScenari = this.selectedScenari.filter(s => s.id !== scenario.scenario_id);
     }
   }
 
-  isScenarioSelected(scenario: ProblemScenario): boolean {
-    return this.selectedScenari.some(s => s.id === scenario.id);
+  isScenarioSelected(scenario: any): boolean {
+    return this.selectedScenari.some(s => s.scenario_id === scenario.scenario_id);
   }
 
   goToScenario(scenario: any): void {
@@ -210,8 +210,8 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
       this.proposalId,
       'scenari',
       'confronta',
-      s1.id,
-      s2.id
+      s1.scenario_id,
+      s2.scenario_id
     ]);
   }
 
@@ -296,7 +296,7 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
     this.scenarioService.deleteScenario(scenarioId, this.problemId, this.proposalId).subscribe({
       next: () => {
         this.notificationService.showSuccess('Proposta eliminata con successo');
-        this.scenari = this.scenari.filter(s => s.scenario_id !== scenarioId);
+        this.scenari = this.scenari.filter(s => s.id !== scenarioId);
         this.deleteScenarioModal.hide();
         this.scenarioToDelete = null;
       },
