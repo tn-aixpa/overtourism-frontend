@@ -99,7 +99,7 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
     if (!this.chartEl?.nativeElement) return;
   
     if (!(this.data?.length && this.selectedKpi && this.selectedComuni?.length)) {
-      // niente requisiti minimi → cancella grafico
+      console.log('Dati insufficienti per disegnare il grafico');
       Plotly.purge(this.chartEl.nativeElement);
       return;
     }
@@ -151,7 +151,7 @@ export class OvertourismChartsComponent implements OnChanges, AfterViewInit {
       yaxis: { ...this.layout.yaxis, title: { text: indexInfo ? indexInfo.title : 'Valore' } }
 
     };
-  
+console.log("print");
     Plotly.react(this.chartEl.nativeElement, chartData, layout, { responsive: true });
   }
   
