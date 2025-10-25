@@ -7,13 +7,13 @@
 To build the Docker container, run:
 
 ```bash
-docker build -t overtourism-frontend .
+docker build -t tn-aixpa/overtourism-frontend .
 ```
 
 If you need to use the cache image for faster builds:
 
 ```bash
-docker build --build-arg CACHE=smartcommunitylab/overtourism-frontend:cache -t overtourism-frontend .
+docker build --build-arg CACHE=tn-aixpa/overtourism-frontend:cache -t overtourism-frontend .
 ```
 
 ### Running the Container
@@ -22,17 +22,17 @@ The container supports runtime configuration of the API base URL through environ
 
 1. With default API URL:
 ```bash
-docker run -p 8080:8080 overtourism-frontend
+docker run -p 8080:8080 tn-aixpa/overtourism-frontend
 ```
 
 2. With custom API URL:
 ```bash
-docker run -p 8080:8080 -e API_BASE_URL=https://your-api-url.com/api/v1 overtourism-frontend
+docker run -p 8080:8080 -e API_BASE_URL=https://your-api-url.com/api/v1 tn-aixpa/overtourism-frontend
 ```
 
 3. For development or testing with a local API:
 ```bash
-docker run -p 8080:8080 -e API_BASE_URL=http://localhost:8081/api/v1 overtourism-frontend
+docker run -p 8080:8080 -e API_BASE_URL=http://localhost:8081/api/v1 tn-aixpa/overtourism-frontend
 ```
 
 The application will be available at `http://localhost:8080`
