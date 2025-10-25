@@ -7,21 +7,9 @@ LABEL org.opencontainers.image.source=https://github.com/tn-aixpa/overtourism-fr
 
 WORKDIR /app
 
-# ARG VITE_APP_URL_TOKEN
-# ARG VITE_APP_AXIOS_URL
-# ARG VITE_APP_HATEDEMICS_API_URL
-# ARG VITE_APP_TITLE="Hatedemics"
-# ARG VITE_APP_HATEDEMICS_API_GEN_URL
 COPY package.json /app
 COPY package-lock.json /app
-# RUN rm .env*
-# RUN npm install --legacy-peer-deps
-# RUN npm install
-# ENV VITE_APP_URL_TOKEN=${VITE_APP_URL_TOKEN}
-# ENV VITE_APP_AXIOS_URL=${VITE_APP_AXIOS_URL}
-# ENV VITE_APP_HATEDEMICS_API_URL=${VITE_APP_HATEDEMICS_API_URL}
-# ENV VITE_APP_TITLE=${VITE_APP_TITLE}
-# ENV VITE_APP_HATEDEMICS_API_GEN_URL=${VITE_APP_HATEDEMICS_API_GEN_URL}
+
 ENV PATH=/app/node_modules/.bin/:$PATH
 COPY . .
 RUN --mount=type=cache,target=/app/node_modules,source=/app/node_modules,from=cache npm install && npm run build
