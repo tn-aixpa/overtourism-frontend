@@ -1,0 +1,13 @@
+FROM node:20 AS build
+
+LABEL org.opencontainers.image.source=https://github.com/tn-aixpa/overtourism-frontend
+
+WORKDIR /app
+
+COPY package.json /app
+COPY package-lock.json /app
+
+RUN npm install
+
+FROM scratch
+COPY --from=build /app/node_modules /app/node_modules

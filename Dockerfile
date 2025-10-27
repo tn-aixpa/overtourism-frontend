@@ -29,6 +29,6 @@ RUN chmod +x /docker-entrypoint.sh && \
     apt-get update && \
     apt-get install -y gettext-base && \
     rm -rf /var/lib/apt/lists/*
-USER nginx
+USER 101
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
