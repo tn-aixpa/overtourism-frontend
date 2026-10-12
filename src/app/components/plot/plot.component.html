@@ -11,11 +11,15 @@
     <div class="flex-grow-1">
       <div class="d-flex justify-content">
         <button [itButton]="!showControls ? 'outline-primary' : 'outline-secondary'"
-          class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
+          type="button"
+          class="m-4 d-flex justify-content-between align-items-center" 
+          data-html2canvas-ignore="true"
+          title="Mostra o nascondi opzioni di visualizzazione del grafico"
+          [attr.aria-expanded]="showControls"
+          aria-label="Opzioni di visualizzazione grafico"
           (click)="toggleControls()">
-          <span class="material-icons me-2">
-            visibility
-          </span> {{('plot.visualizza' | translate) }}
+          <span class="material-icons me-2" aria-hidden="true">visibility</span> 
+          <span>{{('plot.visualizza' | translate) }}</span>
         </button>
       </div>
       <app-plot-controls *ngIf="showControls" [monoDimensionale]="monoDimensionale" [sottosistemi]="sottosistemi"
@@ -24,16 +28,7 @@
         (sottosistemaSelezionatoChange)="sottosistemaSelezionato = $event"
         (funzioneChange)="onFunzioneChange()"></app-plot-controls>
 
-      <!-- <div #chartLib style="max-width: 600px;height: 600px; position: relative;">
-        <div *ngIf="loading" class="loading-spinner">Loading...</div>
-      </div> -->
       <div style="max-width: 600px; height: 600px;">
-        <!-- <app-shared-plot 
-          [inputData]="inputData" 
-          [sottosistemaSelezionato]="sottosistemaSelezionato"
-          [monoDimensionale]="monoDimensionale"
-          [loading]="loading">
-        </app-shared-plot> -->
         <app-shared-plot *ngIf="inputData" [payload]="{
           type: monoDimensionale ? 'mono' : 'bi',
           subsystem: sottosistemaSelezionato,
@@ -43,42 +38,58 @@
       </div>
       <div class="d-flex flex-row gap-4">
         <button [itButton]="!isEditing ? 'primary' : 'secondary'"
-          class="m-4 d-flex justify-content-between align-items-center " data-html2canvas-ignore="true"
-          (click)="toggleEditing()"> <span class="material-icons me-2">
-            settings
-          </span> {{('plot.edit' | translate) }}
+          type="button"
+          class="m-4 d-flex justify-content-between align-items-center" 
+          data-html2canvas-ignore="true"
+          title="Abilita modifica parametri"
+          [attr.aria-expanded]="isEditing"
+          aria-label="Modifica parametri dello scenario"
+          (click)="toggleEditing()"> 
+          <span class="material-icons me-2" aria-hidden="true">settings</span> 
+          <span>{{('plot.edit' | translate) }}</span>
         </button>
-        <button itButton="primary" class="m-4 d-flex justify-content-between align-items-center "
-          data-html2canvas-ignore="true" (click)="goToCompare()">
-          <span class="material-icons me-2">library_books</span>
-          {{ 'plot.compare' | translate }}
+        <button itButton="primary" 
+          type="button"
+          class="m-4 d-flex justify-content-between align-items-center"
+          data-html2canvas-ignore="true" 
+          title="Confronta questo scenario con altri"
+          aria-label="Apri confronto scenari"
+          (click)="goToCompare()">
+          <span class="material-icons me-2" aria-hidden="true">library_books</span>
+          <span>{{ 'plot.compare' | translate }}</span>
         </button>
       </div>
 
       <ng-container *ngIf="isEditing">
         <div class="row mt-4">
-          <!-- <div class="plot-editor-sidebar flex-shrink-0"> -->
           <app-plot-editor-widget [widgets]="widgets" [editableIndexes]="editableIndexes || []"
             (widgetsChanged)="onWidgetsChanged($event)"></app-plot-editor-widget>
         </div>
-
       </ng-container>
 
     </div>
-
-    <!-- Colonna destra: widget solo se editing -->
-
   </div>
 </div>
+
 <div class="d-flex justify-content-end gap-2 mt-4" *ngIf="hasLocalDiffs()">
-  <button itButton="outline-primary" class="m-4 d-flex justify-content-between align-items-center"
+  <button itButton="outline-primary" 
+    type="button"
+    class="m-4 d-flex justify-content-between align-items-center"
+    title="Annulla le modifiche apportate ai parametri"
+    aria-label="Ripristina valori originali dei parametri"
     (click)="resetIndexDiffs()">
-    <span class="material-icons me-2">replay</span>
-    Ripristina modifiche
+    <span class="material-icons me-2" aria-hidden="true">replay</span>
+    <span>Ripristina modifiche</span>
   </button>
-  <button *ngIf="authService.canEdit()" itButton="primary" class="m-4 d-flex justify-content-between align-items-center" (click)="openSaveModal()">
-    <span class="material-icons me-2">save</span>
-    Salva come nuovo scenario
+  <button *ngIf="authService.canEdit()" 
+    itButton="primary" 
+    type="button"
+    class="m-4 d-flex justify-content-between align-items-center" 
+    title="Salva la configurazione corrente come nuovo scenario"
+    aria-label="Salva scenario modificato"
+    (click)="openSaveModal()">
+    <span class="material-icons me-2" aria-hidden="true">save</span>
+    <span>Salva come nuovo scenario</span>
   </button>
 </div>
 

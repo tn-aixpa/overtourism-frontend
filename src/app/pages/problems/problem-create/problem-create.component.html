@@ -7,10 +7,10 @@
            <!-- Titolo -->
            <tr>
             <td class="fw-bold w-25">
-              <label for="title">{{ 'problems.fields.title' | translate }} <span class="text-danger">*</span></label>
+              <label for="problem-title">{{ 'problems.fields.title' | translate }} <span class="text-danger">*</span></label>
             </td>
             <td>
-                <it-input id="title" name="name" [(ngModel)]="model.name" required
+                <it-input id="problem-title" name="name" [(ngModel)]="model.name" required
                           placeholder="{{ 'problems.fields.titlePlaceholder' | translate }}"></it-input>
             </td>
           </tr>
@@ -18,63 +18,44 @@
           <!-- Obiettivo -->
           <tr>
             <td class="fw-bold w-25">
-              <label for="objective">{{ 'problems.fields.objective' | translate }}</label>
+              <label for="problem-objective">{{ 'problems.fields.objective' | translate }}</label>
             </td>
             <td>
-                <it-textarea id="objective" name="objective" [(ngModel)]="model.objective" [rows]="4" 
+                <it-textarea id="problem-objective" name="objective" [(ngModel)]="model.objective" [rows]="4" 
                              placeholder="{{ 'problems.fields.objectivePlaceholder' | translate }}"></it-textarea>
-              
             </td>
           </tr>
 
           <!-- Descrizione del problema -->
           <tr>
             <td class="fw-bold w-25">
-              <label for="descriptionProblem">{{ 'problems.fields.descriptionProblem' | translate }}</label>
+              <label for="problem-description">{{ 'problems.fields.descriptionProblem' | translate }}</label>
             </td>
             <td>
-                <it-textarea id="descriptionProblem" name="descriptionProblem" [(ngModel)]="model.descriptionProblem" 
+                <it-textarea id="problem-description" name="descriptionProblem" [(ngModel)]="model.descriptionProblem" 
                              [rows]="4"
                              placeholder="{{ 'problems.fields.descriptionProblemPlaceholder' | translate }}"></it-textarea>
-             
             </td>
           </tr>
-
-          <!-- Categoria -->
-          <!-- <tr>
-            <td class="fw-bold w-25">
-              <label>{{ 'problems.fields.category' | translate }}</label>
-            </td>
-            <td>
-                <fieldset>
-                  <legend>{{ 'problems.fields.group' | translate }}</legend>
-                  <it-checkbox *ngFor="let cat of availableGroups" 
-                               [(ngModel)]="model.groups[cat.key]"
-                               name="category_{{cat.key}}"
-                               label="{{ cat.label | translate }}"
-                               inline="true"> 
-                  </it-checkbox>
-                </fieldset>
-              
-            </td>
-          </tr> -->
 
           <!-- Dati e tecnologie rilevanti -->
           <tr>
             <td class="fw-bold w-25">
-              <label>{{ 'problems.fields.resources' | translate }}</label>
+              <label for="problem-newResource">{{ 'problems.fields.resources' | translate }}</label>
             </td>
             <td>
                 <!-- Aggiungi nuova risorsa -->
                 <div class="d-flex align-items-center mb-3">
-                  <it-input [(ngModel)]="newResource" name="newResource"
+                  <it-input id="problem-newResource" [(ngModel)]="newResource" name="newResource"
                             placeholder="{{ 'problems.fields.resourcePlaceholder' | translate }}"
                             style="flex: 1; min-width: 0;">
                   </it-input>
                   <button type="button" class="btn btn-outline-primary ms-2 rounded-circle p-0"
                           style="width:36px; height:36px; display:flex; align-items:center; justify-content:center;"
-                          (click)="addResource()">
-                    <span class="material-icons" style="font-size:22px;">add</span>
+                          (click)="addResource()"
+                          title="Aggiungi risorsa"
+                          aria-label="Aggiungi risorsa al problema">
+                    <span class="material-icons" style="font-size:22px;" aria-hidden="true">add</span>
                   </button>
                 </div>
 
@@ -87,8 +68,8 @@
                     <a *ngIf="isUrl(res)" [href]="res" target="_blank" class="text-decoration-none">{{ res }}</a>
                     <span *ngIf="!isUrl(res)">{{ res }}</span>
                   </div>
-                  <button  type="button" class="btn-close btn-close-sm ms-2 mt-1"
-                          aria-label="Remove" (click)="removeResource(i)"></button>
+                  <button type="button" class="btn-close btn-close-sm ms-2 mt-1"
+                          aria-label="Rimuovi risorsa" (click)="removeResource(i)"></button>
                 </div>
               </div>
             </td>
@@ -97,9 +78,8 @@
       </table>
     </div>
 
-    <!-- footer grigio con pulsante salva -->
+    <!-- footer con pulsante salva -->
     <div class="border-top pt-3 mt-4 d-flex justify-content-end">
-      
       <button itButton="primary" type="submit" [disabled]="form.invalid || isSaving">
         <ng-container *ngIf="!isSaving; else savingTemplate">
           {{ 'problems.common.save' | translate }}
@@ -107,20 +87,9 @@
       </button>
       
       <ng-template #savingTemplate>
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
         {{ 'common.saving' | translate }}
       </ng-template>
     </div>
   </form>
-
-
-
-  <!-- Componente proposta -->
-  <!-- <app-proposal-create *ngIf="showProposalForm"
-></app-proposal-create> -->
-   <!-- <div *ngIf="showProposalForm">
-    proposta
-   </div>    [problemId]="savedProblemId -->
 </it-card>
-
-<!-- <app-back-button></app-back-button> -->

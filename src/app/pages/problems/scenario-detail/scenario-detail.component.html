@@ -3,18 +3,18 @@
     <h4>{{ scenario?.name || 'Loading...' }}</h4>
   </div>
   <div class="col-auto">
-    <button itButton="primary" (click)="downloadPdf()" [disabled]="isDownloading">
+    <button itButton="primary" type="button" (click)="downloadPdf()" [disabled]="isDownloading" title="Esporta scenario in PDF" aria-label="Scarica scenario in formato PDF">
       <ng-container *ngIf="!isDownloading; else loading">
         Scarica PDF
       </ng-container>
       <ng-template #loading>
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-        Creazione PDF...
+        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        <span>Creazione PDF...</span>
       </ng-template>
     </button>
   </div>
   <div class="col-auto" *ngIf="scenarioId !== 'model_0' && authService.canEdit()">
-    <button itButton="danger" (click)="openDeleteModal()">
+    <button itButton="danger" type="button" (click)="openDeleteModal()" title="Elimina questo scenario" aria-label="Elimina definitivamente lo scenario">
       {{ 'common.delete' | translate }}
     </button>
   </div>
@@ -30,7 +30,7 @@
     L'operazione non può essere annullata.
   </p>
   <ng-container footer>
-    <button itButton="outline-primary" (click)="onCancelDelete()">Annulla</button>
-    <button itButton="danger" (click)="confirmDelete()">Elimina</button>
+    <button itButton="outline-primary" type="button" (click)="onCancelDelete()">Annulla</button>
+    <button itButton="danger" type="button" (click)="confirmDelete()">Elimina</button>
   </ng-container>
 </it-modal>

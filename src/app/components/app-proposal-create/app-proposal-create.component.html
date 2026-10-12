@@ -1,96 +1,97 @@
 <it-card background="true" class="p-4">
   
-  <form (ngSubmit)="onSubmit()" #form="ngForm" (submit)="onSubmitForm($event)" >
+  <form (ngSubmit)="onSubmit()" #form="ngForm" (submit)="onSubmitForm($event)">
 
-          <div class="table-responsive mb-4">
-        <table class="table table-borderless mb-5">
-          <tbody>
-            <!-- Titolo -->
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.title' | translate }} <span class="text-danger">*</span></label>
-              </td>
-              <td>
-                <it-input [(ngModel)]="model.title" name="title"
-                          placeholder="{{ 'problems.proposals.fields.titlePlaceholder' | translate }}" required>
-                </it-input>
-              </td>
-            </tr>
-  
-  
-            <!-- Descrizione -->
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.description' | translate }}</label>
-              </td>
-              <td>
-                <it-textarea [(ngModel)]="model.description" name="proposal_description" [rows]="4"
-                             placeholder="{{ 'problems.proposals.fields.descriptionPlaceholder' | translate }}"></it-textarea>
-              </td>
-            </tr>
-  
-            <!-- Dati e tecnologie rilevanti -->
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.resources' | translate }}</label>
-              </td>
-              <td>
-                <div class="d-flex align-items-center mb-3">
-                  <it-input [(ngModel)]="newResource" name="newResource"
-                            placeholder="{{ 'problems.proposals.fields.resourcePlaceholder' | translate }}"
-                            style="flex: 1; min-width: 0;"></it-input>
-                  <button type="button" class="btn btn-outline-primary ms-2 rounded-circle p-0"
-                          style="width:36px; height:36px; display:flex; align-items:center; justify-content:center;"
-                          (click)="addResource()">
-                    <span class="material-icons" style="font-size:22px;">add</span>
-                  </button>
-                </div>
-  
-                <div class="d-flex flex-column gap-2">
-                  <div *ngFor="let res of model.resources; let i = index"
-                       class="border rounded p-2 d-flex justify-content-between align-items-start"
-                       style="background-color: #f8f9fa;">
-                    <div style="word-break: break-word; flex: 1;">
-                      <a *ngIf="isUrl(res)" [href]="res" target="_blank" class="text-decoration-none">{{ res }}</a>
-                      <span *ngIf="!isUrl(res)">{{ res }}</span>
-                    </div>
-                    <button type="button" class="btn-close btn-close-sm ms-2 mt-1"
-                            aria-label="Remove" (click)="removeResource(i)"></button>
+    <div class="table-responsive mb-4">
+      <table class="table table-borderless mb-5">
+        <tbody>
+          <!-- Titolo -->
+          <tr>
+            <td class="fw-bold w-25">
+              <label for="proposal-title">{{ 'problems.proposals.fields.title' | translate }} <span class="text-danger">*</span></label>
+            </td>
+            <td>
+              <it-input id="proposal-title" [(ngModel)]="model.title" name="title"
+                        placeholder="{{ 'problems.proposals.fields.titlePlaceholder' | translate }}" required>
+              </it-input>
+            </td>
+          </tr>
+
+          <!-- Descrizione -->
+          <tr>
+            <td class="fw-bold w-25">
+              <label for="proposal-description">{{ 'problems.proposals.fields.description' | translate }}</label>
+            </td>
+            <td>
+              <it-textarea id="proposal-description" [(ngModel)]="model.description" name="proposal_description" [rows]="4"
+                           placeholder="{{ 'problems.proposals.fields.descriptionPlaceholder' | translate }}"></it-textarea>
+            </td>
+          </tr>
+
+          <!-- Dati e tecnologie rilevanti -->
+          <tr>
+            <td class="fw-bold w-25">
+              <label for="proposal-newResource">{{ 'problems.proposals.fields.resources' | translate }}</label>
+            </td>
+            <td>
+              <div class="d-flex align-items-center mb-3">
+                <it-input id="proposal-newResource" [(ngModel)]="newResource" name="newResource"
+                          placeholder="{{ 'problems.proposals.fields.resourcePlaceholder' | translate }}"
+                          style="flex: 1; min-width: 0;"></it-input>
+                <button type="button" class="btn btn-outline-primary ms-2 rounded-circle p-0"
+                        style="width:36px; height:36px; display:flex; align-items:center; justify-content:center;"
+                        (click)="addResource()"
+                        title="Aggiungi risorsa"
+                        aria-label="Aggiungi risorsa alla proposta">
+                  <span class="material-icons" style="font-size:22px;" aria-hidden="true">add</span>
+                </button>
+              </div>
+
+              <div class="d-flex flex-column gap-2">
+                <div *ngFor="let res of model.resources; let i = index"
+                     class="border rounded p-2 d-flex justify-content-between align-items-start"
+                     style="background-color: #f8f9fa;">
+                  <div style="word-break: break-word; flex: 1;">
+                    <a *ngIf="isUrl(res)" [href]="res" target="_blank" class="text-decoration-none">{{ res }}</a>
+                    <span *ngIf="!isUrl(res)">{{ res }}</span>
                   </div>
+                  <button type="button" class="btn-close btn-close-sm ms-2 mt-1"
+                          aria-label="Rimuovi risorsa" (click)="removeResource(i)"></button>
                 </div>
-              </td>
-            </tr>
-  
-            <!-- Potenziali condizioni di contesto -->
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.contextConditions' | translate }}</label>
-              </td>
-              <td>
-                <it-textarea [(ngModel)]="model.context" name="context" [rows]="3"
-                             placeholder="{{ 'problems.proposals.fields.contextConditionsPlaceholder' | translate }}"></it-textarea>
-              </td>
-            </tr>
-  
-            <!-- Potenziale impatto -->
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.potentialImpact' | translate }}</label>
-              </td>
-              <td>
-                <it-textarea [(ngModel)]="model.impact" name="potentialImpact" [rows]="3"
-                             placeholder="{{ 'problems.proposals.fields.potentialImpactPlaceholder' | translate }}"></it-textarea>
-              </td>
-            </tr>
-  
+              </div>
+            </td>
+          </tr>
 
-  
-            <tr>
-              <td class="fw-bold w-25">
-                <label>{{ 'problems.proposals.fields.scenarios' | translate }}</label>
-              </td>
-              <td>
-                <app-autocomplete
+          <!-- Potenziali condizioni di contesto -->
+          <tr>
+            <td class="fw-bold w-25">
+              <label for="proposal-context">{{ 'problems.proposals.fields.contextConditions' | translate }}</label>
+            </td>
+            <td>
+              <it-textarea id="proposal-context" [(ngModel)]="model.context" name="context" [rows]="3"
+                           placeholder="{{ 'problems.proposals.fields.contextConditionsPlaceholder' | translate }}"></it-textarea>
+            </td>
+          </tr>
+
+          <!-- Potenziale impatto -->
+          <tr>
+            <td class="fw-bold w-25">
+              <label for="proposal-impact">{{ 'problems.proposals.fields.potentialImpact' | translate }}</label>
+            </td>
+            <td>
+              <it-textarea id="proposal-impact" [(ngModel)]="model.impact" name="potentialImpact" [rows]="3"
+                           placeholder="{{ 'problems.proposals.fields.potentialImpactPlaceholder' | translate }}"></it-textarea>
+            </td>
+          </tr>
+
+          <!-- Scenari collegati -->
+          <tr>
+            <td class="fw-bold w-25">
+              <label for="scenario-autocomplete">{{ 'problems.proposals.fields.scenarios' | translate }}</label>
+            </td>
+            <td>
+              <app-autocomplete
+                id="scenario-autocomplete"
                 #scenarioAuto
                 [source]="scenarioNames"
                 [minLength]="0"
@@ -108,32 +109,31 @@
                     *ngIf="scenario.scenario_id !== 'model_0'"
                     type="button"
                     class="btn p-0 ms-1 text-white"
+                    aria-label="Rimuovi scenario associato"
                     (click)="removeScenario(scenario, $event)">
-                    <span class="material-icons" style="font-size:16px; line-height:1;">close</span>
+                    <span class="material-icons" style="font-size:16px; line-height:1;" aria-hidden="true">close</span>
                   </button>
                 </div>
               </div>
-              
-                </td>
-            </tr>
-  
-          </tbody>
-        </table>
-      </div>
-  
-      <div class="border-top pt-3 mt-4 d-flex justify-content-end">
-        <button itButton="primary" type="submit" [disabled]="form.invalid || isSaving">
-          <ng-container *ngIf="!isSaving; else savingTemplate">
-            {{ 'common.save' | translate }}
-          </ng-container>
-        </button>
-      </div>
-      
-      <ng-template #savingTemplate>
-        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-        {{ 'common.saving' | translate }}
-      </ng-template>
-      
-    </form>
-  </it-card>
-  
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="border-top pt-3 mt-4 d-flex justify-content-end">
+      <button itButton="primary" type="submit" [disabled]="form.invalid || isSaving">
+        <ng-container *ngIf="!isSaving; else savingTemplate">
+          {{ 'common.save' | translate }}
+        </ng-container>
+      </button>
+    </div>
+    
+    <ng-template #savingTemplate>
+      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+      {{ 'common.saving' | translate }}
+    </ng-template>
+    
+  </form>
+</it-card>

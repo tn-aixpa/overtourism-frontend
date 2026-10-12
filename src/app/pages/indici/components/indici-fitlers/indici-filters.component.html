@@ -3,15 +3,15 @@
   <div class="row g-3 align-items-start">
     <!-- Indicatore -->
     <div class="col-12 col-md-auto">
-      <label class="form-label fw-bold mb-1" style="font-size:13px;">Indici territoriali</label>
+      <label id="lbl-indici" class="form-label fw-bold mb-1" style="font-size:13px;">Indici territoriali</label>
       <div class="dropdown">
-        <button class="btn btn-outline-primary d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+        <button class="btn btn-outline-primary d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-labelledby="lbl-indici" aria-haspopup="true">
           <span class="text-truncate text-start me-2">{{ currentMeta?.label || 'Seleziona Indice' }}</span>
           <div class="info-hover-wrapper me-1 d-flex align-items-center" *ngIf="currentMeta?.index_description">
-            <span class="material-icons text-primary" style="font-size: 18px; cursor: help;">info</span>
+            <span class="material-icons text-primary" style="font-size: 18px; cursor: help;" aria-hidden="true">info</span>
             <div class="html-tooltip shadow border rounded bg-white text-dark p-2 text-start" [innerHTML]="currentMeta?.index_description"></div>
           </div>
-          <span class="material-icons ms-auto" style="font-size: 18px;">expand_more</span>
+          <span class="material-icons ms-auto" style="font-size: 18px;" aria-hidden="true">expand_more</span>
         </button>
         <div class="dropdown-menu shadow">
           <div class="link-list-wrapper">
@@ -27,15 +27,15 @@
 
     <!-- Granularità Territoriale -->
     <div class="col-12 col-md-auto">
-      <label class="form-label fw-bold mb-1" style="font-size:13px;">Granularità territoriale</label>
+      <label id="lbl-gran-terr" class="form-label fw-bold mb-1" style="font-size:13px;">Granularità territoriale</label>
       <div class="dropdown">
-        <button class="btn btn-outline-primary d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+        <button class="btn btn-outline-primary d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-labelledby="lbl-gran-terr" aria-haspopup="true">
           <span class="text-start me-2">
             {{ spatialGranularity === 'comune'
                 ? 'Comunale'
                 : (spatialGranularity === 'provincia' ? 'Provinciale' : 'Macro area') }}
           </span>
-          <span class="material-icons ms-auto" style="font-size: 18px;">expand_more</span>
+          <span class="material-icons ms-auto" style="font-size: 18px;" aria-hidden="true">expand_more</span>
         </button>
         <div class="dropdown-menu shadow">
           <div class="link-list-wrapper">
@@ -53,27 +53,29 @@
     <div class="col-12 col-md-auto">
       <div class="d-flex gap-2">
         <div>
-          <label class="form-label fw-bold mb-1" style="font-size:13px;">Inizio periodo</label>
-          <input type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-            [(ngModel)]="startDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;">
+          <label for="filter-start-date" class="form-label fw-bold mb-1" style="font-size:13px;">Inizio periodo</label>
+          <input id="filter-start-date" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+            [(ngModel)]="startDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;"
+            aria-label="Inizio periodo">
         </div>
         <div>
-          <label class="form-label fw-bold mb-1" style="font-size:13px;">Fine periodo</label>
-          <input type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-            [(ngModel)]="endDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;">
+          <label for="filter-end-date" class="form-label fw-bold mb-1" style="font-size:13px;">Fine periodo</label>
+          <input id="filter-end-date" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+            [(ngModel)]="endDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;"
+            aria-label="Fine periodo">
         </div>
       </div>
     </div>
 
     <!-- Granularità Temporale (solo per tab grafici) -->
     <div class="col-12 col-md-auto" *ngIf="showOption === 'chart'">
-      <label class="form-label fw-bold mb-1" style="font-size:13px;">Granularità temp.</label>
+      <label id="lbl-gran-temp" class="form-label fw-bold mb-1" style="font-size:13px;">Granularità temp.</label>
       <div class="dropdown">
-        <button class="btn btn-outline-primary d-flex align-items-center" type="button" data-bs-toggle="dropdown">
+        <button class="btn btn-outline-primary d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-labelledby="lbl-gran-temp" aria-haspopup="true">
           <span class="text-start me-2">
             {{ { giornaliero: 'Giornaliero', settimanale: 'Settimanale', mensile: 'Mensile', annuale: 'Annuale' }[granularity] }}
           </span>
-          <span class="material-icons ms-auto" style="font-size: 18px;">expand_more</span>
+          <span class="material-icons ms-auto" style="font-size: 18px;" aria-hidden="true">expand_more</span>
         </button>
         <div class="dropdown-menu shadow">
           <div class="link-list-wrapper">
@@ -94,12 +96,12 @@
     <!-- Tasso variazione -->
     <span [title]="showOption !== 'map' ? 'Disponibile solo in vista Mappa.' : ''" class="d-inline-flex">
       <div class="form-check mb-0 d-flex align-items-center">
-        <input type="checkbox" class="form-check-input me-2" [(ngModel)]="enableVariation" [disabled]="showOption !== 'map'" id="varCheck" (change)="onVariationToggle()">
+        <input type="checkbox" class="form-check-input me-2" [(ngModel)]="enableVariation" [disabled]="showOption !== 'map'" id="varCheck" name="varCheck" (change)="onVariationToggle()">
         <label class="form-check-label fw-bold mb-0" [ngClass]="showOption === 'map' ? 'text-primary' : 'text-muted opacity-50'" for="varCheck" style="font-size:14px; cursor:pointer;">
           {{ variationMeta?.label || 'Tasso di variazione' }}
         </label>
         <div class="info-hover-wrapper ms-1 d-flex align-items-center" *ngIf="variationMeta?.index_description">
-          <span class="material-icons text-primary" style="font-size: 16px; cursor: help;">info</span>
+          <span class="material-icons text-primary" style="font-size: 16px; cursor: help;" aria-hidden="true">info</span>
           <div class="html-tooltip shadow border rounded bg-white text-dark p-2 text-start" [innerHTML]="variationMeta?.index_description"></div>
         </div>
       </div>
@@ -107,24 +109,26 @@
 
     <ng-container *ngIf="enableVariation">
       <div class="d-flex align-items-center gap-2 border-start ps-3 ms-2">
-        <label class="form-label fw-bold mb-0" style="font-size:13px;">Inizio conf.</label>
-        <input type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-          [(ngModel)]="startDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;">
-        <label class="form-label fw-bold mb-0 ms-2" style="font-size:13px;">Fine conf.</label>
-        <input type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-          [(ngModel)]="endDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;">
+        <label for="filter-start-comp" class="form-label fw-bold mb-0" style="font-size:13px;">Inizio conf.</label>
+        <input id="filter-start-comp" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+          [(ngModel)]="startDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;"
+          aria-label="Inizio periodo di confronto">
+        <label for="filter-end-comp" class="form-label fw-bold mb-0 ms-2" style="font-size:13px;">Fine conf.</label>
+        <input id="filter-end-comp" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+          [(ngModel)]="endDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;"
+          aria-label="Fine periodo di confronto">
       </div>
     </ng-container>
 
     <!-- Incidenza Periodo -->
     <span class="d-inline-flex ms-2">
       <div class="form-check mb-0 d-flex align-items-center">
-        <input type="checkbox" class="form-check-input me-2" [(ngModel)]="enableImpactPercentage" [disabled]="showOption !== 'map'" id="impactCheck" (change)="onImpactPercentageToggle()">
+        <input type="checkbox" class="form-check-input me-2" [(ngModel)]="enableImpactPercentage" [disabled]="showOption !== 'map'" id="impactCheck" name="impactCheck" (change)="onImpactPercentageToggle()">
         <label class="form-check-label fw-bold mb-0 text-primary" [ngClass]="showOption === 'map' ? 'text-primary' : 'text-muted opacity-50'" for="impactCheck" style="font-size:14px; cursor:pointer;">
           {{ impactMeta?.label || 'incidenza percentuale del sottoperiodo' }}
         </label>
         <div class="info-hover-wrapper ms-1 d-flex align-items-center" *ngIf="impactMeta?.index_description">
-          <span class="material-icons text-primary" style="font-size: 16px; cursor: help;">info</span>
+          <span class="material-icons text-primary" style="font-size: 16px; cursor: help;" aria-hidden="true">info</span>
           <div class="html-tooltip shadow border rounded bg-white text-dark p-2 text-start" [innerHTML]="impactMeta?.index_description"></div>
         </div>
       </div>
@@ -132,9 +136,9 @@
 
     <ng-container *ngIf="enableImpactPercentage">
       <div class="dropdown ms-1">
-        <button class="btn btn-outline-primary d-flex align-items-center py-1" type="button" data-bs-toggle="dropdown" style="min-height: 38px;">
+        <button class="btn btn-outline-primary d-flex align-items-center py-1" type="button" data-bs-toggle="dropdown" style="min-height: 38px;" aria-label="Seleziona tipologia sottoperiodo per incidenza">
           <span class="text-start me-2" style="font-size: 13px;">{{ impactSeasonalityLabel }}</span>
-          <span class="material-icons ms-auto" style="font-size: 18px;">expand_more</span>
+          <span class="material-icons ms-auto" style="font-size: 18px;" aria-hidden="true">expand_more</span>
         </button>
         <div class="dropdown-menu shadow">
           <div class="link-list-wrapper">
@@ -153,15 +157,17 @@
     <!-- Bottone Applica -->
     <div class="ms-auto pt-1">
       <button itButton="primary"
+        type="button"
         [attr.itButton]="isDirty ? 'warning' : 'primary'"
         (click)="submit()"
-        [disabled]="loading || !!error || !startDate || !endDate">
+        [disabled]="loading || !!error || !startDate || !endDate"
+        aria-label="Applica i filtri selezionati">
         <ng-container *ngIf="!loading">
-          <span *ngIf="isDirty" class="material-icons align-middle me-1" style="font-size: 18px;">refresh</span>
+          <span *ngIf="isDirty" class="material-icons align-middle me-1" style="font-size: 18px;" aria-hidden="true">refresh</span>
           {{ isDirty ? 'Aggiorna dati' : 'Applica filtri' }}
         </ng-container>
         <ng-container *ngIf="loading">
-          <span class="spinner-border spinner-border-sm me-2" role="status"></span>Caricamento...
+          <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Caricamento...
         </ng-container>
       </button>
     </div>
@@ -169,12 +175,12 @@
 </div>
 
 <!-- Alert Errori -->
-<div class="alert alert-danger py-2 px-3 mb-2" *ngIf="error">
-  <span class="material-icons align-middle me-2">error_outline</span>{{ error }}
+<div class="alert alert-danger py-2 px-3 mb-2" *ngIf="error" role="alert">
+  <span class="material-icons align-middle me-2" aria-hidden="true">error_outline</span>{{ error }}
 </div>
 
 <!-- Alert Filtri Modificati -->
-<div class="alert alert-warning py-2 px-3 mb-2 d-flex align-items-center" *ngIf="isDirty && !error && !loading && hasData">
-  <span class="material-icons align-middle me-2">warning_amber</span>
+<div class="alert alert-warning py-2 px-3 mb-2 d-flex align-items-center" *ngIf="isDirty && !error && !loading && hasData" role="status">
+  <span class="material-icons align-middle me-2" aria-hidden="true">warning_amber</span>
   <span>I filtri sono stati modificati. Premi <strong>Aggiorna dati</strong> per riflettere le modifiche.</span>
 </div>
