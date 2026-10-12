@@ -1,15 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 
 @Injectable({ providedIn: 'root' })
 export class AgentService {
-  private readonly apiUrl = environment.agentApiUrl;
+  private readonly apiUrl: string;
 
-  constructor(private http: HttpClient, private authService: AuthenticationService) { }
+  constructor(private http: HttpClient,    @Inject(APP_CONFIG) config: AppConfig
+,  private authService: AuthenticationService) {
+  this.apiUrl = config.agentApiUrl;
+
+ }
   
   private getTerritoryParams(): HttpParams {
     let params = new HttpParams();

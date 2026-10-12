@@ -1,16 +1,21 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthMe, AuthRole, AuthUser, CreateAuthUserDto, UpdateAuthUserDto } from '../models/user.model';
+import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl = environment.apiBaseUrl;
+  private readonly baseUrl: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,    @Inject(APP_CONFIG) config: AppConfig
+) {
+  this.baseUrl = config.apiBaseUrl;
+
+}
 
   getMe(): Observable<AuthMe> {
     return this.http.get<AuthMe>(`${this.baseUrl}/auth/me`);

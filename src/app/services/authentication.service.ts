@@ -1,26 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { AuthConfig, OAuthEvent, OAuthService } from 'angular-oauth2-oidc';
-import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
 import { NotificationService } from './notifications.service';
 import { ChatbotService } from './chatbot/chatbot.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AuthMe } from '../models/user.model';
-
-export const authConfig: AuthConfig = {
-  issuer: environment.auth.issuer,
-  clientId: environment.auth.clientId,
-  responseType: environment.auth.responseType,
-  scope: environment.auth.scope,
-  redirectUri: environment.auth.redirectUri,
-  postLogoutRedirectUri: window.location.origin + '/', 
-  clearHashAfterLogin: true,
-  useSilentRefresh: false,
-  timeoutFactor: 0.75,
-  sessionChecksEnabled: false,
-  showDebugInformation: true,
-};
+import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -36,10 +22,25 @@ export class AuthenticationService {
     private router: Router,
     private notificationService: NotificationService,
     private chatbotService: ChatbotService,
-    private http: HttpClient
+    private http: HttpClient,
+    @Inject(APP_CONFIG) private config: AppConfig
   ) {}
 
   public async initialLoginSequence(): Promise<void> {
+    const authConfig: AuthConfig = {
+      issuer: this.config.auth.issuer,
+      clientId: this.config.auth.clientId,
+      responseType: this.config.auth.responseType,
+      scope: this.config.auth.scope,
+      redirectUri: window.location.origin + (this.config.auth.redirectUri || '/'),
+      postLogoutRedirectUri: window.location.origin + '/', 
+      clearHashAfterLogin: true,
+      useSilentRefresh: false,
+      timeoutFactor: 0.75,
+      sessionChecksEnabled: false,
+      showDebugInformation: false
+    };
+
     this.oauthService.configure(authConfig);
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.events.subscribe((event: OAuthEvent) => {
@@ -85,7 +86,7 @@ export class AuthenticationService {
 
   public async loadUserProfile(): Promise<AuthMe | null> {
     try {
-      const profile = await firstValueFrom(this.http.get<AuthMe>(`${environment.apiBaseUrl}/auth/me`));
+      const profile = await firstValueFrom(this.http.get<AuthMe>(`${this.config.apiBaseUrl}/auth/me`));
       
       if (!profile || profile.authenticated === false) {
         return null;

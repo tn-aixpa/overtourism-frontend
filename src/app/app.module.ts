@@ -1,9 +1,12 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, provideAppInitializer, inject, Injector } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { OAuthModule } from 'angular-oauth2-oidc';
-import { environment } from '../environments/environment';
+import { OAuthModule, OAuthModuleConfig } from 'angular-oauth2-oidc';
+
+// Configurazione Runtime
+import { ConfigService } from './core/config/config.service';
+import { APP_CONFIG, AppConfig } from './core/config/app-config.model';
 
 // AGID Design
 import { DesignAngularKitModule } from 'design-angular-kit';
@@ -79,7 +82,6 @@ import { SharedLineChartComponent } from './components/shared/shared-line-chart/
 import { SharedBarChartComponent } from './components/shared/shared-bar-chart/shared-bar-chart.component';
 import { UsersComponent } from './pages/users/users.component';
 
-// Funzioni Factory
 export function multiTranslateLoaderFactory(httpBackend: HttpBackend) {
   return new MultiTranslateHttpLoader(httpBackend, [
     { prefix: './assets/i18n/design-angular-kit/', suffix: '.json' },
@@ -97,13 +99,12 @@ export function initializeAuth(authService: AuthenticationService) {
     FaqsComponent, TermsComponent, SettingsComponent, ScenarioDetailComponent, PlotComponent,
     KpiBoxComponent, PlotControlsComponent, AppPlotEditorWidgetComponent, BreadcrumbsComponent,
     ConfrontoScenariComponent, BackButtonComponent, KpiComparisonComponent, ProblemCreateComponent,
-     ReadingComponent, ProposalCreateComponent, ProblemDetailComponent,
+    ReadingComponent, ProposalCreateComponent, ProblemDetailComponent,
     ProposalDetailComponent, ProposalDetailPageComponent, OvertourismComponent, OvertourismChartsComponent, 
     OvertourismMapComponent, ToastComponent, AutocompleteComponent, CapacityComponent, FlowsComponent, 
     RedistributionComponent, HiddenComponent, ProposalListPageComponent, EmptyFieldPipe, LoginComponent,IndiciComponent,
     IndiciMapComponent, AgentStatsComponent,IndiciFiltersComponent,IndiciChartComponent,
     UsersComponent
-
   ],
   imports: [
     BrowserModule,
@@ -122,12 +123,7 @@ export function initializeAuth(authService: AuthenticationService) {
     SharedLineChartComponent,
     SharedBarChartComponent,
     SharedKpisComponent,
-    OAuthModule.forRoot({
-      resourceServer: {
-        allowedUrls: [environment.apiBaseUrl, environment.agentApiUrl],
-        sendAccessToken: true
-      }
-    }), 
+    OAuthModule.forRoot(), 
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -147,11 +143,31 @@ export function initializeAuth(authService: AuthenticationService) {
     })
   ],
   providers: [
+    provideAppInitializer(async () => {
+      const configService = inject(ConfigService);
+      const injector = inject(Injector);
+
+      // Carica il config prima di tutto
+      await configService.loadConfig();
+
+      // Inizializza auth una volta che il config è pronto
+      const authService = injector.get(AuthenticationService);
+      await authService.initialLoginSequence();
+    }),
     {
-      provide: APP_INITIALIZER,
-      useFactory: initializeAuth,
-      deps: [AuthenticationService],
-      multi: true
+      provide: APP_CONFIG,
+      useFactory: (configService: ConfigService): AppConfig => configService.config,
+      deps: [ConfigService]
+    },
+    {
+      provide: OAuthModuleConfig,
+      useFactory: (configService: ConfigService): OAuthModuleConfig => ({
+        resourceServer: {
+          allowedUrls: [configService.config.apiBaseUrl, configService.config.agentApiUrl],
+          sendAccessToken: true
+        }
+      }),
+      deps: [ConfigService]
     },
     {
       provide: HTTP_INTERCEPTORS,

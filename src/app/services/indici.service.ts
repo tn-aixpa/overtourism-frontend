@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment';
+import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 import {
   IndicatorMeta, Comune,
   IndexDataResponse, VariationDataResponse, VariationOverTimeResponse,
@@ -12,9 +12,14 @@ import {
 export class IndiciService {
 
   // prefisso fisso con /default/indexes
-  private readonly base = `${environment.apiBaseUrl}/default/indexes`;
+  private readonly base: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(APP_CONFIG) config: AppConfig
+  ) {
+    this.base = `${config.apiBaseUrl}/default/indexes`;
+  }
 
   getIndicatorList(): Observable<{ indicators: IndicatorMeta[]; additional_labels?: AdditionalLabelMeta[] }> {
     return this.http.get<{ indicators: IndicatorMeta[]; additional_labels?: AdditionalLabelMeta[] }>(`${this.base}/get-index-list`);

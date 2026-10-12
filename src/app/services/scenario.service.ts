@@ -1,22 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ProblemScenario } from '../models/scenario.model';
 import { Observable, BehaviorSubject, map, filter, shareReplay, switchMap } from 'rxjs';
 import dataExample from '../../assets/dataExample.json';
-import { ConfigService } from './config.service';
-import { environment } from '../../environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { PlotMapper } from '../models/plot.model';
+import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 
-// interface ScenarioResponse {
-//   scenarios: Array<{
-//     problem_id: string;
-//     scenario_id: string;
-//     scenario_name: string;
-//     scenario_description: string;
-//     index_diffs?: { [key: string]: number };
-//   }>;
-// }
+
 export interface AppConfiguration {
   indexes: Widget[];
   map: any[]; 
@@ -60,8 +51,12 @@ export class ScenarioService {
   private baseUrl: string;
   private configuration$: Observable<AppConfiguration>;
 
-  constructor(private http: HttpClient, private configService: ConfigService,private authService: AuthenticationService) {
-    this.baseUrl = environment.apiBaseUrl;
+  constructor(
+    private http: HttpClient,
+    @Inject(APP_CONFIG) config: AppConfig,
+    private authService: AuthenticationService
+  ) {
+    this.baseUrl = config.apiBaseUrl;
 
     this.getTerritories().subscribe({
       next: (territories) => {
