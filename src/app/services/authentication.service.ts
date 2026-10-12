@@ -210,13 +210,30 @@ export class AuthenticationService {
   }
 
   setActiveTerritory(territory: string, reload: boolean = true) {
+    if (!territory || territory === this.activeTerritory) {
+      return;
+    }
+
     localStorage.setItem(this.TERRITORY_KEY, territory);
     this.activeTerritorySubject.next(territory);
 
+    // reset variabili legate  al vecchio territorio
+    this.chatbotService.clearSession();
+    sessionStorage.removeItem('overtourism_session_id');
+    sessionStorage.removeItem('overtourism_temp_scenario_id');
+    sessionStorage.removeItem('overtourism_changed_widgets');
+    sessionStorage.removeItem('overtourism_index_diffs');
+
     if (reload) {
-      this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      // reindirizza lista problemi sempre
+      if (this.router.url === '/problems') {
+        // Se siamo già nella lista, forziamo il reload via router
+        this.router.navigateByUrl('/login', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/problems']);
+        });
+      } else {
         this.router.navigate(['/problems']);
-      });
+      }
     }
   }
 }
