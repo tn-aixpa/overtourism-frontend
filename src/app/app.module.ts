@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule, provideAppInitializer, inject, Injector } from '@angular/core';
+import { APP_INITIALIZER, NgModule, provideAppInitializer, inject, Injector, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -28,6 +28,7 @@ import { AppFooterModule } from './components/app-footer/app-footer.module';
 import { HttpErrorInterceptor } from './interceptors/http-error.interceptor';
 import { TerritoryInterceptor } from './interceptors/territory.interceptor';
 import { AuthenticationService } from './services/authentication.service';
+import { GlobalErrorHandler } from './core/errors/global-error-handler';
 
 // Pages & Components
 import { HomeComponent } from './pages/home/home.component';
@@ -143,14 +144,16 @@ export function initializeAuth(authService: AuthenticationService) {
     })
   ],
   providers: [
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandler
+    },
     provideAppInitializer(async () => {
       const configService = inject(ConfigService);
       const injector = inject(Injector);
 
-      // Carica il config prima di tutto
       await configService.loadConfig();
 
-      // Inizializza auth una volta che il config è pronto
       const authService = injector.get(AuthenticationService);
       await authService.initialLoginSequence();
     }),

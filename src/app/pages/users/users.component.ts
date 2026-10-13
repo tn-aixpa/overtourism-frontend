@@ -64,8 +64,8 @@ export class UsersComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
+        console.error('Errore durante il caricamento degli utenti:', err);
         this.loading = false;
-        this.notificationService.showError('Errore durante il caricamento degli utenti');
       }
     });
   }
@@ -129,7 +129,7 @@ export class UsersComponent implements OnInit {
     return list.includes(terr);
   }
 
-  onSubmit(): void {
+   onSubmit(): void {
     if (this.userForm.invalid) {
       this.userForm.markAllAsTouched();
       return;
@@ -157,7 +157,7 @@ export class UsersComponent implements OnInit {
           this.closeModal();
           this.loadData();
         },
-        error: () => this.notificationService.showError("Errore durante l'aggiornamento dell'utente")
+        error: (err) => console.error("Errore aggiornamento utente:", err)
       });
     } else {
       const payload: CreateAuthUserDto = {
@@ -172,7 +172,7 @@ export class UsersComponent implements OnInit {
           this.closeModal();
           this.loadData();
         },
-        error: () => this.notificationService.showError("Errore durante la creazione dell'utente")
+        error: (err) => console.error("Errore creazione utente:", err)
       });
     }
   }
@@ -184,7 +184,7 @@ export class UsersComponent implements OnInit {
           this.notificationService.showSuccess('Utente disattivato');
           this.loadData();
         },
-        error: () => this.notificationService.showError('Errore durante la disattivazione')
+        error: (err) => console.error('Errore disattivazione:', err)
       });
     }
   }

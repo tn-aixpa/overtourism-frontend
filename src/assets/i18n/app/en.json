@@ -26,6 +26,15 @@
     "constraint_level_ristoranti": "Restaurant Constraint Days",
     "critical_constraint": "Critical Constraint"
   },
+  "errors": {
+    "generic": "An unexpected error occurred.",
+    "timeout": "Request to the server timed out.",
+    "unreachable": "The server is unreachable.",
+    "sessionExpired": "Session expired or unauthorized. Please log in again.",
+    "notFound": "Requested resource not found.",
+    "serverError": "Internal server error.",
+    "clientError": "An error occurred in the application."
+  },
   "problems": {
     "title": "Design Questions",
     "loading": "Loading design questions...",

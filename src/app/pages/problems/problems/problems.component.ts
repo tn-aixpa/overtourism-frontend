@@ -68,20 +68,16 @@ export class ProblemsComponent {
     this.router.navigate(['/problems', item.id, 'scenari']);
     
   }
-
   loadProblems(): void {
-
     this.loading = true;
     this.errorMessage = ''; 
     this.problemService.getProblems().subscribe({
       next: (data) => {
-
         this.problems = data;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Errore nel caricamento problems', err);
-        this.notificationService.showError(err.message || 'Errore sconosciuto.');
+        console.error('Errore nel caricamento problems:', err);
         this.loading = false;
       }
     });

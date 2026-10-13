@@ -165,7 +165,7 @@ export class ScenariComponent {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Errore nel caricamento scenari', err);
+        console.error('Errore nel caricamento scenari:', err);
         this.loading = false;
       }
     });
@@ -196,11 +196,7 @@ export class ScenariComponent {
         this.scenarioToDelete = null;
       },
       error: (err) => {
-        this.notificationService.showError(
-          this.translate.instant('scenari.delete_error', { name: this.scenarioToDelete?.name }) ||
-          err?.message
-        );
-        console.error('Errore durante l\'eliminazione dello scenario', err);
+        console.error('Errore durante l\'eliminazione dello scenario:', err);
       }
     });
   }

@@ -109,12 +109,12 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
         this.loadScenarios();
       },
       error: (err) => {
-        console.error('Errore caricamento proposta', err);
-        this.notificationService.showError(err.message || 'Errore caricamento proposta');
+        console.error('Errore caricamento proposta:', err);
         this.loading = false;
       }
     });
   }
+
   loadRelatedScenarios(relatedScenarios: { scenario_id: string; scenario_name: string }[]): void {
     const observables = relatedScenarios.map(s =>
       this.scenarioService.getScenarioData(s.scenario_id, this.problemId)
@@ -122,25 +122,24 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
 
     forkJoin(observables).subscribe({
       next: (results) => {
-        // 🔹 results è un array di scenari completi
         this.scenari = results;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Errore caricamento scenari', err);
-        this.notificationService.showError('Errore caricamento scenari');
+        console.error('Errore caricamento scenari correlati:', err);
         this.loading = false;
       }
     });
   }
+
   loadScenarios(): void {
     this.scenarioService.getScenarios(this.problemId, this.proposalId).subscribe({
-      next: (data:ProblemScenario[]) => {
+      next: (data: ProblemScenario[]) => {
         this.scenari = data;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Errore nel caricamento scenari', err);
+        console.error('Errore nel caricamento scenari:', err);
         this.loading = false;
       }
     });
@@ -264,15 +263,30 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
           this.translate.instant('problems.delete_success', { name: this.proposalToDelete?.name })
         );
         this.deleteProposalModal.hide();
-
         this.router.navigate([`/problems/${this.problemId}`]);
       },
       error: (err) => {
-        this.notificationService.showError(
-          this.translate.instant('problems.delete_error', { name: this.proposalToDelete?.name }) ||
-          err?.message
-        );
+        console.error('Errore durante eliminazione proposta:', err);
         this.deleteProposalModal.hide();
+      }
+    });
+  }
+
+  onConfirmDeleteScenario(): void {
+    if (!this.scenarioToDelete || !this.problemId) return;
+
+    const scenarioId = this.scenarioToDelete.scenario_id;
+
+    this.scenarioService.deleteScenario(scenarioId, this.problemId, this.proposalId).subscribe({
+      next: () => {
+        this.notificationService.showSuccess('Scenario eliminato con successo');
+        this.scenari = this.scenari.filter(s => s.id !== scenarioId);
+        this.deleteScenarioModal.hide();
+        this.scenarioToDelete = null;
+      },
+      error: (err) => {
+        console.error('Errore durante l\'eliminazione dello scenario:', err);
+        this.deleteScenarioModal.hide();
       }
     });
   }
@@ -291,22 +305,5 @@ export class ProposalDetailPageComponent implements OnInit, AfterViewInit {
     this.scenarioToDelete = null;
   }
 
-  onConfirmDeleteScenario(): void {
-    if (!this.scenarioToDelete || !this.problemId) return;
 
-    const scenarioId = this.scenarioToDelete.scenario_id;
-
-    this.scenarioService.deleteScenario(scenarioId, this.problemId, this.proposalId).subscribe({
-      next: () => {
-        this.notificationService.showSuccess('Proposta eliminata con successo');
-        this.scenari = this.scenari.filter(s => s.id !== scenarioId);
-        this.deleteScenarioModal.hide();
-        this.scenarioToDelete = null;
-      },
-      error: (err) => {
-        this.notificationService.showError(err?.message || 'Errore durante l\'eliminazione della proposta');
-        this.deleteScenarioModal.hide();
-      }
-    });
-  }
 }

@@ -1,54 +1,66 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse, HttpContextToken } from '@angular/common/http';
 import { Observable, throwError, TimeoutError } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
 import { NotificationService } from '../services/notifications.service';
 import { AuthenticationService } from '../services/authentication.service';
+import { TranslateService } from '@ngx-translate/core';
+export const SKIP_ERROR_NOTIFICATION = new HttpContextToken<boolean>(() => false);
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
   constructor(
     private notificationService: NotificationService,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private translate: TranslateService
+
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       timeout(60000),
       catchError((error: any) => {
-        let message = 'Errore imprevisto.';
+        const skipNotification = req.context.get(SKIP_ERROR_NOTIFICATION);
 
         if (error instanceof TimeoutError) {
-          message = 'Timeout della richiesta al server.';
-          this.notificationService.showError(message);
+          if (!skipNotification) {
+            this.notificationService.showError(this.translate.instant('errors.timeout'));
+          }
         } else if (error instanceof HttpErrorResponse) {
           switch (error.status) {
             case 0:
-              message = 'Il server non è raggiungibile.';
-              this.notificationService.showError(message);
+              if (!skipNotification) {
+                this.notificationService.showError(this.translate.instant('errors.unreachable'));
+              }
               break;
             case 401:
-              message = 'Sessione scaduta o non autorizzata. Effettua nuovamente il login.';
-              this.authService.logout();
+              if (!skipNotification) {
+                this.notificationService.showError(this.translate.instant('errors.sessionExpired'));
+              }
+              this.authService.forceLocalLogout();
               break;
             case 403:
-              // Gestito da AuthInterceptor / AuthenticationService (redirect a login con unauthorized)
+              // Gestito da AuthInterceptor / AuthenticationService
               break;
             case 404:
-              message = 'Risorsa non trovata.';
-              this.notificationService.showError(message);
+              if (!skipNotification) {
+                this.notificationService.showError(this.translate.instant('errors.notFound'));
+              }
               break;
             case 500:
-              message = 'Errore interno del server.';
-              this.notificationService.showError(message);
+              if (!skipNotification) {
+                this.notificationService.showError(this.translate.instant('errors.serverError'));
+              }
               break;
             default:
-              message = error.error?.message || error.message || 'Errore generico.';
-              this.notificationService.showError(message);
+              if (!skipNotification) {
+                const message = error.error?.message || error.error?.detail || this.translate.instant('errors.generic');
+                this.notificationService.showError(message);
+              }
           }
         }
 
-        // RILANCIA L'ERRORE ORIGINALE (mantiene .status, .headers, .error)
+        // Rilancia l'errore per preservare la catena di gestione del chiamante
         return throwError(() => error);
       })
     );

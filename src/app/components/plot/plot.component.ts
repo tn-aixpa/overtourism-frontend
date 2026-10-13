@@ -118,10 +118,8 @@ export class PlotComponent implements AfterViewInit {
       const response = await firstValueFrom(this.scenarioService.createSession(this.problemId));
       this.sessionId = response.session_id;
       sessionStorage.setItem('overtourism_session_id', this.sessionId);
-      console.log('Session ID from backend:', this.sessionId);
     } catch (err: any) {
-      console.error('Errore generazione sessione: ', err);
-      this.notificationService.showError('Impossibile creare una sessione di calcolo con il server.');
+      console.error('Errore generazione sessione:', err);
       throw err;
     }
   }
@@ -187,7 +185,7 @@ export class PlotComponent implements AfterViewInit {
         next: (res) => {
           this.isSaving = false;
           this.hasChanges = false;
-          this.clearSessionStorage(); // Pulizia dopo il salvataggio avvenuto
+          this.clearSessionStorage();
           this.closeModal();
           this.navigationAfterSave = true;
 
@@ -204,9 +202,7 @@ export class PlotComponent implements AfterViewInit {
         },
         error: (err) => {
           this.isSaving = false;
-          this.notif.showError(
-            this.translate.instant('scenari.create_error', { name: this.titolo }) || err?.message
-          );
+          console.error('Errore salvataggio scenario:', err);
           this.closeModal();
         }
       });
@@ -250,8 +246,7 @@ export class PlotComponent implements AfterViewInit {
       this.originalWidgets = JSON.parse(JSON.stringify(initialized));
       this.widgets = JSON.parse(JSON.stringify(this.originalWidgets));
     } catch (err) {
-      console.error('Errore caricamento widget/configurazione', err);
-      this.notificationService.showError('Errore nel caricamento della configurazione.');
+      console.error('Errore caricamento widget/configurazione:', err);
     }
   }
   
@@ -322,7 +317,6 @@ export class PlotComponent implements AfterViewInit {
   }
   async updateData(values: Record<string, number | [number, number]>) {
     this.loading = true;
-    // Resetta per dire ai figli (ReadingComponent) di aspettare
     this.sessionScenarioId = null;
     this.sessionEvaluationId = null;
     this.savedSummary = null;
@@ -331,12 +325,12 @@ export class PlotComponent implements AfterViewInit {
       const sessionScenario = await firstValueFrom(
         this.scenarioService.createSessionScenario(this.sessionId, this.problemId, this.scenarioId, values)
       );
-      const tempScenarioId = sessionScenario.scenario_id; // Salva in variabile temp
+      const tempScenarioId = sessionScenario.scenario_id;
 
       const evaluationRes = await firstValueFrom(
         this.scenarioService.createSessionEvaluation(this.sessionId, this.problemId, tempScenarioId!)
       );
-      const tempEvaluationId = evaluationRes.evaluation_id || evaluationRes.id; // Salva in variabile temp
+      const tempEvaluationId = evaluationRes.evaluation_id || evaluationRes.id;
 
       const rawResponse = await firstValueFrom(
         this.scenarioService.getSessionEvaluationData(
@@ -346,9 +340,8 @@ export class PlotComponent implements AfterViewInit {
         )
       );
 
-
       const scenarioData = rawResponse.extras?.data || rawResponse.data || rawResponse;
-      this.inputData = this.plotService.preparePlotInput(scenarioData, this.colorMap, this.sottosistemi,this.plotMapper); 
+      this.inputData = this.plotService.preparePlotInput(scenarioData, this.colorMap, this.sottosistemi, this.plotMapper); 
 
       const actualNumericalValues = this.scenarioService.arrayToDict(sessionScenario.index_values || []);
       const backendDiffs = sessionScenario.extras?.index_diffs;
@@ -369,8 +362,6 @@ export class PlotComponent implements AfterViewInit {
       if (Object.keys(values).length > 0) {
         this.indexDiffs = { ...this.originalIndexDiffs, ...values };
       }
-
-      this.notificationService.showError('Errore durante l\'aggiornamento iterativo del grafico.');
     } finally {
       this.loading = false;
     }
@@ -419,7 +410,6 @@ export class PlotComponent implements AfterViewInit {
   async loadData() {
     this.loading = true;
     if (!this.scenarioId || !this.problemId) {
-      this.notificationService.showError('Scenario o problem mancanti.');
       this.loading = false;
       return;
     }
@@ -446,7 +436,7 @@ export class PlotComponent implements AfterViewInit {
       completedEvals.sort((a, b) => {
         const dateA = new Date(a.finished || 0).getTime();
         const dateB = new Date(b.finished || 0).getTime();
-        return dateB - dateA; // Ordine decrescente
+        return dateB - dateA;
       });
 
       const currentEval = completedEvals[0];
@@ -459,17 +449,12 @@ export class PlotComponent implements AfterViewInit {
 
       const dataSet = rawResponse.data || {};
 
-      // Prepariamo i dati per il plot (le curve)
-      this.inputData = this.plotService.preparePlotInput(dataSet, this.colorMap, this.sottosistemi,this.plotMapper);
+      this.inputData = this.plotService.preparePlotInput(dataSet, this.colorMap, this.sottosistemi, this.plotMapper);
       this.kpisData = this.inputData.kpis;
 
       this.setupSelectOptions();
-      // this.renderPlot();
     } catch (error: any) {
-      console.error('Errore nel caricamento dati evaluation', error);
-      this.notificationService.showError(
-        `Errore: ${error.message || 'impossibile caricare i dati del grafico.'}`
-      );
+      console.error('Errore nel caricamento dati evaluation:', error);
     } finally {
       this.loading = false;
     }
@@ -508,13 +493,13 @@ export class PlotComponent implements AfterViewInit {
     //   this.renderPlot();
   }
   resetIndexDiffs(): void {
-    // Ripristina widgets e indexDiffs allo stato originale
     this.widgets = JSON.parse(JSON.stringify(this.originalWidgets));
     this.indexDiffs = JSON.parse(JSON.stringify(this.originalIndexDiffs));
     this.hasChanges = false;
     this.changedWidgets = {};
     this.loadData();
-    this.notificationService.showError('Modifiche ripristinate.');
+    // Feedback informativo: usare showSuccess invece di showError
+    this.notificationService.showSuccess('Modifiche ripristinate con successo.');
   }
 
   canDeactivate(): Promise<boolean> | boolean {

@@ -26,7 +26,15 @@
     "constraint_level_ristoranti": "Giorni di criticità Ristoranti",
     "critical_constraint": "Vincolo Critico"
   },
-
+  "errors": {
+    "generic": "Si è verificato un errore imprevisto.",
+    "timeout": "Timeout della richiesta al server.",
+    "unreachable": "Il server non è raggiungibile.",
+    "sessionExpired": "Sessione scaduta o non autorizzata. Effettua nuovamente il login.",
+    "notFound": "Risorsa richiesta non trovata.",
+    "serverError": "Errore interno del server.",
+    "clientError": "Si è verificato un errore nell'applicazione."
+  },
   "problems": {
     "title": "Ambiti di analisi",
     "loading": "Caricamento ambiti di analisi...",
