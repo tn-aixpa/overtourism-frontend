@@ -95,10 +95,20 @@ export class ScenariComponent {
   
     const diffs = Object.entries(scenario.extras.index_diffs).map(([key, value]) => {
       const name = this.getIndexNameFromKey(key);
-      return `<div width="300px"><strong>${name}</strong>: ${value}</div>`;
+      const displayVal = this.getDiffDisplayValue(key, value);
+      return `<div width="300px"><strong>${name}</strong>: ${displayVal}</div>`;
     });
   
     return diffs.join('');
+  }
+
+  getDiffDisplayValue(key: string, value: any): string {
+    if (!this.widgets) return String(value);
+    const widget = this.widgets.find((w: any) => w.name === key || w.index_id === key);
+    if (widget?.support_labels && widget.support_labels[value]) {
+      return widget.support_labels[value];
+    }
+    return String(value);
   }
   
   getIndexNameFromKey(key: string): string {

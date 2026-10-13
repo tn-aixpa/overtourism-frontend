@@ -24,6 +24,7 @@ export interface Widget {
   max_value?: number | null;
   step?: number | null;
   support?: string[];
+  support_labels?: Record<string, string>;
   default?: any;
   default_category?: string | null;
   default_range?: any;

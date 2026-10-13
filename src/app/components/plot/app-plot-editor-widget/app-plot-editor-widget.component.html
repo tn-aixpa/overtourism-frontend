@@ -44,7 +44,7 @@
                           type="button"
                           [disabled]="!isEditable(widget)"
                           (click)="toggleDropdown(widget.name)">
-                          <span>{{ widget.v ? widget.v : 'Seleziona...' }}</span>
+                          <span>{{ widget.v ? getOptionLabel(widget, widget.v) : 'Seleziona...' }}</span>
                           <span class="material-icons ms-2">expand_more</span>
                         </button>
 
@@ -64,7 +64,7 @@
                                 <a class="list-item"
                                    [class.active]="widget.v === opt"
                                    (click)="selectCategorical(widget, opt)">
-                                  <span>{{ opt }}</span>
+                                  <span>{{ getOptionLabel(widget, opt) }}</span>
                                 </a>
                               </li>
                             </ul>

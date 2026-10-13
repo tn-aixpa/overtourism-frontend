@@ -103,7 +103,15 @@ export class AppPlotEditorWidgetComponent implements OnInit, OnDestroy {
     this.closeDropdown(widget.name);
     this.onWidgetChange();
   }
-  
+  getOptionLabel(widget: Widget, value: any): string {
+    if (value === null || value === undefined || value === '') {
+      return 'Seleziona...';
+    }
+    if (widget.support_labels && widget.support_labels[value]) {
+      return widget.support_labels[value];
+    }
+    return String(value);
+  }
   decrease(widget: Widget): void {
     const step = widget.step || 1;
     const min = widget.min_value ?? -Infinity;
