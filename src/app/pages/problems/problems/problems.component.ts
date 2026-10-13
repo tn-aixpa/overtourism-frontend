@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Problem } from '../../../models/problem.model';
 import { ProblemService } from '../../../services/problem.service';
-import { of, delay, Observable } from 'rxjs';
+import { of, delay, Observable, Subscription } from 'rxjs';
 import { NotificationService } from '../../../services/notifications.service';
 import { ItModalComponent, SearchItem } from 'design-angular-kit';
 import { Router } from '@angular/router';
@@ -19,6 +19,7 @@ export class ProblemsComponent {
   loading = true;
   errorMessage = '';
   @ViewChild('problemModal') problemModal!: ItModalComponent;
+  private territorySub?: Subscription;
 
   openCreateProblemModal() {
     this.problemModal.show();
@@ -41,9 +42,16 @@ export class ProblemsComponent {
 
   ngOnInit(): void {
     this.chatbotCtx.setContext(null, null, []);
-    this.loadProblems();
+    this.territorySub = this.authService.activeTerritory$.subscribe((territory) => {
+      if (territory) {
+        this.problems = [];
+        this.loadProblems();
+      }
+    });
   }
-
+  ngOnDestroy(): void {
+    this.territorySub?.unsubscribe();
+  }
   searchProblems$: (search?: string | null | undefined) => Observable<Array<SearchItem>> = (search) => {
     if (!search) {
     return of([]);
