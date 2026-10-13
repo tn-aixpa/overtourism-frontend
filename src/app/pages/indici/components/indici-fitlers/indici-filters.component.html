@@ -51,18 +51,24 @@
 
     <!-- Date Inizio e Fine -->
     <div class="col-12 col-md-auto">
-      <div class="d-flex gap-2">
-        <div>
-          <label for="filter-start-date" class="form-label fw-bold mb-1" style="font-size:13px;">Inizio periodo</label>
-          <input id="filter-start-date" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-            [(ngModel)]="startDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;"
-            aria-label="Inizio periodo">
+      <div class="date-group-box">
+        <div class="date-group-header">
+          <span class="material-icons date-group-icon" aria-hidden="true">date_range</span>
+          <span class="date-group-title">Periodo base</span>
         </div>
-        <div>
-          <label for="filter-end-date" class="form-label fw-bold mb-1" style="font-size:13px;">Fine periodo</label>
-          <input id="filter-end-date" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-            [(ngModel)]="endDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;"
-            aria-label="Fine periodo">
+        <div class="d-flex gap-2">
+          <div>
+            <label for="filter-start-date" class="form-label date-sub-label">Inizio periodo</label>
+            <input id="filter-start-date" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+              [(ngModel)]="startDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;"
+              aria-label="Inizio periodo base">
+          </div>
+          <div>
+            <label for="filter-end-date" class="form-label date-sub-label">Fine periodo</label>
+            <input id="filter-end-date" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+              [(ngModel)]="endDate" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px;"
+              aria-label="Fine periodo base">
+          </div>
         </div>
       </div>
     </div>
@@ -108,15 +114,25 @@
     </span>
 
     <ng-container *ngIf="enableVariation">
-      <div class="d-flex align-items-center gap-2 border-start ps-3 ms-2">
-        <label for="filter-start-comp" class="form-label fw-bold mb-0" style="font-size:13px;">Inizio conf.</label>
-        <input id="filter-start-comp" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-          [(ngModel)]="startDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;"
-          aria-label="Inizio periodo di confronto">
-        <label for="filter-end-comp" class="form-label fw-bold mb-0 ms-2" style="font-size:13px;">Fine conf.</label>
-        <input id="filter-end-comp" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
-          [(ngModel)]="endDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;"
-          aria-label="Fine periodo di confronto">
+      <div class="date-group-box date-group-box--comparison border-start ps-3 ms-1">
+        <div class="date-group-header">
+          <span class="material-icons date-group-icon" aria-hidden="true">compare_arrows</span>
+          <span class="date-group-title">Periodo di confronto</span>
+        </div>
+        <div class="d-flex gap-2">
+          <div>
+            <label for="filter-start-comp" class="form-label date-sub-label">Inizio confronto</label>
+            <input id="filter-start-comp" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+              [(ngModel)]="startDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;"
+              aria-label="Inizio periodo di confronto">
+          </div>
+          <div>
+            <label for="filter-end-comp" class="form-label date-sub-label">Fine confronto</label>
+            <input id="filter-end-comp" type="date" class="form-control btn btn-outline-primary date-custom-outline text-start px-2 py-1"
+              [(ngModel)]="endDateComparison" (ngModelChange)="markDirty()" [attr.min]="minDateBound || null" [attr.max]="maxDateBound || null" style="min-height: 48px; min-width: 140px;"
+              aria-label="Fine periodo di confronto">
+          </div>
+        </div>
       </div>
     </ng-container>
 

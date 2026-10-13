@@ -46,6 +46,47 @@
   }
 }
 
+// ── Raggruppamento Date (Base e Confronto) ─────────────────────────────────
+.date-group-box {
+  display: flex;
+  flex-direction: column;
+
+  .date-group-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+
+  .date-group-icon {
+    font-size: 16px;
+    color: #0066cc;
+  }
+
+  .date-group-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0066cc;
+    letter-spacing: 0.2px;
+  }
+
+  .date-sub-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  &.date-group-box--comparison {
+    .date-group-icon,
+    .date-group-title {
+      color: #0d6efd;
+    }
+  }
+}
+
 // ── Seconda riga filtri (confronto + applica) ──────────────────────────────
 .filtri-row2 {
   border-top: 1px solid #dee2e6;
