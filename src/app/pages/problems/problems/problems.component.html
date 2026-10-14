@@ -1,13 +1,49 @@
 <div *ngIf="loading">{{ 'loading' | translate }}</div>
 
 <div *ngIf="!loading" class="bd-example">
-  <h3>{{ 'problems.title' | translate }}</h3>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">{{ 'problems.title' | translate }}</h3>
 
-  <!-- Mostrato solo a chi ha permessi di scrittura -->
-  <button itButton="primary" *ngIf="authService.canEdit()" (click)="openCreateProblemModal()" class="mb-5 d-flex align-items-center gap-2">
-    <span class="material-icons">add_circle_outline</span>
-    <span>{{ 'problems.create' | translate }}</span>
-  </button>
+    <!-- Mostrato solo a chi ha permessi di scrittura -->
+    <button
+      itButton="primary"
+      *ngIf="authService.canEdit()"
+      (click)="openCreateProblemModal()"
+      class="d-flex align-items-center gap-2">
+      <span class="material-icons" style="font-size: 20px;">add_circle_outline</span>
+      <span>{{ 'problems.create' | translate }}</span>
+    </button>
+  </div>
+
+  <!-- BANNER SCENARIO BASE -->
+  <div *ngIf="baseProblemRoute" class="base-scenario-banner mb-4 p-3 p-md-4 rounded shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+    <div class="d-flex align-items-center gap-3">
+      <div class="banner-icon-wrapper rounded-circle d-flex align-items-center justify-content-center">
+        <it-icon name="chart-line" color="primary" size="sm"></it-icon>
+      </div>
+      <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <span class="badge bg-primary text-white text-uppercase" style="letter-spacing: 0.5px; font-size: 11px;">Riferimento Territoriale</span>
+          <span class="text-muted small">Contesto: <strong>{{ authService.activeTerritory | titlecase }}</strong></span>
+        </div>
+        <h4 class="mb-1 text-dark fw-bold" style="font-size: 1.15rem;">Scenario Base di {{ authService.activeTerritory | titlecase }}</h4>
+        <p class="mb-0 text-muted small">
+          Accedi direttamente all'analisi di riferimento e alla proposta base con le simulazioni e i parametri del modello.
+        </p>
+      </div>
+    </div>
+    <div class="flex-shrink-0">
+      <button
+        itButton="outline-primary"
+        type="button"
+        (click)="goToBaseScenario()"
+        class="d-flex align-items-center gap-2 px-3 py-2">
+        <span>Esplora Scenario Base</span>
+        <it-icon name="arrow-right" color="primary" size="xs"></it-icon>
+      </button>
+    </div>
+  </div>
+
 
   <it-modal #problemModal size="xl" *ngIf="authService.canEdit()">
     <ng-container modalTitle>
@@ -24,6 +60,7 @@
     </app-problem-create>
   </it-modal>
 
+  <!-- LISTA AMBITI DI ANALISI (cards) -->
   <div class="row">
     <div class="col-12 col-lg-4 mb-4" *ngFor="let problem of problems">
       <div class="card-wrapper" [routerLink]="['/problems', problem.problem_id]">

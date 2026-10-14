@@ -66,7 +66,26 @@ export class ProblemsComponent {
 
   onSearchSelected(item: any): void {
     this.router.navigate(['/problems', item.id, 'scenari']);
-    
+  }
+
+  get baseProblemRoute(): string[] | null {
+    const territory = this.authService.activeTerritory?.toLowerCase().trim();
+    if (!territory) return null;
+    return [
+      '/problems',
+      `${territory}_base_problem`,
+      'proposals',
+      `${territory}_base_proposal`,
+      'scenari',
+      `${territory}_base_scenario`
+    ];
+  }
+
+  goToBaseScenario(): void {
+    const route = this.baseProblemRoute;
+    if (route) {
+      this.router.navigate(route);
+    }
   }
   loadProblems(): void {
     this.loading = true;
