@@ -1,12 +1,37 @@
 export function stripSystemKpis(kpis: Record<string, any> = {}): Record<string, any> {
-    const excluded = ['critical constraint', 'critical_constraint', 'uncertainty', 'uncertainty_by_constraint'];
-    const clean = { ...kpis };
-    excluded.forEach(k => delete clean[k]);
-    return clean;
+  const excluded = ['critical constraint', 'critical_constraint', 'uncertainty', 'uncertainty_by_constraint', 'area', 'title'];
+  const clean = { ...kpis };
+  excluded.forEach(k => delete clean[k]);
+  return clean;
+}
+
+export function normalizeKpiKey(key: string): string {
+  return key
+    .toLowerCase()
+    .trim()
+    .replace(/_/g, ' ')
+    .replace(/\s+/g, ' ');
+}
+
+export function getKpiLabel(key: string, kpiMapper: Record<string, string> = {}): string {
+  if (!kpiMapper) return key;
+
+  if (kpiMapper[key]) return kpiMapper[key];
+
+  const normalizedKey = normalizeKpiKey(key);
+  const foundKey = Object.keys(kpiMapper).find(k => normalizeKpiKey(k) === normalizedKey);
+
+  if (foundKey) {
+    return kpiMapper[foundKey];
   }
-  
-  export function getKpiLabel(key: string, kpiMapper: Record<string, string> = {}): string {
-    const mappedKeySpace = key.replace(/_/g, ' ');
-    const mappedKeyTrim = key.replace('constraint_level_', 'constraint level ');
-    return kpiMapper[key] || kpiMapper[mappedKeyTrim] || kpiMapper[mappedKeySpace] || key;
+
+  return key;
+}
+
+export function isPercentageKpi(key: string): boolean {
+  const norm = normalizeKpiKey(key);
+  if (norm.includes('dropout')) {
+    return false;
   }
+  return true;
+}

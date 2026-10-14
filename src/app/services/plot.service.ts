@@ -160,11 +160,10 @@ const plotMapper = (input as any).plotMapper;
   
     // Individual constraints
     const constraints = Object.keys(kpis)
-    .filter(key => key.startsWith('constraint_level_'))
-    .map(key => key.replace('constraint_level_', ''));
+      .filter(key => key.startsWith('constraint_level_'))
+      .map(key => key.replace('constraint_level_', ''));
 
     for (const c of constraints) {
-      // Ora val è un oggetto {level: number, confidence: number}
       const valObj = kpis[`constraint_level_${c}`];
 
       if (valObj !== undefined) {
@@ -179,14 +178,28 @@ const plotMapper = (input as any).plotMapper;
         });
       }
     }
+
+    ['dropouts_mean', 'dropouts_peak', 'dropouts mean', 'dropouts peak'].forEach(key => {
+      const d = kpis[key];
+      if (d !== undefined && typeof d === 'object') {
+        dataFacts.push({
+          category: key.replace(/_/g, ' '),
+          parameter: 'dropouts',
+          original_value: '',
+          new_value: '',
+          violations_percentage: +(d.share ? d.share * 100 : 0).toFixed(1),
+          uncertainty: +(d.value ?? 0).toFixed(1),
+          violations_numerosity: Number(d.value) > 0 ? 1 : 0
+        });
+      }
+    });
   
     return dataFacts;
   }
   
-  
   preparePlotInput(module: any, colorScale?: any, mapper?: any, plotMapper?: any): PlotInput { 
 
-    // 🔴 Leggi i field configurati per il bidimensionale (con fallback ai nomi noti)
+    // Leggi i field configurati per il bidimensionale (con fallback ai nomi noti)
     const xField = plotMapper?.bidimensional?.x?.field;
     const yField = plotMapper?.bidimensional?.y?.field;
     const usageField = plotMapper?.monodimensional?.y?.field;
@@ -205,7 +218,7 @@ const plotMapper = (input as any).plotMapper;
     const heatmapsByFunction: Record<string, number[][]> = module.points.uncertainty_by_constraint ?? {};
 
     const points = Array.isArray(module.kpis?.uncertainty)
-    ? [this.createUncertaintyPoint('Presenze', module.kpis?.uncertainty, false, colorScale, plotMapper) as Point] : [];
+      ? [this.createUncertaintyPoint('Presenze', module.kpis?.uncertainty, false, colorScale, plotMapper) as Point] : [];
 
     let kpis: any = undefined;
     if (module.kpis && typeof module.kpis === 'object') {
@@ -246,29 +259,29 @@ const plotMapper = (input as any).plotMapper;
         ) : {}
       };
 
+      // Copia TUTTI i KPI presenti nella risposta, senza filtrarli
       Object.keys(module.kpis).forEach(key => {
-        if (key.startsWith('constraint level ')) {
-          const cat = key.replace('constraint level ', '');
-          const dataObj = module.kpis[key];
-          
-          if (typeof dataObj === 'object') {
-            kpis[`constraint_level_${cat}`] = { 
-              level: dataObj.level ?? 0, 
-              confidence: dataObj.confidence ?? 0 
-            };
-          } else {
-            kpis[`constraint_level_${cat}`] = { 
-              level: dataObj ?? 0, 
-              confidence: 0 
-            };
-          }
+        if (key === 'uncertainty' || key === 'uncertainty_by_constraint' || key === 'title' || key === 'area') {
+          return;
+        }
+
+        const dataObj = module.kpis[key];
+
+        if (key.startsWith('constraint level ') || key.startsWith('constraint_level_')) {
+          const cat = key.replace(/^constraint[_ ]level[_ ]/, '');
+          const normalized = typeof dataObj === 'object'
+            ? { level: dataObj.level ?? 0, confidence: dataObj.confidence ?? 0 }
+            : { level: dataObj ?? 0, confidence: 0 };
+          kpis[`constraint_level_${cat}`] = normalized;
+        } else if (key !== 'sustainability_level' && key !== 'critical constraint' && key !== 'critical_constraint') {
+          const normalizedKey = key.trim().replace(/\s+/g, '_');
+          kpis[normalizedKey] = dataObj;
         }
       });
     }
 
     const dataFacts = module.kpis ? this.createDataFactsFromKpis(kpis) : [];
-
-    return {
+ return {
       curves,
       heatmap: module.uncertainty
         ? {

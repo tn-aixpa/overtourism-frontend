@@ -21,3 +21,23 @@
     color: #6c757d; 
     vertical-align: baseline;
   }
+  :host {
+    display: block;
+    width: 100%;
+  }
+  
+  .card-wrapper {
+    width: 100%;
+  
+    h6 {
+      line-height: 1.35;
+      word-break: normal;
+      overflow-wrap: break-word;
+      font-size: 0.95rem;
+    }
+  
+    p.h3 {
+      flex-wrap: wrap;
+      row-gap: 4px;
+    }
+  }
