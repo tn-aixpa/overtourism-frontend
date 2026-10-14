@@ -21,7 +21,12 @@ export class ConfigService {
   get agentApiUrl(): string {
     return this._config?.agentApiUrl || '';
   }
-
+  get versionInfo() {
+    return this._config?.version || {
+      version: 'dev',
+      releaseUrl: 'https://github.com/tn-aixpa/overtourism-frontend'
+    };
+  }
   async loadConfig(): Promise<AppConfig> {
     try {
       const timestamp = new Date().getTime();

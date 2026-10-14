@@ -7,11 +7,19 @@ export interface AppAuthConfig {
   scope: string;
   redirectUri: string;
 }
-
+export interface AppVersionInfo {
+    version: string;
+    tag?: string;
+    commit?: string;
+    repoUrl: string;
+    releaseUrl: string;
+  }
 export interface AppConfig {
   apiBaseUrl: string;
   agentApiUrl: string;
   auth: AppAuthConfig;
+  version?: AppVersionInfo;
+
 }
 
 export const APP_CONFIG = new InjectionToken<AppConfig>('APP_CONFIG');

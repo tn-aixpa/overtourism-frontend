@@ -1,0 +1,19 @@
+.footer-version-item {
+    margin-left: 1rem;
+  
+    a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+  
+      &:hover {
+        text-decoration: underline;
+      }
+  
+      .badge {
+        font-size: 0.8rem;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+    }
+  }

@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "prebuild": "node ./scripts/set-version.js",
+    "prestart": "node ./scripts/set-version.js",
+    "set-version": "node ./scripts/set-version.js",
     "start": "ng serve",
     "start:local": "ng serve --configuration=local",
     "build": "ng build --configuration=production",

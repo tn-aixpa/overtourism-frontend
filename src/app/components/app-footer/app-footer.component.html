@@ -1,17 +1,18 @@
 <it-footer>
-    
-    
-    
-    <ng-container small-links>
-        
-      <li class="list-inline-item"><a href="#">Media policy</a></li>
-      <li class="list-inline-item"><a href="#">Note legali</a></li>
-      <li class="list-inline-item"><a href="#">Privacy policy</a></li>
-      <li class="list-inline-item"><a href="#">Mappa del sito</a></li>
-      <li class="list-inline-item">
-        <a href="https://form.agid.gov.it/view/xyz"
-          >Dichiarazione di accessibilità <span class="visually-hidden">(link esterno su sito AgID)</span></a
-        >
-      </li>
-    </ng-container>
-  </it-footer>
+  <ng-container small-links>
+    <li class="list-inline-item"><a href="#">Media policy</a></li>
+    <li class="list-inline-item"><a href="#">Note legali</a></li>
+    <li class="list-inline-item"><a href="#">Privacy policy</a></li>
+    <li class="list-inline-item"><a href="#">Mappa del sito</a></li>
+    <li class="list-inline-item">
+      <a href="https://form.agid.gov.it/view/xyz">
+        Dichiarazione di accessibilità <span class="visually-hidden">(link esterno su sito AgID)</span>
+      </a>
+    </li>
+    <li class="list-inline-item footer-version-item">
+      <a [href]="versionInfo.releaseUrl" target="_blank" rel="noopener noreferrer" title="Consulta il rilascio sorgente su GitHub">
+        Versione: <span class="badge bg-light text-dark font-monospace">{{ versionInfo.version }}</span>
+      </a>
+    </li>
+  </ng-container>
+</it-footer>
