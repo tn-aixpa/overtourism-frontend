@@ -199,7 +199,8 @@ export class AuthenticationService {
     if (!territory || (this._availableTerritories.length > 0 && !this._availableTerritories.includes(territory))) {
       if (this._availableTerritories.length > 0) {
         territory = this._availableTerritories[0];
-        this.setActiveTerritory(territory, false);
+        localStorage.setItem(this.TERRITORY_KEY, territory);
+        this.activeTerritorySubject.next(territory);
       } else {
         return ''; 
       }
@@ -208,7 +209,8 @@ export class AuthenticationService {
   }
 
   setActiveTerritory(territory: string, reload: boolean = true) {
-    if (!territory || territory === this.activeTerritory) {
+    const current = localStorage.getItem(this.TERRITORY_KEY);
+    if (!territory || territory === current) {
       return;
     }
 
