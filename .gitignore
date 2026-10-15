@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Configurazione locale con segreti (non committare su git)
+src/assets/config.local.json
+public/config.local.json

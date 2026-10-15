@@ -9,10 +9,10 @@
     "redirectUri": "/"
   },
   "version": {
-    "version": "1.0.0-161-gad8b88f",
-    "tag": "1.0.0-161-gad8b88f",
-    "commit": "ad8b88f",
+    "version": "1.0.0-162-g643fe44",
+    "tag": "1.0.0-162-g643fe44",
+    "commit": "643fe44",
     "repoUrl": "https://github.com/tn-aixpa/overtourism-frontend",
-    "releaseUrl": "https://github.com/tn-aixpa/overtourism-frontend/releases/tag/1.0.0-161-gad8b88f"
+    "releaseUrl": "https://github.com/tn-aixpa/overtourism-frontend/releases/tag/1.0.0-162-g643fe44"
   }
 }

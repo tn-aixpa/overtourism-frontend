@@ -3,6 +3,7 @@ import {
   AfterViewInit, ViewChild, ElementRef, SimpleChanges
 } from '@angular/core';
 import * as L from 'leaflet';
+import { ConfigService } from '../../core/config/config.service';
 
 @Component({
   selector: 'app-indici-map',
@@ -24,11 +25,19 @@ export class IndiciMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private colorbarControl?: L.Control;
   private ready = false;
   private currentHoveredLayer: L.Path | null = null; 
+
+  constructor(private configService: ConfigService) {}
+
   ngAfterViewInit(): void {
     this.map = L.map(this.mapEl.nativeElement, { zoomControl: true, attributionControl: false })
       .setView([44.3, 9], 8);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    const apiKey = this.configService.cartoApiKey;
+    const tileUrl = apiKey
+      ? `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${apiKey}`
+      : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+
+    L.tileLayer(tileUrl, {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       subdomains: 'abcd',
       maxZoom: 20

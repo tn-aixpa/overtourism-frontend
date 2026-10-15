@@ -166,7 +166,7 @@ export function initializeAuth(authService: AuthenticationService) {
       provide: OAuthModuleConfig,
       useFactory: (configService: ConfigService): OAuthModuleConfig => ({
         resourceServer: {
-          allowedUrls: [configService.config.apiBaseUrl, configService.config.agentApiUrl],
+          allowedUrls: [configService.apiBaseUrl, configService.agentApiUrl].filter(Boolean),
           sendAccessToken: true
         }
       }),

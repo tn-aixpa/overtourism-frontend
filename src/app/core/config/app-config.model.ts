@@ -19,6 +19,7 @@ export interface AppConfig {
   agentApiUrl: string;
   auth: AppAuthConfig;
   version?: AppVersionInfo;
+  cartoApiKey?: string;
 
 }
 

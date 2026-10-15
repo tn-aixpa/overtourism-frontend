@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpBackend } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { AppConfig } from './app-config.model';
 
 @Injectable({
@@ -6,11 +8,13 @@ import { AppConfig } from './app-config.model';
 })
 export class ConfigService {
   private _config!: AppConfig;
+  private http: HttpClient;
+
+  constructor(handler: HttpBackend) {
+    this.http = new HttpClient(handler);
+  }
 
   get config(): AppConfig {
-    if (!this._config) {
-      throw new Error('Configurazione non ancora inizializzata.');
-    }
     return this._config;
   }
 
@@ -21,28 +25,39 @@ export class ConfigService {
   get agentApiUrl(): string {
     return this._config?.agentApiUrl || '';
   }
+
+  get cartoApiKey(): string {
+    return this._config?.cartoApiKey || '';
+  }
+
   get versionInfo() {
     return this._config?.version || {
       version: 'dev',
-      releaseUrl: 'https://github.com/tn-aixpa/overtourism-frontend'
+      releaseUrl: 'https://github.com/smartcommunitylab/overtourism-frontend'
     };
   }
+
   async loadConfig(): Promise<AppConfig> {
     try {
-      const timestamp = new Date().getTime();
-      // Prova /assets/config.json (se in src/assets), altrimenti /config.json (se in public)
-      let response = await fetch(`/assets/config.json?v=${timestamp}`);
-      if (!response.ok) {
-        response = await fetch(`/config.json?v=${timestamp}`);
+      this._config = await firstValueFrom(
+        this.http.get<AppConfig>('/assets/config.json')
+      );
+
+      try {
+        const localConfig = await firstValueFrom(
+          this.http.get<Partial<AppConfig>>('/assets/config.local.json')
+        );
+        if (localConfig) {
+          this._config = { ...this._config, ...localConfig };
+        }
+      } catch {
+        // config.local.json 
       }
-      if (!response.ok) {
-        throw new Error(`Impossibile trovare config.json (status: ${response.status})`);
-      }
-      this._config = await response.json();
+
       return this._config;
-    } catch (err) {
-      console.error('Errore critico durante il caricamento di config.json:', err);
-      throw err;
+    } catch (error) {
+      console.error('Impossibile caricare la configurazione dell\'applicazione:', error);
+      throw error;
     }
   }
 }
