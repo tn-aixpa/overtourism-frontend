@@ -41,6 +41,7 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Configurazione locale con segreti (non committare su git)
+# Configurazione locale 
+src/assets/env.js
 src/assets/config.local.json
 public/config.local.json

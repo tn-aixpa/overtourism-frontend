@@ -5,8 +5,7 @@ import { Observable, BehaviorSubject, map, filter, shareReplay, switchMap } from
 import dataExample from '../../assets/dataExample.json';
 import { AuthenticationService } from './authentication.service';
 import { PlotMapper } from '../models/plot.model';
-import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
-
+import { environment } from '../../environments/environment';
 
 export interface AppConfiguration {
   indexes: Widget[];
@@ -52,12 +51,8 @@ export class ScenarioService {
   private baseUrl: string;
   private configuration$: Observable<AppConfiguration>;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(APP_CONFIG) config: AppConfig,
-    private authService: AuthenticationService
-  ) {
-    this.baseUrl = config.apiBaseUrl;
+  constructor(private http: HttpClient,private authService: AuthenticationService) {
+    this.baseUrl = environment.apiBaseUrl;
 
     this.getTerritories().subscribe({
       next: (territories) => {

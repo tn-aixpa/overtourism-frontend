@@ -1,7 +1,7 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
+import { environment } from '../../environments/environment';
 import {
   IndicatorMeta, Comune,
   IndexDataResponse, VariationDataResponse, VariationOverTimeResponse,
@@ -11,15 +11,10 @@ import {
 @Injectable({ providedIn: 'root' })
 export class IndiciService {
 
-  // prefisso fisso con /default/indexes
-  private readonly base: string;
+  //prefisso
+  private readonly base = `${environment.apiBaseUrl}/indexes`;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(APP_CONFIG) config: AppConfig
-  ) {
-    this.base = `${config.apiBaseUrl}/default/indexes`;
-  }
+  constructor(private http: HttpClient) {}
 
   getIndicatorList(): Observable<{ indicators: IndicatorMeta[]; additional_labels?: AdditionalLabelMeta[] }> {
     return this.http.get<{ indicators: IndicatorMeta[]; additional_labels?: AdditionalLabelMeta[] }>(`${this.base}/get-index-list`);
@@ -52,6 +47,8 @@ export class IndiciService {
     return this.http.get<IndexDataResponse>(`${this.base}/get_index_data`, { params });
   }
 
+
+
   getVariationData(
     index: string,
     startDate: string,
@@ -67,4 +64,24 @@ export class IndiciService {
       .set('spatial_granularity', spatialGranularity);
     return this.http.get<VariationDataResponse>(`${this.base}/get-variation-data`, { params });
   }
+
+  // getVariationOverTime(
+  //   index: string,
+  //   startBaseline: string,
+  //   endBaseline: string,
+  //   startComparison: string,
+  //   endComparison: string,
+  //   spatialGranularity = 'comune',
+  //   seasonality?: string
+  // ): Observable<VariationOverTimeResponse> {
+  //   let params = new HttpParams()
+  //     .set('index', index)
+  //     .set('start_date_baseline', startBaseline)
+  //     .set('end_date_baseline', endBaseline)
+  //     .set('start_date_comparison', startComparison)
+  //     .set('end_date_comparison', endComparison)
+  //     .set('spatial_granularity', spatialGranularity);
+  //   if (seasonality) params = params.set('seasonality', seasonality);
+  //   return this.http.get<VariationOverTimeResponse>(`${this.base}/get-variation-over-time`, { params });
+  // }
 }

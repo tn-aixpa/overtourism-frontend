@@ -1,9 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ChatMessage } from '../../models/chat.model';  
-import { APP_CONFIG, AppConfig } from '../../core/config/app-config.model';
 
 export interface ChatRequest {
   messages: ChatMessage[];
@@ -19,11 +18,8 @@ export class ChatbotService {
   private readonly STORAGE_KEY = 'chatbot_messages';
   private readonly SESSION_KEY = 'chatbot_session_id';
 
-  constructor(private http: HttpClient,
-    @Inject(APP_CONFIG) config: AppConfig
-
-  ) {
-    this.baseUrl = config.apiBaseUrl;
+  constructor(private http: HttpClient) {
+    this.baseUrl = environment.apiBaseUrl;
   }
 
   clearSession(): void {

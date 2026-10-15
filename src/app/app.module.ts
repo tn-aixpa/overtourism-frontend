@@ -2,11 +2,9 @@ import { APP_INITIALIZER, NgModule, provideAppInitializer, inject, Injector, Err
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { OAuthModule, OAuthModuleConfig } from 'angular-oauth2-oidc';
+import { OAuthModule } from 'angular-oauth2-oidc';
+import { environment } from '../environments/environment';
 
-// Configurazione Runtime
-import { ConfigService } from './core/config/config.service';
-import { APP_CONFIG, AppConfig } from './core/config/app-config.model';
 
 // AGID Design
 import { DesignAngularKitModule } from 'design-angular-kit';
@@ -124,7 +122,12 @@ export function initializeAuth(authService: AuthenticationService) {
     SharedLineChartComponent,
     SharedBarChartComponent,
     SharedKpisComponent,
-    OAuthModule.forRoot(), 
+    OAuthModule.forRoot({
+      resourceServer: {
+        allowedUrls: [environment.apiBaseUrl, environment.agentApiUrl],
+        sendAccessToken: true
+      }
+    }), 
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -148,29 +151,11 @@ export function initializeAuth(authService: AuthenticationService) {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
     },
-    provideAppInitializer(async () => {
-      const configService = inject(ConfigService);
-      const injector = inject(Injector);
-
-      await configService.loadConfig();
-
-      const authService = injector.get(AuthenticationService);
-      await authService.initialLoginSequence();
-    }),
     {
-      provide: APP_CONFIG,
-      useFactory: (configService: ConfigService): AppConfig => configService.config,
-      deps: [ConfigService]
-    },
-    {
-      provide: OAuthModuleConfig,
-      useFactory: (configService: ConfigService): OAuthModuleConfig => ({
-        resourceServer: {
-          allowedUrls: [configService.apiBaseUrl, configService.agentApiUrl].filter(Boolean),
-          sendAccessToken: true
-        }
-      }),
-      deps: [ConfigService]
+      provide: APP_INITIALIZER,
+      useFactory: initializeAuth,
+      deps: [AuthenticationService],
+      multi: true
     },
     {
       provide: HTTP_INTERCEPTORS,

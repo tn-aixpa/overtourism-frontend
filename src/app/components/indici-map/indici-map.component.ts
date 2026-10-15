@@ -3,7 +3,7 @@ import {
   AfterViewInit, ViewChild, ElementRef, SimpleChanges
 } from '@angular/core';
 import * as L from 'leaflet';
-import { ConfigService } from '../../core/config/config.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-indici-map',
@@ -26,13 +26,13 @@ export class IndiciMapComponent implements AfterViewInit, OnChanges, OnDestroy {
   private ready = false;
   private currentHoveredLayer: L.Path | null = null; 
 
-  constructor(private configService: ConfigService) {}
+  constructor() {}
 
   ngAfterViewInit(): void {
     this.map = L.map(this.mapEl.nativeElement, { zoomControl: true, attributionControl: false })
       .setView([44.3, 9], 8);
 
-    const apiKey = this.configService.cartoApiKey;
+    const apiKey = environment.cartoApiKey;
     const tileUrl = apiKey
       ? `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=${apiKey}`
       : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';

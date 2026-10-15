@@ -3,19 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthMe, AuthRole, AuthUser, CreateAuthUserDto, UpdateAuthUserDto } from '../models/user.model';
-import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private readonly baseUrl: string;
+  private readonly baseUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient,    @Inject(APP_CONFIG) config: AppConfig
-) {
-  this.baseUrl = config.apiBaseUrl;
-
-}
+  constructor(private http: HttpClient) {}
 
   getMe(): Observable<AuthMe> {
     return this.http.get<AuthMe>(`${this.baseUrl}/auth/me`);

@@ -1,8 +1,9 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { Problem } from '../models/problem.model';
-import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
+import { ConfigService } from './config.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -10,11 +11,8 @@ import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
 export class ProblemService {
   private baseUrl: string;
 
-  constructor(
-    private http: HttpClient,
-    @Inject(APP_CONFIG) config: AppConfig
-  ) {
-    this.baseUrl = config.apiBaseUrl;
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.baseUrl = environment.apiBaseUrl;
   }
 
   /** GET all problems */
@@ -54,10 +52,9 @@ export class ProblemService {
   refreshProblems(): Observable<any> {
     return this.http.put(`${this.baseUrl}/problems/refresh`, {});
   }
-
   /** PUT update problem */
-  updateProblem(problemId: string, payload: Problem): Observable<Problem> {
-    const { problem_id, territory, updated, ...body } = payload;
-    return this.http.put<Problem>(`${this.baseUrl}/problems/${problemId}`, body);
-  }
+updateProblem(problemId: string, payload: Problem): Observable<Problem> {
+  const { problem_id, territory, updated,...body } = payload;
+  return this.http.put<Problem>(`${this.baseUrl}/problems/${problemId}`, body);
+}
 }

@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   HttpRequest,
   HttpHandler,
@@ -7,8 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
-import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
-
+import { environment } from '../../environments/environment';
 @Injectable()
 export class TerritoryInterceptor implements HttpInterceptor {
 
@@ -20,13 +19,11 @@ export class TerritoryInterceptor implements HttpInterceptor {
   ];
 
   constructor(
-    private authService: AuthenticationService,
-    @Inject(APP_CONFIG) private config: AppConfig
+    private authService: AuthenticationService
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const isApiUrl = request.url.startsWith(this.config.apiBaseUrl);
-
+    const isApiUrl = request.url.startsWith(environment.apiBaseUrl);
     // Salta se non è una chiamata alle nostre API o se matcha una rotta esclusa
     const isExcluded = this.excludedPatterns.some(pattern => request.url.includes(pattern));
 
@@ -38,11 +35,11 @@ export class TerritoryInterceptor implements HttpInterceptor {
 
     if (territory) {
       // Sostituisce apiBaseUrl con apiBaseUrl + '/' + territory se non è già presente
-      const targetPrefix = `${this.config.apiBaseUrl}/${territory}`;
+      const targetPrefix = `${environment.apiBaseUrl}/${territory}`;
       
       if (!request.url.startsWith(targetPrefix)) {
-        const pathAfterBase = request.url.substring(this.config.apiBaseUrl.length);
-        const newUrl = `${this.config.apiBaseUrl}/${territory}${pathAfterBase}`;
+        const pathAfterBase = request.url.substring(environment.apiBaseUrl.length);
+        const newUrl = `${environment.apiBaseUrl}/${territory}${pathAfterBase}`;
         const modifiedRequest = request.clone({ url: newUrl });
         return next.handle(modifiedRequest);
       }

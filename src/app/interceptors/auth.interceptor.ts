@@ -1,25 +1,21 @@
-import { Injectable, Inject } from '@angular/core';
-import {
+import { Injectable } from '@angular/core';import {
   HttpInterceptor, HttpRequest, HttpHandler,
   HttpEvent, HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from '../services/authentication.service';
-import { APP_CONFIG, AppConfig } from '../core/config/app-config.model';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(
-    private authService: AuthenticationService,
-    @Inject(APP_CONFIG) private config: AppConfig
-  ) {}
+  constructor(private authService: AuthenticationService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
 
-    const isApiUrl = req.url.startsWith(this.config.apiBaseUrl) || req.url.startsWith(this.config.agentApiUrl);
+    const isApiUrl = req.url.startsWith(environment.apiBaseUrl) || req.url.startsWith(environment.agentApiUrl);
     const token = this.authService.accessToken;
 
     if (isApiUrl && token && !req.headers.has('Authorization')) {
